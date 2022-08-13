@@ -1,20 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:share_location/constants/values.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final supabase = Supabase.instance.client;
 
 extension ShowSnackBar on BuildContext {
-  void showSnackBar({
-    required String message,
-    Color backgroundColor = Colors.white,
+  static ScaffoldFeatureController<SnackBar, SnackBarClosedReason>?
+      pendingSnackBar;
+
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar({
+    required final String message,
+    final Color backgroundColor = Colors.white,
+    final Duration duration = const Duration(seconds: 4),
   }) {
-    ScaffoldMessenger.of(this).showSnackBar(SnackBar(
-      content: Text(message),
-      backgroundColor: backgroundColor,
-    ));
+    pendingSnackBar?.close();
+    pendingSnackBar = null;
+
+    return ScaffoldMessenger.of(this).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: backgroundColor,
+        duration: duration,
+      ),
+    );
   }
 
-  void showErrorSnackBar({required String message}) {
-    showSnackBar(message: message, backgroundColor: Colors.red);
+  void showErrorSnackBar({required final String message}) {
+    showSnackBar(
+      message: message,
+      backgroundColor: Colors.red,
+    );
+  }
+
+  void showSuccessSnackBar({required final String message}) {
+    showSnackBar(
+      message: message,
+      backgroundColor: Colors.green,
+    );
+  }
+
+  void showPendingSnackBar({required final String message}) {
+    pendingSnackBar = showSnackBar(
+      message: message,
+      backgroundColor: Colors.yellow,
+      duration: DURATION_INFINITY,
+    );
   }
 }

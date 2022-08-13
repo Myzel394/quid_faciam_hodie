@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ import 'package:share_location/utils/loadable.dart';
 import 'package:share_location/widgets/camera_button.dart';
 import 'package:share_location/widgets/change_camera_button.dart';
 import 'package:share_location/widgets/today_photo_button.dart';
+import 'package:share_location/widgets/uploading_photo.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MainScreen extends StatefulWidget {
@@ -27,6 +29,7 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
   bool isRecording = false;
   bool hasGrantedPermissions = false;
   List? lastPhoto;
+  Uint8List? uploadingPhotoAnimation;
 
   late User _user;
 
@@ -114,26 +117,27 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
       return;
     }
 
+    context.showPendingSnackBar(message: 'Taking photo...');
+
     controller!.setFlashMode(FlashMode.off);
     final file = File((await controller!.takePicture()).path);
+
+    setState(() {
+      uploadingPhotoAnimation = file.readAsBytesSync();
+    });
+
+    context.showPendingSnackBar(message: 'Uploading photo...');
 
     try {
       await FileManager.uploadFile(_user, file);
     } catch (error) {
-      if (mounted) {
-        context.showErrorSnackBar(message: error.toString());
-      }
+      context.showErrorSnackBar(message: error.toString());
       return;
     }
 
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Photo saved.'),
-          backgroundColor: Colors.green,
-        ),
-      );
+    context.showSuccessSnackBar(message: 'Photo uploaded!');
 
+    if (mounted) {
       await getLastPhoto();
     }
   }
@@ -148,7 +152,11 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
       isRecording = false;
     });
 
+    context.showPendingSnackBar(message: 'Saving video...');
+
     final file = File((await controller!.stopVideoRecording()).path);
+
+    context.showPendingSnackBar(message: 'Uploading video...');
 
     try {
       await FileManager.uploadFile(_user, file);
@@ -159,13 +167,9 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
       return;
     }
 
+    context.showSuccessSnackBar(message: 'Video uploaded!');
+
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Video saved.'),
-          backgroundColor: Colors.green,
-        ),
-      );
       await getLastPhoto();
     }
   }
@@ -211,18 +215,21 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          ChangeCameraButton(onChangeCamera: () {
-                            final currentCameraIndex = GlobalValuesManager
-                                .cameras
-                                .indexOf(controller!.description);
-                            final availableCameras =
-                                GlobalValuesManager.cameras.length;
+                          ChangeCameraButton(
+                            onChangeCamera: () {
+                              final currentCameraIndex = GlobalValuesManager
+                                  .cameras
+                                  .indexOf(controller!.description);
+                              final availableCameras =
+                                  GlobalValuesManager.cameras.length;
 
-                            onNewCameraSelected(
-                              GlobalValuesManager.cameras[
-                                  (currentCameraIndex + 1) % availableCameras],
-                            );
-                          }),
+                              onNewCameraSelected(
+                                GlobalValuesManager.cameras[
+                                    (currentCameraIndex + 1) %
+                                        availableCameras],
+                              );
+                            },
+                          ),
                           CameraButton(
                             active: isRecording,
                             onVideoBegin: () async {
@@ -251,6 +258,15 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
                     )
                   ],
                 ),
+                if (uploadingPhotoAnimation != null)
+                  UploadingPhoto(
+                    data: uploadingPhotoAnimation!,
+                    onDone: () {
+                      setState(() {
+                        uploadingPhotoAnimation = null;
+                      });
+                    },
+                  )
               ],
             ),
           );

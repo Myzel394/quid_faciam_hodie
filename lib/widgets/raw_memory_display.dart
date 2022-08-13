@@ -9,12 +9,14 @@ import 'package:video_player/video_player.dart';
 class RawMemoryDisplay extends StatefulWidget {
   final Uint8List data;
   final MemoryType type;
+  final bool loopVideo;
   final String? filename;
 
   const RawMemoryDisplay({
     Key? key,
     required this.data,
     required this.type,
+    this.loopVideo = false,
     this.filename,
   }) : super(key: key);
 
@@ -56,7 +58,7 @@ class _RawMemoryDisplayState extends State<RawMemoryDisplay> {
     videoController = VideoPlayerController.file(file);
     videoController!.initialize().then((value) {
       setState(() {});
-      videoController!.setLooping(true);
+      videoController!.setLooping(widget.loopVideo);
       videoController!.play();
     });
   }
