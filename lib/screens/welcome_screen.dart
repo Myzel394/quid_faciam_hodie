@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:share_location/constants/spacing.dart';
+import 'package:share_location/managers/startup_page_manager.dart';
+import 'package:share_location/screens/main_screen.dart';
 import 'package:share_location/widgets/logo.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -38,9 +40,11 @@ class WelcomeScreen extends StatelessWidget {
             ),
             const SizedBox(height: LARGE_SPACE),
             ElevatedButton.icon(
-              icon: Icon(Icons.arrow_right),
-              label: Text('Start'),
-              onPressed: () {},
+              icon: const Icon(Icons.arrow_right),
+              label: const Text('Start'),
+              onPressed: () {
+                StartupPageManager.navigateToNewPage(context, MainScreen.ID);
+              },
             ),
           ],
         ),

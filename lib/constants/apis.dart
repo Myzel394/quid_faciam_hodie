@@ -1,0 +1,3 @@
+const SUPABASE_API_URL = 'https://gmqzelvauqziurlloawb.supabase.co';
+const SUPABASE_API_KEY =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdtcXplbHZhdXF6aXVybGxvYXdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjAzODE5MDcsImV4cCI6MTk3NTk1NzkwN30.D_964EIlD9WRFnG6MWtQtmIg04eMBbZhIEF7zl--bKw';

@@ -1,0 +1,4 @@
+enum MemoryType {
+  photo,
+  video,
+}
