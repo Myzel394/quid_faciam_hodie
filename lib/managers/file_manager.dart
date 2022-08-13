@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:share_location/enums.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -9,6 +10,8 @@ const uuid = Uuid();
 final supabase = Supabase.instance.client;
 
 class FileManager {
+  static Map<String, Uint8List> fileCache = {};
+
   static Future<User> getUser(final String userID) async {
     final response = await supabase
         .from('users')
@@ -67,5 +70,28 @@ class FileManager {
     }
 
     return [file.data!, memoryType];
+  }
+
+  static Future<Uint8List> downloadFile(
+    final String table,
+    final String path,
+  ) async {
+    final key = '$table:$path';
+
+    if (fileCache.containsKey(key)) {
+      return fileCache[key]!;
+    }
+
+    final response = await supabase.storage.from(table).download(path);
+
+    if (response.error != null) {
+      throw Exception('Error downloading file: ${response.error!.message}');
+    }
+
+    final data = response.data!;
+
+    fileCache[key] = data;
+
+    return data;
   }
 }

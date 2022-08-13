@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:share_location/constants/apis.dart';
 import 'package:share_location/screens/login_screen.dart';
 import 'package:share_location/screens/main_screen.dart';
+import 'package:share_location/screens/timeline_screen.dart';
 import 'package:share_location/screens/welcome_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -58,6 +59,7 @@ class MyApp extends StatelessWidget {
         WelcomeScreen.ID: (context) => const WelcomeScreen(),
         MainScreen.ID: (context) => const MainScreen(),
         LoginScreen.ID: (context) => const LoginScreen(),
+        TimelineScreen.ID: (context) => const TimelineScreen(),
       },
       initialRoute: initialPage,
     );
