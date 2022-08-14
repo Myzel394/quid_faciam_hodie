@@ -76,11 +76,15 @@ class _TimelineScrollState extends State<TimelineScroll> with Loadable {
           memories: timeline.values.toList()[index],
           onNextTimeline: () {
             pageController.nextPage(
-                duration: Duration(milliseconds: 500), curve: Curves.ease);
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.ease,
+            );
           },
           onPreviousTimeline: () {
             pageController.previousPage(
-                duration: Duration(milliseconds: 500), curve: Curves.ease);
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.ease,
+            );
           },
         ),
       ),
