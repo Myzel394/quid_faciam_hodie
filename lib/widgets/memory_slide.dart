@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:share_location/controllers/memory_slide_controller.dart';
 import 'package:share_location/controllers/status_controller.dart';
 import 'package:share_location/enums.dart';
 import 'package:share_location/foreign_types/memory.dart';
+import 'package:share_location/models/timeline_overlay.dart';
 import 'package:share_location/widgets/status.dart';
 
 import 'memory.dart';
@@ -66,35 +68,38 @@ class _MemorySlideState extends State<MemorySlide>
 
   @override
   Widget build(BuildContext context) {
-    return Status(
-      controller: controller,
-      child: MemoryView(
-        creationDate: widget.memory.creationDate,
-        location: widget.memory.location,
-        filename: widget.memory.filename,
-        loopVideo: false,
-        onFileDownloaded: () {
-          if (widget.memory.type == MemoryType.photo) {
-            initializeAnimation(DEFAULT_IMAGE_DURATION);
-          }
-        },
-        onVideoControllerInitialized: (controller) {
-          if (mounted) {
-            initializeAnimation(controller.value.duration);
+    return Consumer<TimelineOverlay>(
+      builder: (context, overlayController, _) => Status(
+        controller: controller,
+        disabled: !overlayController.showOverlay,
+        child: MemoryView(
+          creationDate: widget.memory.creationDate,
+          location: widget.memory.location,
+          filename: widget.memory.filename,
+          loopVideo: false,
+          onFileDownloaded: () {
+            if (widget.memory.type == MemoryType.photo) {
+              initializeAnimation(DEFAULT_IMAGE_DURATION);
+            }
+          },
+          onVideoControllerInitialized: (controller) {
+            if (mounted) {
+              initializeAnimation(controller.value.duration);
 
-            widget.controller.addListener(() {
-              if (!mounted) {
-                return;
-              }
+              widget.controller.addListener(() {
+                if (!mounted) {
+                  return;
+                }
 
-              if (widget.controller.paused) {
-                controller.pause();
-              } else {
-                controller.play();
-              }
-            });
-          }
-        },
+                if (widget.controller.paused) {
+                  controller.pause();
+                } else {
+                  controller.play();
+                }
+              });
+            }
+          },
+        ),
       ),
     );
   }
