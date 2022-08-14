@@ -28,6 +28,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
   bool isRecording = false;
   bool hasGrantedPermissions = false;
+  bool lockCamera = false;
   List? lastPhoto;
   Uint8List? uploadingPhotoAnimation;
 
@@ -117,25 +118,37 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
       return;
     }
 
-    context.showPendingSnackBar(message: 'Taking photo...');
-
-    controller!.setFlashMode(FlashMode.off);
-    final file = File((await controller!.takePicture()).path);
-
     setState(() {
-      uploadingPhotoAnimation = file.readAsBytesSync();
+      lockCamera = true;
     });
 
-    context.showPendingSnackBar(message: 'Uploading photo...');
-
     try {
-      await FileManager.uploadFile(_user, file);
-    } catch (error) {
-      context.showErrorSnackBar(message: error.toString());
-      return;
-    }
+      context.showPendingSnackBar(
+        message: 'Taking photo, please hold still...',
+      );
 
-    context.showSuccessSnackBar(message: 'Photo uploaded!');
+      controller!.setFlashMode(FlashMode.off);
+      final file = File((await controller!.takePicture()).path);
+
+      setState(() {
+        uploadingPhotoAnimation = file.readAsBytesSync();
+      });
+
+      context.showPendingSnackBar(message: 'Uploading photo...');
+
+      try {
+        await FileManager.uploadFile(_user, file);
+      } catch (error) {
+        context.showErrorSnackBar(message: error.toString());
+        return;
+      }
+
+      context.showSuccessSnackBar(message: 'Photo uploaded!');
+    } finally {
+      setState(() {
+        lockCamera = false;
+      });
+    }
 
     if (mounted) {
       await getLastPhoto();
@@ -143,31 +156,41 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
   }
 
   Future<void> takeVideo() async {
+    setState(() {
+      isRecording = false;
+    });
+
     if (!controller!.value.isRecordingVideo) {
       // Recording has already been stopped
       return;
     }
 
     setState(() {
-      isRecording = false;
+      lockCamera = true;
     });
 
-    context.showPendingSnackBar(message: 'Saving video...');
-
-    final file = File((await controller!.stopVideoRecording()).path);
-
-    context.showPendingSnackBar(message: 'Uploading video...');
-
     try {
-      await FileManager.uploadFile(_user, file);
-    } catch (error) {
-      if (mounted) {
-        context.showErrorSnackBar(message: error.toString());
-      }
-      return;
-    }
+      context.showPendingSnackBar(message: 'Saving video...');
 
-    context.showSuccessSnackBar(message: 'Video uploaded!');
+      final file = File((await controller!.stopVideoRecording()).path);
+
+      context.showPendingSnackBar(message: 'Uploading video...');
+
+      try {
+        await FileManager.uploadFile(_user, file);
+      } catch (error) {
+        if (mounted) {
+          context.showErrorSnackBar(message: error.toString());
+        }
+        return;
+      }
+
+      context.showSuccessSnackBar(message: 'Video uploaded!');
+    } finally {
+      setState(() {
+        lockCamera = false;
+      });
+    }
 
     if (mounted) {
       await getLastPhoto();
@@ -231,16 +254,17 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
                             },
                           ),
                           CameraButton(
+                            disabled: lockCamera,
                             active: isRecording,
                             onVideoBegin: () async {
+                              setState(() {
+                                isRecording = true;
+                              });
+
                               if (controller!.value.isRecordingVideo) {
                                 // A recording has already started, do nothing.
                                 return;
                               }
-
-                              setState(() {
-                                isRecording = true;
-                              });
 
                               await controller!.startVideoRecording();
                             },
@@ -248,7 +272,7 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
                             onPhotoShot: takePhoto,
                           ),
                           lastPhoto == null
-                              ? TodayPhotoButton()
+                              ? const TodayPhotoButton()
                               : TodayPhotoButton(
                                   data: lastPhoto![0],
                                   type: lastPhoto![1],
@@ -266,7 +290,7 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
                         uploadingPhotoAnimation = null;
                       });
                     },
-                  )
+                  ),
               ],
             ),
           );

@@ -35,6 +35,7 @@ extension ShowSnackBar on BuildContext {
   void showSuccessSnackBar({required final String message}) {
     showSnackBar(
       message: message,
+      duration: const Duration(milliseconds: 550),
       backgroundColor: Colors.green,
     );
   }
