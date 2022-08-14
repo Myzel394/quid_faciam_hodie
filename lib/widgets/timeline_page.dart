@@ -13,12 +13,14 @@ class TimelinePage extends StatefulWidget {
   final DateTime date;
   final VoidCallback onPreviousTimeline;
   final VoidCallback onNextTimeline;
+  final VoidCallback onMemoryRemoved;
 
   const TimelinePage({
     Key? key,
     required this.date,
     required this.onPreviousTimeline,
     required this.onNextTimeline,
+    required this.onMemoryRemoved,
   }) : super(key: key);
 
   @override
@@ -45,6 +47,18 @@ class _TimelinePageState extends State<TimelinePage> {
       if (timelineOverlayController.state == TimelineState.completed) {
         timelineOverlayController.reset();
         memoryPack.next();
+      }
+    }, ['state']);
+
+    memoryPack.addListener(() {
+      if (!mounted) {
+        return;
+      }
+
+      if (memoryPack.paused) {
+        timelineOverlayController.hideOverlay();
+      } else {
+        timelineOverlayController.restoreOverlay();
       }
     }, ['state']);
 
@@ -81,7 +95,6 @@ class _TimelinePageState extends State<TimelinePage> {
         final memoryPack = context.read<MemoryPack>();
 
         memoryPack.pause();
-        timelineOverlayController.hideOverlay();
 
         await showModalBottomSheet(
           context: context,
@@ -98,16 +111,15 @@ class _TimelinePageState extends State<TimelinePage> {
 
         memoryPack.removeCurrentMemory();
         memoryPack.resume();
-        timelineOverlayController.restoreOverlay();
+
+        widget.onMemoryRemoved();
       },
       onTapDown: (_) {
         final memoryPack = context.read<MemoryPack>();
 
-        memoryPack.pause();
-
         overlayRemover = Timer(
           const Duration(milliseconds: 200),
-          timelineOverlayController.hideOverlay,
+          memoryPack.pause,
         );
       },
       onTapUp: (_) {
@@ -115,14 +127,11 @@ class _TimelinePageState extends State<TimelinePage> {
 
         overlayRemover?.cancel();
         memoryPack.resume();
-        timelineOverlayController.restoreOverlay();
       },
       onTapCancel: () {
         final memoryPack = context.read<MemoryPack>();
 
         overlayRemover?.cancel();
-
-        timelineOverlayController.restoreOverlay();
         memoryPack.resume();
       },
       onHorizontalDragEnd: (details) {
@@ -146,34 +155,30 @@ class _TimelinePageState extends State<TimelinePage> {
       },
       child: ChangeNotifierProvider<TimelineOverlay>(
         create: (_) => timelineOverlayController,
-        child: Stack(
-          fit: StackFit.expand,
-          children: <Widget>[
-            Consumer<MemoryPack>(
-              builder: (_, memoryPack, __) {
-                return PageView.builder(
-                  controller: pageController,
-                  physics: const NeverScrollableScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (_, index) => MemorySlide(
-                    key: Key(memoryPack.memories[index].filename),
-                    memory: memoryPack.memories[index],
-                  ),
-                  itemCount: memoryPack.memories.length,
-                );
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: LARGE_SPACE,
-                left: MEDIUM_SPACE,
-                right: MEDIUM_SPACE,
+        child: Consumer<MemoryPack>(
+          builder: (_, memoryPack, __) => Stack(
+            fit: StackFit.expand,
+            children: <Widget>[
+              PageView.builder(
+                controller: pageController,
+                physics: const NeverScrollableScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (_, index) => MemorySlide(
+                  key: Key(memoryPack.memories[index].filename),
+                  memory: memoryPack.memories[index],
+                ),
+                itemCount: memoryPack.memories.length,
               ),
-              child: Consumer<TimelineOverlay>(
-                builder: (context, overlayController, _) => AnimatedOpacity(
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: LARGE_SPACE,
+                  left: MEDIUM_SPACE,
+                  right: MEDIUM_SPACE,
+                ),
+                child: AnimatedOpacity(
                   duration: const Duration(milliseconds: 500),
                   curve: Curves.linearToEaseOut,
-                  opacity: overlayController.showOverlay ? 1.0 : 0.0,
+                  opacity: memoryPack.paused ? 0.0 : 1.0,
                   child: Text(
                     DateFormat('dd. MMMM yyyy').format(widget.date),
                     textAlign: TextAlign.center,
@@ -181,8 +186,26 @@ class _TimelinePageState extends State<TimelinePage> {
                   ),
                 ),
               ),
-            ),
-          ],
+              Positioned(
+                right: SMALL_SPACE,
+                bottom: SMALL_SPACE * 2,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: SMALL_SPACE),
+                  child: AnimatedOpacity(
+                    duration: const Duration(milliseconds: 500),
+                    curve: Curves.linearToEaseOut,
+                    opacity: memoryPack.paused ? 0.0 : 1.0,
+                    child: Consumer<MemoryPack>(
+                      builder: (_, memoryPack, __) => Text(
+                        '${memoryPack.currentMemoryIndex + 1}/${memoryPack.memories.length}',
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

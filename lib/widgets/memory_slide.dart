@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:share_location/controllers/status_controller.dart';
 import 'package:share_location/enums.dart';
 import 'package:share_location/foreign_types/memory.dart';
+import 'package:share_location/models/memory_pack.dart';
 import 'package:share_location/models/timeline_overlay.dart';
 import 'package:share_location/widgets/status.dart';
 
@@ -59,6 +60,7 @@ class _MemorySlideState extends State<MemorySlide>
 
   void initializeAnimation(final Duration duration) {
     final timelineOverlay = context.read<TimelineOverlay>();
+    final memoryPack = context.read<MemoryPack>();
 
     this.duration = duration;
 
@@ -72,7 +74,8 @@ class _MemorySlideState extends State<MemorySlide>
       }
 
       if (controller!.done) {
-        timelineOverlay.setState(TimelineState.completed);
+        timelineOverlay.reset();
+        memoryPack.next();
       }
     }, ['done']);
 
@@ -81,10 +84,10 @@ class _MemorySlideState extends State<MemorySlide>
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<TimelineOverlay>(
-      builder: (context, overlayController, _) => Status(
+    return Consumer<MemoryPack>(
+      builder: (context, memoryPack, _) => Status(
         controller: controller,
-        disabled: !overlayController.showOverlay,
+        disabled: memoryPack.paused,
         child: MemoryView(
           creationDate: widget.memory.creationDate,
           location: widget.memory.location,
@@ -99,17 +102,17 @@ class _MemorySlideState extends State<MemorySlide>
             if (mounted) {
               initializeAnimation(controller.value.duration);
 
-              overlayController.addListener(() {
+              memoryPack.addListener(() {
                 if (!mounted) {
                   return;
                 }
 
-                if (overlayController.state == TimelineState.playing) {
-                  controller.play();
-                } else {
+                if (memoryPack.paused) {
                   controller.pause();
+                } else {
+                  controller.play();
                 }
-              }, ['state']);
+              }, ['paused']);
             }
           },
         ),

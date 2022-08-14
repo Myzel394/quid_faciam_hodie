@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:share_location/foreign_types/memory.dart';
-import 'package:share_location/models/memory_pack.dart';
+import 'package:share_location/models/timeline.dart';
 import 'package:share_location/utils/loadable.dart';
 import 'package:share_location/widgets/timeline_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -20,7 +19,7 @@ class TimelineScroll extends StatefulWidget {
 
 class _TimelineScrollState extends State<TimelineScroll> with Loadable {
   final pageController = PageController();
-  Map<String, MemoryPack>? timeline;
+  TimelineModel? timeline;
 
   @override
   initState() {
@@ -28,7 +27,18 @@ class _TimelineScrollState extends State<TimelineScroll> with Loadable {
     loadTimeline();
   }
 
+  @override
+  dispose() {
+    pageController.dispose();
+
+    timeline?.dispose();
+
+    super.dispose();
+  }
+
   Future<void> loadTimeline() async {
+    timeline?.dispose();
+
     final response = await supabase
         .from('memories')
         .select()
@@ -36,35 +46,16 @@ class _TimelineScrollState extends State<TimelineScroll> with Loadable {
         .execute();
     final memories = List<Memory>.from(
         List<Map<String, dynamic>>.from(response.data).map(Memory.parse));
-    final timelineMapped = convertMemoriesToTimeline(memories);
 
     setState(() {
-      timeline = timelineMapped;
+      timeline = TimelineModel.fromMemoriesList(memories);
     });
-  }
 
-  static Map<String, MemoryPack> convertMemoriesToTimeline(
-    final List<Memory> memories,
-  ) {
-    final map = <String, List<Memory>>{};
-
-    for (final memory in memories) {
-      final date = DateFormat('yyyy-MM-dd').format(memory.creationDate);
-      if (map.containsKey(date)) {
-        map[date]!.add(memory);
-      } else {
-        map[date] = [memory];
+    timeline!.addListener(() {
+      if (mounted) {
+        setState(() {});
       }
-    }
-
-    return Map.fromEntries(
-      map.entries.map(
-        (entry) => MapEntry<String, MemoryPack>(
-          entry.key,
-          MemoryPack(entry.value),
-        ),
-      ),
-    );
+    });
   }
 
   @override
@@ -79,11 +70,12 @@ class _TimelineScrollState extends State<TimelineScroll> with Loadable {
       body: PageView.builder(
         controller: pageController,
         scrollDirection: Axis.vertical,
-        itemCount: timeline!.length,
-        itemBuilder: (_, index) => ChangeNotifierProvider<MemoryPack>(
-          create: (_) => timeline!.values.elementAt(index),
+        itemCount: timeline!.values.length,
+        itemBuilder: (_, index) => ChangeNotifierProvider.value(
+          value: timeline!.atIndex(index),
           child: TimelinePage(
-            date: DateTime.parse(timeline!.keys.toList()[index]),
+            date: timeline!.dateAtIndex(index),
+            onMemoryRemoved: () => timeline!.removeEmptyDates(),
             onNextTimeline: () {
               pageController.nextPage(
                 duration: const Duration(milliseconds: 500),
