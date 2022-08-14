@@ -95,4 +95,20 @@ class FileManager {
 
     return data;
   }
+
+  static Future<void> deleteFile(final String path) async {
+    final response =
+        await supabase.from('memories').delete().eq('location', path).execute();
+
+    if (response.error != null) {
+      throw Exception('Error deleting file: ${response.error!.message}');
+    }
+
+    final storageResponse =
+        await supabase.storage.from('memories').remove([path]);
+
+    if (storageResponse.error != null) {
+      throw Exception('Error deleting file: ${storageResponse.error!.message}');
+    }
+  }
 }

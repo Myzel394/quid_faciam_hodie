@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:share_location/foreign_types/memory.dart';
+import 'package:share_location/models/memory_pack.dart';
 import 'package:share_location/utils/loadable.dart';
 import 'package:share_location/widgets/timeline_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -18,7 +20,7 @@ class TimelineScroll extends StatefulWidget {
 
 class _TimelineScrollState extends State<TimelineScroll> with Loadable {
   final pageController = PageController();
-  dynamic timeline;
+  Map<String, MemoryPack>? timeline;
 
   @override
   initState() {
@@ -41,7 +43,7 @@ class _TimelineScrollState extends State<TimelineScroll> with Loadable {
     });
   }
 
-  static Map<String, List<Memory>> convertMemoriesToTimeline(
+  static Map<String, MemoryPack> convertMemoriesToTimeline(
     final List<Memory> memories,
   ) {
     final map = <String, List<Memory>>{};
@@ -55,7 +57,14 @@ class _TimelineScrollState extends State<TimelineScroll> with Loadable {
       }
     }
 
-    return map;
+    return Map.fromEntries(
+      map.entries.map(
+        (entry) => MapEntry<String, MemoryPack>(
+          entry.key,
+          MemoryPack(entry.value),
+        ),
+      ),
+    );
   }
 
   @override
@@ -70,22 +79,24 @@ class _TimelineScrollState extends State<TimelineScroll> with Loadable {
       body: PageView.builder(
         controller: pageController,
         scrollDirection: Axis.vertical,
-        itemCount: timeline.length,
-        itemBuilder: (_, index) => TimelinePage(
-          date: DateTime.parse(timeline.keys.toList()[index]),
-          memories: timeline.values.toList()[index],
-          onNextTimeline: () {
-            pageController.nextPage(
-              duration: const Duration(milliseconds: 500),
-              curve: Curves.ease,
-            );
-          },
-          onPreviousTimeline: () {
-            pageController.previousPage(
-              duration: const Duration(milliseconds: 500),
-              curve: Curves.ease,
-            );
-          },
+        itemCount: timeline!.length,
+        itemBuilder: (_, index) => ChangeNotifierProvider<MemoryPack>(
+          create: (_) => timeline!.values.elementAt(index),
+          child: TimelinePage(
+            date: DateTime.parse(timeline!.keys.toList()[index]),
+            onNextTimeline: () {
+              pageController.nextPage(
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.ease,
+              );
+            },
+            onPreviousTimeline: () {
+              pageController.previousPage(
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.ease,
+              );
+            },
+          ),
         ),
       ),
     );

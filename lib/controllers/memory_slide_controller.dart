@@ -19,6 +19,8 @@ class MemorySlideController extends PropertyChangeNotifier<String> {
   int get index => _index;
   bool get completed => _completed;
 
+  bool get isLast => _index == memoryLength - 1;
+
   void setPaused(bool paused) {
     _paused = paused;
     notifyListeners('paused');
@@ -30,7 +32,7 @@ class MemorySlideController extends PropertyChangeNotifier<String> {
   }
 
   void next() {
-    if (_index == memoryLength - 1) {
+    if (isLast) {
       _completed = true;
       notifyListeners('completed');
     } else {

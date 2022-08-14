@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:share_location/controllers/memory_slide_controller.dart';
 import 'package:share_location/controllers/status_controller.dart';
 import 'package:share_location/enums.dart';
 import 'package:share_location/foreign_types/memory.dart';
@@ -14,12 +13,10 @@ const DEFAULT_IMAGE_DURATION = Duration(seconds: 5);
 
 class MemorySlide extends StatefulWidget {
   final Memory memory;
-  final MemorySlideController controller;
 
   const MemorySlide({
     Key? key,
     required this.memory,
-    required this.controller,
   }) : super(key: key);
 
   @override
@@ -36,15 +33,19 @@ class _MemorySlideState extends State<MemorySlide>
   void initState() {
     super.initState();
 
-    widget.controller.addListener(() {
+    final timelineOverlay = context.read<TimelineOverlay>();
+
+    timelineOverlay.addListener(() {
       if (!mounted) {
         return;
       }
 
-      if (widget.controller.paused) {
-        controller?.stop();
-      } else {
-        controller?.start();
+      switch (timelineOverlay.state) {
+        case TimelineState.playing:
+          controller?.start();
+          break;
+        default:
+          controller?.stop();
       }
     });
   }
@@ -57,11 +58,23 @@ class _MemorySlideState extends State<MemorySlide>
   }
 
   void initializeAnimation(final Duration duration) {
+    final timelineOverlay = context.read<TimelineOverlay>();
+
     this.duration = duration;
 
     controller = StatusController(
       duration: duration,
-    )..addListener(widget.controller.setDone, ['done']);
+    );
+
+    controller!.addListener(() {
+      if (!mounted) {
+        return;
+      }
+
+      if (controller!.done) {
+        timelineOverlay.setState(TimelineState.completed);
+      }
+    }, ['done']);
 
     setState(() {});
   }
@@ -86,17 +99,17 @@ class _MemorySlideState extends State<MemorySlide>
             if (mounted) {
               initializeAnimation(controller.value.duration);
 
-              widget.controller.addListener(() {
+              overlayController.addListener(() {
                 if (!mounted) {
                   return;
                 }
 
-                if (widget.controller.paused) {
-                  controller.pause();
-                } else {
+                if (overlayController.state == TimelineState.playing) {
                   controller.play();
+                } else {
+                  controller.pause();
                 }
-              });
+              }, ['state']);
             }
           },
         ),

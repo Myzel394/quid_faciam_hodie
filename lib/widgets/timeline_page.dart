@@ -4,21 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:share_location/constants/spacing.dart';
-import 'package:share_location/controllers/memory_slide_controller.dart';
-import 'package:share_location/foreign_types/memory.dart';
+import 'package:share_location/models/memory_pack.dart';
 import 'package:share_location/models/timeline_overlay.dart';
+import 'package:share_location/widgets/memory_sheet.dart';
 import 'package:share_location/widgets/memory_slide.dart';
 
 class TimelinePage extends StatefulWidget {
   final DateTime date;
-  final List<Memory> memories;
   final VoidCallback onPreviousTimeline;
   final VoidCallback onNextTimeline;
 
   const TimelinePage({
     Key? key,
     required this.date,
-    required this.memories,
     required this.onPreviousTimeline,
     required this.onNextTimeline,
   }) : super(key: key);
@@ -30,7 +28,6 @@ class TimelinePage extends StatefulWidget {
 class _TimelinePageState extends State<TimelinePage> {
   final timelineOverlayController = TimelineOverlay();
   final pageController = PageController();
-  late final MemorySlideController controller;
 
   Timer? overlayRemover;
 
@@ -38,37 +35,75 @@ class _TimelinePageState extends State<TimelinePage> {
   void initState() {
     super.initState();
 
-    controller = MemorySlideController(memoryLength: widget.memories.length);
-    controller.addListener(() {
-      if (controller.done) {
-        controller.next();
+    final memoryPack = context.read<MemoryPack>();
 
-        pageController.nextPage(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.linearToEaseOut,
-        );
+    timelineOverlayController.addListener(() {
+      if (!mounted) {
+        return;
       }
-    }, ['done']);
-    controller.addListener(() {
-      if (controller.completed) {
+
+      if (timelineOverlayController.state == TimelineState.completed) {
+        timelineOverlayController.reset();
+        memoryPack.next();
+      }
+    }, ['state']);
+
+    memoryPack.addListener(() {
+      if (!mounted) {
+        return;
+      }
+
+      if (memoryPack.completed) {
         widget.onNextTimeline();
+        memoryPack.reset();
       }
     }, ['completed']);
-  }
 
-  @override
-  void dispose() {
-    controller.dispose();
-    timelineOverlayController.dispose();
+    memoryPack.addListener(() {
+      if (!mounted) {
+        return;
+      }
 
-    super.dispose();
+      if (memoryPack.currentMemoryIndex != pageController.page) {
+        pageController.animateToPage(
+          memoryPack.currentMemoryIndex,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOutQuad,
+        );
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onDoubleTap: () async {
+        final memoryPack = context.read<MemoryPack>();
+
+        memoryPack.pause();
+        timelineOverlayController.hideOverlay();
+
+        await showModalBottomSheet(
+          context: context,
+          backgroundColor: Colors.transparent,
+          isScrollControlled: true,
+          builder: (_) => MemorySheet(
+            memory: memoryPack.currentMemory,
+          ),
+        );
+
+        if (!mounted) {
+          return;
+        }
+
+        memoryPack.removeCurrentMemory();
+        memoryPack.resume();
+        timelineOverlayController.restoreOverlay();
+      },
       onTapDown: (_) {
-        controller.setPaused(true);
+        final memoryPack = context.read<MemoryPack>();
+
+        memoryPack.pause();
 
         overlayRemover = Timer(
           const Duration(milliseconds: 200),
@@ -76,28 +111,32 @@ class _TimelinePageState extends State<TimelinePage> {
         );
       },
       onTapUp: (_) {
+        final memoryPack = context.read<MemoryPack>();
+
         overlayRemover?.cancel();
-
-        controller.setPaused(false);
-
+        memoryPack.resume();
         timelineOverlayController.restoreOverlay();
       },
       onTapCancel: () {
+        final memoryPack = context.read<MemoryPack>();
+
         overlayRemover?.cancel();
 
         timelineOverlayController.restoreOverlay();
-        controller.setPaused(false);
+        memoryPack.resume();
       },
       onHorizontalDragEnd: (details) {
+        final memoryPack = context.read<MemoryPack>();
+
         if (details.primaryVelocity! < 0) {
-          controller.next();
+          memoryPack.next();
 
           pageController.nextPage(
             duration: const Duration(milliseconds: 200),
             curve: Curves.linearToEaseOut,
           );
         } else if (details.primaryVelocity! > 0) {
-          controller.previous();
+          memoryPack.previous();
 
           pageController.previousPage(
             duration: const Duration(milliseconds: 200),
@@ -110,16 +149,19 @@ class _TimelinePageState extends State<TimelinePage> {
         child: Stack(
           fit: StackFit.expand,
           children: <Widget>[
-            PageView.builder(
-              controller: pageController,
-              physics: const NeverScrollableScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (_, __) => MemorySlide(
-                key: Key(controller.index.toString()),
-                controller: controller,
-                memory: widget.memories[controller.index],
-              ),
-              itemCount: widget.memories.length,
+            Consumer<MemoryPack>(
+              builder: (_, memoryPack, __) {
+                return PageView.builder(
+                  controller: pageController,
+                  physics: const NeverScrollableScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (_, index) => MemorySlide(
+                    key: Key(memoryPack.memories[index].filename),
+                    memory: memoryPack.memories[index],
+                  ),
+                  itemCount: memoryPack.memories.length,
+                );
+              },
             ),
             Padding(
               padding: const EdgeInsets.only(
