@@ -29,49 +29,51 @@ class _LoginScreenState extends AuthState<LoginScreen> with Loadable {
     super.dispose();
   }
 
-  Future<bool> doesEmailExist() async {
-    // TODO: SECURE PROFILE READ ACCESS TO ONLY ALLOW ACCESS TO EMAIL ADDRESSES
-    final response = await supabase
-        .from('profiles')
-        .select()
-        .match({'username': emailController.text.trim()}).execute();
+  Future<void> _signUp() async {
+    final response = await supabase.auth.signUp(
+      emailController.text.trim(),
+      passwordController.text,
+    );
 
-    return response.data.isNotEmpty;
+    final error = response.error;
+
+    if (error != null) {
+      throw Exception(error);
+    }
+  }
+
+  Future<void> _signIn() async {
+    final response = await supabase.auth.signIn(
+      email: emailController.text.trim(),
+      password: passwordController.text,
+    );
+
+    final error = response.error;
+
+    if (error != null) {
+      throw Exception(error);
+    }
   }
 
   Future<void> signIn() async {
-    if (await doesEmailExist()) {
-      // Login User
-      final response = await supabase.auth.signIn(
-        email: emailController.text.trim(),
-        password: passwordController.text,
-      );
-      final error = response.error;
+    try {
+      await _signUp();
+    } catch (error) {
+      try {
+        await _signIn();
+      } catch (error) {
+        if (mounted) {
+          context.showErrorSnackBar(message: error.toString());
 
-      if (mounted) {
-        if (error != null) {
-          context.showErrorSnackBar(message: error.message);
-        } else {
           emailController.clear();
           passwordController.clear();
         }
+        return;
       }
-    } else {
-      // Sign up User
-      final response = await supabase.auth.signUp(
-        emailController.text.trim(),
-        passwordController.text,
-      );
+    }
 
-      final error = response.error;
-
-      if (mounted) {
-        if (error != null) {
-          context.showErrorSnackBar(message: error.message);
-        } else {
-          Navigator.pushReplacementNamed(context, MainScreen.ID);
-        }
-      }
+    if (mounted) {
+      Navigator.pushReplacementNamed(context, MainScreen.ID);
     }
   }
 

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:share_location/foreign_types/memory.dart';
 import 'package:share_location/utils/loadable.dart';
-import 'package:share_location/widgets/memory.dart';
+import 'package:share_location/widgets/memory_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final supabase = Supabase.instance.client;
@@ -30,10 +32,30 @@ class _TimelineScrollState extends State<TimelineScroll> with Loadable {
         .select()
         .order('created_at', ascending: false)
         .execute();
+    final memories = List<Memory>.from(
+        List<Map<String, dynamic>>.from(response.data).map(Memory.parse));
+    final timelineMapped = convertMemoriesToTimeline(memories);
 
     setState(() {
-      timeline = response.data;
+      timeline = timelineMapped;
     });
+  }
+
+  static Map<String, List<Memory>> convertMemoriesToTimeline(
+    final List<Memory> memories,
+  ) {
+    final map = <String, List<Memory>>{};
+
+    for (final memory in memories) {
+      final date = DateFormat('yyyy-MM-dd').format(memory.creationDate);
+      if (map.containsKey(date)) {
+        map[date]!.add(memory);
+      } else {
+        map[date] = [memory];
+      }
+    }
+
+    return map;
   }
 
   @override
@@ -49,13 +71,17 @@ class _TimelineScrollState extends State<TimelineScroll> with Loadable {
         controller: pageController,
         scrollDirection: Axis.vertical,
         itemCount: timeline.length,
-        itemBuilder: (_, index) => Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: Memory(
-            location: timeline[index]['location'],
-            creationDate: DateTime.parse(timeline[index]['created_at']),
-          ),
+        itemBuilder: (_, index) => MemoryPage(
+          date: DateTime.parse(timeline.keys.toList()[index]),
+          memories: timeline.values.toList()[index],
+          onNextTimeline: () {
+            pageController.nextPage(
+                duration: Duration(milliseconds: 500), curve: Curves.ease);
+          },
+          onPreviousTimeline: () {
+            pageController.previousPage(
+                duration: Duration(milliseconds: 500), curve: Curves.ease);
+          },
         ),
       ),
     );

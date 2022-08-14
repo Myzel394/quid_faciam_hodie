@@ -11,6 +11,7 @@ class RawMemoryDisplay extends StatefulWidget {
   final MemoryType type;
   final bool loopVideo;
   final String? filename;
+  final void Function(VideoPlayerController)? onVideoControllerInitialized;
 
   const RawMemoryDisplay({
     Key? key,
@@ -18,6 +19,7 @@ class RawMemoryDisplay extends StatefulWidget {
     required this.type,
     this.loopVideo = false,
     this.filename,
+    this.onVideoControllerInitialized,
   }) : super(key: key);
 
   @override
@@ -60,6 +62,10 @@ class _RawMemoryDisplayState extends State<RawMemoryDisplay> {
       setState(() {});
       videoController!.setLooping(widget.loopVideo);
       videoController!.play();
+
+      if (widget.onVideoControllerInitialized != null) {
+        widget.onVideoControllerInitialized!(videoController!);
+      }
     });
   }
 

@@ -62,7 +62,7 @@ class _PermissionsRequiredPageState extends State<PermissionsRequiredPage> {
         ),
         const SizedBox(height: MEDIUM_SPACE),
         const Text(
-          'Please grant permissions to use this app',
+          'Please grant the following permissions to use this app',
         ),
         const SizedBox(height: LARGE_SPACE),
         if (hasDeniedForever) ...[

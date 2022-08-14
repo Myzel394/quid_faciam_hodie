@@ -7,6 +7,7 @@ import 'package:share_location/managers/file_manager.dart';
 import 'package:share_location/utils/auth_required.dart';
 import 'package:share_location/widgets/raw_memory_display.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:video_player/video_player.dart';
 
 enum MemoryFetchStatus {
   preparing,
@@ -16,21 +17,27 @@ enum MemoryFetchStatus {
   done,
 }
 
-class Memory extends StatefulWidget {
+class MemoryView extends StatefulWidget {
   final String location;
   final DateTime creationDate;
+  final bool loopVideo;
+  final void Function(VideoPlayerController)? onVideoControllerInitialized;
+  final VoidCallback? onFileDownloaded;
 
-  const Memory({
+  const MemoryView({
     Key? key,
     required this.location,
     required this.creationDate,
+    this.loopVideo = false,
+    this.onVideoControllerInitialized,
+    this.onFileDownloaded,
   }) : super(key: key);
 
   @override
-  State<Memory> createState() => _MemoryState();
+  State<MemoryView> createState() => _MemoryViewState();
 }
 
-class _MemoryState extends AuthRequiredState<Memory> {
+class _MemoryViewState extends AuthRequiredState<MemoryView> {
   late final User _user;
   MemoryFetchStatus status = MemoryFetchStatus.preparing;
   Uint8List? data;
@@ -67,6 +74,10 @@ class _MemoryState extends AuthRequiredState<Memory> {
         .single()
         .execute();
 
+    if (!mounted) {
+      return;
+    }
+
     if (response.data == null) {
       setState(() {
         status = MemoryFetchStatus.error;
@@ -86,12 +97,24 @@ class _MemoryState extends AuthRequiredState<Memory> {
     try {
       final fileData = await FileManager.downloadFile('memories', location);
 
+      if (!mounted) {
+        return;
+      }
+
       setState(() {
         status = MemoryFetchStatus.done;
         data = fileData;
         type = memoryType;
       });
+
+      if (widget.onFileDownloaded != null) {
+        widget.onFileDownloaded!();
+      }
     } catch (error) {
+      if (!mounted) {
+        return;
+      }
+
       setState(() {
         status = MemoryFetchStatus.error;
       });
@@ -111,6 +134,8 @@ class _MemoryState extends AuthRequiredState<Memory> {
       return RawMemoryDisplay(
         data: data!,
         type: type!,
+        loopVideo: widget.loopVideo,
+        onVideoControllerInitialized: widget.onVideoControllerInitialized,
       );
     }
 
