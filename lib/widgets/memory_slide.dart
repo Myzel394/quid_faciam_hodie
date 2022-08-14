@@ -84,37 +84,40 @@ class _MemorySlideState extends State<MemorySlide>
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<MemoryPack>(
-      builder: (context, memoryPack, _) => Status(
-        controller: controller,
-        disabled: memoryPack.paused,
-        child: MemoryView(
-          creationDate: widget.memory.creationDate,
-          location: widget.memory.location,
-          filename: widget.memory.filename,
-          loopVideo: false,
-          onFileDownloaded: () {
-            if (widget.memory.type == MemoryType.photo) {
-              initializeAnimation(DEFAULT_IMAGE_DURATION);
-            }
-          },
-          onVideoControllerInitialized: (controller) {
-            if (mounted) {
-              initializeAnimation(controller.value.duration);
+    return Consumer<TimelineOverlay>(
+      builder: (_, timelineOverlay, __) => Consumer<MemoryPack>(
+        builder: (___, memoryPack, ____) => Status(
+          controller: controller,
+          paused: memoryPack.paused,
+          hideProgressBar: !timelineOverlay.showOverlay,
+          child: MemoryView(
+            creationDate: widget.memory.creationDate,
+            location: widget.memory.location,
+            filename: widget.memory.filename,
+            loopVideo: false,
+            onFileDownloaded: () {
+              if (widget.memory.type == MemoryType.photo) {
+                initializeAnimation(DEFAULT_IMAGE_DURATION);
+              }
+            },
+            onVideoControllerInitialized: (controller) {
+              if (mounted) {
+                initializeAnimation(controller.value.duration);
 
-              memoryPack.addListener(() {
-                if (!mounted) {
-                  return;
-                }
+                memoryPack.addListener(() {
+                  if (!mounted) {
+                    return;
+                  }
 
-                if (memoryPack.paused) {
-                  controller.pause();
-                } else {
-                  controller.play();
-                }
-              }, ['paused']);
-            }
-          },
+                  if (memoryPack.paused) {
+                    controller.pause();
+                  } else {
+                    controller.play();
+                  }
+                }, ['paused']);
+              }
+            },
+          ),
         ),
       ),
     );

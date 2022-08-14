@@ -7,12 +7,14 @@ const BAR_HEIGHT = 4.0;
 class Status extends StatefulWidget {
   final StatusController? controller;
   final Widget child;
-  final bool disabled;
+  final bool paused;
+  final bool hideProgressBar;
 
   const Status({
     Key? key,
     required this.child,
-    this.disabled = false,
+    this.paused = false,
+    this.hideProgressBar = false,
     this.controller,
   }) : super(key: key);
 
@@ -32,7 +34,7 @@ class _StatusState extends State<Status> with TickerProviderStateMixin {
       initializeAnimation();
     }
 
-    if (widget.disabled) {
+    if (widget.paused) {
       animationController?.stop();
     } else {
       animationController?.forward();
@@ -86,7 +88,7 @@ class _StatusState extends State<Status> with TickerProviderStateMixin {
             child: AnimatedOpacity(
               duration: const Duration(milliseconds: 500),
               curve: Curves.linearToEaseOut,
-              opacity: widget.disabled ? 0.0 : 1.0,
+              opacity: widget.hideProgressBar ? 0.0 : 1.0,
               child: (widget.controller == null)
                   ? ClipRRect(
                       borderRadius: BorderRadius.circular(HUGE_SPACE),

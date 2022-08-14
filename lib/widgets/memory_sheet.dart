@@ -7,10 +7,12 @@ import 'package:share_location/widgets/modal_sheet.dart';
 
 class MemorySheet extends StatefulWidget {
   final Memory memory;
+  final VoidCallback onMemoryDeleted;
 
   const MemorySheet({
     Key? key,
     required this.memory,
+    required this.onMemoryDeleted,
   }) : super(key: key);
 
   @override
@@ -18,7 +20,10 @@ class MemorySheet extends StatefulWidget {
 }
 
 class _MemorySheetState extends State<MemorySheet> with Loadable {
-  Future<void> deleteFile() => FileManager.deleteFile(widget.memory.location);
+  Future<void> deleteFile() async {
+    await FileManager.deleteFile(widget.memory.location);
+    widget.onMemoryDeleted();
+  }
 
   @override
   Widget build(BuildContext context) {
