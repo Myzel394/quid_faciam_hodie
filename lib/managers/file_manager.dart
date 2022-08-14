@@ -63,13 +63,14 @@ class FileManager {
     final location = memory['location'];
     final memoryType =
         location.split('.').last == 'jpg' ? MemoryType.photo : MemoryType.video;
-    final file = await supabase.storage.from('memories').download(location);
 
-    if (file.error != null) {
+    try {
+      final file = await downloadFile('memories', location);
+
+      return [file, memoryType];
+    } catch (error) {
       return null;
     }
-
-    return [file.data!, memoryType];
   }
 
   static Future<Uint8List> downloadFile(
