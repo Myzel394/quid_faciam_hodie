@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:share_location/foreign_types/memory.dart';
 import 'package:share_location/utils/loadable.dart';
-import 'package:share_location/widgets/memory_page.dart';
+import 'package:share_location/widgets/timeline_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final supabase = Supabase.instance.client;
@@ -71,7 +71,7 @@ class _TimelineScrollState extends State<TimelineScroll> with Loadable {
         controller: pageController,
         scrollDirection: Axis.vertical,
         itemCount: timeline.length,
-        itemBuilder: (_, index) => MemoryPage(
+        itemBuilder: (_, index) => TimelinePage(
           date: DateTime.parse(timeline.keys.toList()[index]),
           memories: timeline.values.toList()[index],
           onNextTimeline: () {

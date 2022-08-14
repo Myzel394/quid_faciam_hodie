@@ -71,6 +71,7 @@ class _MemorySlideState extends State<MemorySlide>
       child: MemoryView(
         creationDate: widget.memory.creationDate,
         location: widget.memory.location,
+        filename: widget.memory.filename,
         loopVideo: false,
         onFileDownloaded: () {
           if (widget.memory.type == MemoryType.photo) {

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class MemorySlideController extends PropertyChangeNotifier<String> {
@@ -37,6 +39,11 @@ class MemorySlideController extends PropertyChangeNotifier<String> {
       _index++;
       notifyListeners();
     }
+  }
+
+  void previous() {
+    _index = max(_index - 1, 0);
+    notifyListeners();
   }
 
   void reset() {

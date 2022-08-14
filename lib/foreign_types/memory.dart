@@ -1,3 +1,4 @@
+import 'package:path/path.dart';
 import 'package:share_location/enums.dart';
 
 class Memory {
@@ -25,6 +26,8 @@ class Memory {
     );
   }
 
+  String get filename => basename(location);
+
   MemoryType get type =>
-      location.split('.').last == 'jpg' ? MemoryType.photo : MemoryType.video;
+      filename.split('.').last == 'jpg' ? MemoryType.photo : MemoryType.video;
 }

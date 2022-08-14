@@ -12,12 +12,14 @@ class RawMemoryDisplay extends StatefulWidget {
   final bool loopVideo;
   final String? filename;
   final void Function(VideoPlayerController)? onVideoControllerInitialized;
+  final BoxFit? fit;
 
   const RawMemoryDisplay({
     Key? key,
     required this.data,
     required this.type,
     this.loopVideo = false,
+    this.fit = BoxFit.cover,
     this.filename,
     this.onVideoControllerInitialized,
   }) : super(key: key);
@@ -41,14 +43,15 @@ class _RawMemoryDisplayState extends State<RawMemoryDisplay> {
   Future<File> createTempVideo() async {
     final tempDirectory = await getTemporaryDirectory();
     final path = '${tempDirectory.path}/${widget.filename ?? 'video.mp4'}';
+    final file = File(path);
 
-    if (widget.filename != null) {
-      // File already exists, so just return the path
-      return File(path);
+    if (await file.exists()) {
+      // File already exists, so just return it
+      return file;
     }
 
     // File needs to be created
-    final file = await File(path).create();
+    await file.create();
     await file.writeAsBytes(widget.data);
 
     return file;
@@ -82,17 +85,27 @@ class _RawMemoryDisplayState extends State<RawMemoryDisplay> {
       case MemoryType.photo:
         return Image.memory(
           widget.data,
-          fit: BoxFit.cover,
+          fit: widget.fit,
         );
       case MemoryType.video:
         if (videoController == null) {
           return const SizedBox();
         }
 
-        return AspectRatio(
-          aspectRatio: videoController!.value.aspectRatio,
-          child: VideoPlayer(videoController!),
-        );
+        switch (widget.fit) {
+          case BoxFit.contain:
+            return Align(
+              child: AspectRatio(
+                aspectRatio: videoController!.value.aspectRatio,
+                child: VideoPlayer(videoController!),
+              ),
+            );
+          default:
+            return AspectRatio(
+              aspectRatio: videoController!.value.aspectRatio,
+              child: VideoPlayer(videoController!),
+            );
+        }
       default:
         throw Exception('Unknown memory type: ${widget.type}');
     }

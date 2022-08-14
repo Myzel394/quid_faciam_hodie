@@ -311,7 +311,7 @@ packages:
     source: hosted
     version: "1.0.2"
   path:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: path
       url: "https://pub.dartlang.org"

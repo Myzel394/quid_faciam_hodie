@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:share_location/constants/spacing.dart';
@@ -20,6 +21,7 @@ enum MemoryFetchStatus {
 class MemoryView extends StatefulWidget {
   final String location;
   final DateTime creationDate;
+  final String filename;
   final bool loopVideo;
   final void Function(VideoPlayerController)? onVideoControllerInitialized;
   final VoidCallback? onFileDownloaded;
@@ -28,6 +30,7 @@ class MemoryView extends StatefulWidget {
     Key? key,
     required this.location,
     required this.creationDate,
+    required this.filename,
     this.loopVideo = false,
     this.onVideoControllerInitialized,
     this.onFileDownloaded,
@@ -131,11 +134,30 @@ class _MemoryViewState extends AuthRequiredState<MemoryView> {
     }
 
     if (status == MemoryFetchStatus.done) {
-      return RawMemoryDisplay(
-        data: data!,
-        type: type!,
-        loopVideo: widget.loopVideo,
-        onVideoControllerInitialized: widget.onVideoControllerInitialized,
+      return Stack(
+        fit: StackFit.expand,
+        alignment: Alignment.center,
+        children: <Widget>[
+          if (type == MemoryType.photo)
+            ImageFiltered(
+              imageFilter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: RawMemoryDisplay(
+                filename: widget.filename,
+                data: data!,
+                type: type!,
+                loopVideo: widget.loopVideo,
+                fit: BoxFit.cover,
+              ),
+            ),
+          RawMemoryDisplay(
+            filename: widget.filename,
+            data: data!,
+            type: type!,
+            fit: BoxFit.contain,
+            loopVideo: widget.loopVideo,
+            onVideoControllerInitialized: widget.onVideoControllerInitialized,
+          ),
+        ],
       );
     }
 

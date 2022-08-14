@@ -5,13 +5,13 @@ import 'package:share_location/controllers/memory_slide_controller.dart';
 import 'package:share_location/foreign_types/memory.dart';
 import 'package:share_location/widgets/memory_slide.dart';
 
-class MemoryPage extends StatefulWidget {
+class TimelinePage extends StatefulWidget {
   final DateTime date;
   final List<Memory> memories;
   final VoidCallback onPreviousTimeline;
   final VoidCallback onNextTimeline;
 
-  const MemoryPage({
+  const TimelinePage({
     Key? key,
     required this.date,
     required this.memories,
@@ -20,10 +20,11 @@ class MemoryPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<MemoryPage> createState() => _MemoryPageState();
+  State<TimelinePage> createState() => _TimelinePageState();
 }
 
-class _MemoryPageState extends State<MemoryPage> {
+class _TimelinePageState extends State<TimelinePage> {
+  final pageController = PageController();
   late final MemorySlideController controller;
 
   @override
@@ -34,8 +35,11 @@ class _MemoryPageState extends State<MemoryPage> {
     controller.addListener(() {
       if (controller.done) {
         controller.next();
-        // Force UI update
-        setState(() {});
+
+        pageController.nextPage(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.linearToEaseOut,
+        );
       }
     }, ['done']);
     controller.addListener(() {
@@ -61,13 +65,39 @@ class _MemoryPageState extends State<MemoryPage> {
       onTapUp: (_) {
         controller.setPaused(false);
       },
+      onTapCancel: () {
+        controller.setPaused(false);
+      },
+      onHorizontalDragEnd: (details) {
+        if (details.primaryVelocity! < 0) {
+          controller.next();
+
+          pageController.nextPage(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.linearToEaseOut,
+          );
+        } else if (details.primaryVelocity! > 0) {
+          controller.previous();
+
+          pageController.previousPage(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.linearToEaseOut,
+          );
+        }
+      },
       child: Stack(
         fit: StackFit.expand,
         children: <Widget>[
-          MemorySlide(
-            key: Key(controller.index.toString()),
-            controller: controller,
-            memory: widget.memories[controller.index],
+          PageView.builder(
+            controller: pageController,
+            physics: const NeverScrollableScrollPhysics(),
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (_, __) => MemorySlide(
+              key: Key(controller.index.toString()),
+              controller: controller,
+              memory: widget.memories[controller.index],
+            ),
+            itemCount: widget.memories.length,
           ),
           Padding(
             padding: const EdgeInsets.only(
