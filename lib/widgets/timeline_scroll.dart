@@ -75,6 +75,7 @@ class _TimelineScrollState extends State<TimelineScroll> with Loadable {
           },
           itemBuilder: (_, index) => TimelinePage(
             date: timeline.dateAtIndex(index),
+            memoryPack: timeline.atIndex(index),
           ),
         ),
       ),

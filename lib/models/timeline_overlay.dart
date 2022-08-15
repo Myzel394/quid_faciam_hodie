@@ -7,7 +7,7 @@ enum TimelineState {
   completed,
 }
 
-class TimelineOverlay extends PropertyChangeNotifier<String> {
+class TimelineOverlayModel extends PropertyChangeNotifier<String> {
   bool _showOverlay = true;
   TimelineState _state = TimelineState.loading;
 

@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:share_location/controllers/status_controller.dart';
 import 'package:share_location/enums.dart';
 import 'package:share_location/foreign_types/memory.dart';
-import 'package:share_location/models/memory_pack.dart';
 import 'package:share_location/models/timeline.dart';
 import 'package:share_location/models/timeline_overlay.dart';
 import 'package:share_location/widgets/status.dart';
@@ -31,13 +30,11 @@ class _MemorySlideState extends State<MemorySlide>
 
   Duration? duration;
 
-  MemoryPack getMemoryPack() => context.read<TimelineModel>().currentMemoryPack;
-
   @override
   void initState() {
     super.initState();
 
-    final timelineOverlay = context.read<TimelineOverlay>();
+    final timelineOverlay = context.read<TimelineOverlayModel>();
 
     timelineOverlay.addListener(() {
       if (!mounted) {
@@ -62,7 +59,7 @@ class _MemorySlideState extends State<MemorySlide>
   }
 
   void initializeAnimation(final Duration newDuration) {
-    final timelineOverlay = context.read<TimelineOverlay>();
+    final timelineOverlay = context.read<TimelineOverlayModel>();
 
     duration = newDuration;
 
@@ -88,7 +85,7 @@ class _MemorySlideState extends State<MemorySlide>
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<TimelineOverlay>(
+    return Consumer<TimelineOverlayModel>(
       builder: (_, timelineOverlay, __) => Consumer<TimelineModel>(
         builder: (___, timeline, ____) => Status(
           controller: controller,
