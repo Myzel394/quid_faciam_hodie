@@ -92,13 +92,6 @@ class TimelineModel extends PropertyChangeNotifier<String> {
     notifyListeners('paused');
   }
 
-  void resetMemoryPack() {
-    resume();
-
-    _memoryIndex = 0;
-    notifyListeners('memoryIndex');
-  }
-
   void removeMemory(
     final int timelineIndex,
     final int memoryIndex,
