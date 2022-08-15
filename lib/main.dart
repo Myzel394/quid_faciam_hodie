@@ -1,6 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:share_location/constants/apis.dart';
 import 'package:share_location/screens/grant_permission_screen.dart';
 import 'package:share_location/screens/login_screen.dart';
@@ -20,6 +21,11 @@ void main() async {
     anonKey: SUPABASE_API_KEY,
     debug: kDebugMode,
   );
+
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 
   GlobalValuesManager.setCameras(await availableCameras());
 
