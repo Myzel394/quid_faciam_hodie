@@ -5,22 +5,17 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:share_location/constants/spacing.dart';
 import 'package:share_location/models/memory_pack.dart';
+import 'package:share_location/models/timeline.dart';
 import 'package:share_location/models/timeline_overlay.dart';
 import 'package:share_location/widgets/memory_sheet.dart';
 import 'package:share_location/widgets/memory_slide.dart';
 
 class TimelinePage extends StatefulWidget {
   final DateTime date;
-  final VoidCallback onPreviousTimeline;
-  final VoidCallback onNextTimeline;
-  final VoidCallback onMemoryRemoved;
 
   const TimelinePage({
     Key? key,
     required this.date,
-    required this.onPreviousTimeline,
-    required this.onNextTimeline,
-    required this.onMemoryRemoved,
   }) : super(key: key);
 
   @override
@@ -33,11 +28,43 @@ class _TimelinePageState extends State<TimelinePage> {
 
   Timer? overlayRemover;
 
+  MemoryPack getMemoryPack() => context.read<TimelineModel>().currentMemoryPack;
+
+  void _handleOverlayChangeBasedOnMemoryPack() {
+    if (!mounted) {
+      return;
+    }
+
+    final timeline = context.read<TimelineModel>();
+
+    if (timeline.paused) {
+      timelineOverlayController.hideOverlay();
+    } else {
+      timelineOverlayController.restoreOverlay();
+    }
+  }
+
+  void _jumpToCorrectPageFromMemoryPack() {
+    if (!mounted) {
+      return;
+    }
+
+    final timeline = context.read<TimelineModel>();
+
+    if (timeline.memoryIndex != pageController.page) {
+      pageController.animateToPage(
+        timeline.memoryIndex,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOutQuad,
+      );
+    }
+  }
+
   @override
   void initState() {
     super.initState();
 
-    final memoryPack = context.read<MemoryPack>();
+    final timeline = context.read<TimelineModel>();
 
     timelineOverlayController.addListener(() {
       if (!mounted) {
@@ -46,7 +73,7 @@ class _TimelinePageState extends State<TimelinePage> {
 
       if (timelineOverlayController.state == TimelineState.completed) {
         timelineOverlayController.reset();
-        memoryPack.next();
+        timeline.nextMemory();
       }
     }, ['state']);
 
@@ -59,59 +86,42 @@ class _TimelinePageState extends State<TimelinePage> {
       setState(() {});
     }, ['showOverlay']);
 
-    memoryPack.addListener(() {
-      if (!mounted) {
-        return;
-      }
+    timelineOverlayController
+        .addListener(_handleOverlayChangeBasedOnMemoryPack, ['state']);
 
-      if (memoryPack.paused) {
-        timelineOverlayController.hideOverlay();
-      } else {
-        timelineOverlayController.restoreOverlay();
-      }
-    }, ['state']);
+    timeline.addListener(_jumpToCorrectPageFromMemoryPack);
+  }
 
-    memoryPack.addListener(() {
-      if (!mounted) {
-        return;
-      }
+  @override
+  void dispose() {
+    pageController.dispose();
 
-      if (memoryPack.completed) {
-        widget.onNextTimeline();
-        memoryPack.reset();
-      }
-    }, ['completed']);
+    try {
+      final timeline = context.read<TimelineModel>();
 
-    memoryPack.addListener(() {
-      if (!mounted) {
-        return;
-      }
+      timeline.removeListener(_jumpToCorrectPageFromMemoryPack);
+    } catch (error) {
+      // Timeline has been removed completely
+    }
 
-      if (memoryPack.currentMemoryIndex != pageController.page) {
-        pageController.animateToPage(
-          memoryPack.currentMemoryIndex,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOutQuad,
-        );
-      }
-    });
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onDoubleTap: () async {
-        final memoryPack = context.read<MemoryPack>();
+        final timeline = context.read<TimelineModel>();
 
-        memoryPack.pause();
+        timeline.pause();
 
         await showModalBottomSheet(
           context: context,
           backgroundColor: Colors.transparent,
           isScrollControlled: true,
           builder: (_) => MemorySheet(
-            memory: memoryPack.currentMemory,
-            onMemoryDeleted: widget.onMemoryRemoved,
+            memory: timeline.currentMemory,
+            onMemoryDeleted: timeline.removeEmptyDates,
           ),
         );
 
@@ -119,12 +129,12 @@ class _TimelinePageState extends State<TimelinePage> {
           return;
         }
 
-        memoryPack.resume();
+        timeline.resume();
       },
       onTapDown: (_) {
-        final memoryPack = context.read<MemoryPack>();
+        final timeline = context.read<TimelineModel>();
 
-        memoryPack.pause();
+        timeline.pause();
 
         overlayRemover = Timer(
           const Duration(milliseconds: 600),
@@ -132,53 +142,43 @@ class _TimelinePageState extends State<TimelinePage> {
         );
       },
       onTapUp: (_) {
-        final memoryPack = context.read<MemoryPack>();
+        final timeline = context.read<TimelineModel>();
 
         overlayRemover?.cancel();
-        memoryPack.resume();
+        timeline.resume();
         timelineOverlayController.restoreOverlay();
       },
       onTapCancel: () {
-        final memoryPack = context.read<MemoryPack>();
+        final timeline = context.read<TimelineModel>();
 
         overlayRemover?.cancel();
-        memoryPack.resume();
+        timeline.resume();
         timelineOverlayController.restoreOverlay();
       },
       onHorizontalDragEnd: (details) {
-        final memoryPack = context.read<MemoryPack>();
+        final timeline = context.read<TimelineModel>();
 
         if (details.primaryVelocity! < 0) {
-          memoryPack.next();
-
-          pageController.nextPage(
-            duration: const Duration(milliseconds: 200),
-            curve: Curves.linearToEaseOut,
-          );
+          timeline.nextMemory();
         } else if (details.primaryVelocity! > 0) {
-          memoryPack.previous();
-
-          pageController.previousPage(
-            duration: const Duration(milliseconds: 200),
-            curve: Curves.linearToEaseOut,
-          );
+          timeline.previousMemory();
         }
       },
-      child: ChangeNotifierProvider<TimelineOverlay>(
-        create: (_) => timelineOverlayController,
+      child: ChangeNotifierProvider.value(
+        value: timelineOverlayController,
         child: Stack(
           fit: StackFit.expand,
           children: <Widget>[
-            Consumer<MemoryPack>(
-              builder: (_, memoryPack, __) => PageView.builder(
+            Consumer<TimelineModel>(
+              builder: (_, timeline, __) => PageView.builder(
                 controller: pageController,
                 physics: const NeverScrollableScrollPhysics(),
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (_, index) => MemorySlide(
-                  key: Key(memoryPack.memories[index].filename),
-                  memory: memoryPack.memories[index],
+                  key: Key(timeline.currentMemoryPack.memories[index].filename),
+                  memory: timeline.currentMemoryPack.memories[index],
                 ),
-                itemCount: memoryPack.memories.length,
+                itemCount: timeline.currentMemoryPack.memories.length,
               ),
             ),
             Padding(
@@ -207,9 +207,9 @@ class _TimelinePageState extends State<TimelinePage> {
                   duration: const Duration(milliseconds: 500),
                   curve: Curves.linearToEaseOut,
                   opacity: timelineOverlayController.showOverlay ? 1.0 : 0.0,
-                  child: Consumer<MemoryPack>(
-                    builder: (_, memoryPack, __) => Text(
-                      '${memoryPack.currentMemoryIndex + 1}/${memoryPack.memories.length}',
+                  child: Consumer<TimelineModel>(
+                    builder: (_, timeline, __) => Text(
+                      '${timeline.memoryIndex + 1}/${timeline.currentMemoryPack.memories.length}',
                       style: Theme.of(context).textTheme.titleSmall,
                     ),
                   ),

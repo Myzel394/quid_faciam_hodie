@@ -4,6 +4,7 @@ import 'package:share_location/controllers/status_controller.dart';
 import 'package:share_location/enums.dart';
 import 'package:share_location/foreign_types/memory.dart';
 import 'package:share_location/models/memory_pack.dart';
+import 'package:share_location/models/timeline.dart';
 import 'package:share_location/models/timeline_overlay.dart';
 import 'package:share_location/widgets/status.dart';
 
@@ -29,6 +30,8 @@ class _MemorySlideState extends State<MemorySlide>
   StatusController? controller;
 
   Duration? duration;
+
+  MemoryPack getMemoryPack() => context.read<TimelineModel>().currentMemoryPack;
 
   @override
   void initState() {
@@ -58,14 +61,13 @@ class _MemorySlideState extends State<MemorySlide>
     super.dispose();
   }
 
-  void initializeAnimation(final Duration duration) {
+  void initializeAnimation(final Duration newDuration) {
     final timelineOverlay = context.read<TimelineOverlay>();
-    final memoryPack = context.read<MemoryPack>();
 
-    this.duration = duration;
+    duration = newDuration;
 
     controller = StatusController(
-      duration: duration,
+      duration: newDuration,
     );
 
     controller!.addListener(() {
@@ -73,9 +75,11 @@ class _MemorySlideState extends State<MemorySlide>
         return;
       }
 
+      final timeline = context.read<TimelineModel>();
+
       if (controller!.done) {
         timelineOverlay.reset();
-        memoryPack.next();
+        timeline.nextMemory();
       }
     }, ['done']);
 
@@ -85,10 +89,10 @@ class _MemorySlideState extends State<MemorySlide>
   @override
   Widget build(BuildContext context) {
     return Consumer<TimelineOverlay>(
-      builder: (_, timelineOverlay, __) => Consumer<MemoryPack>(
-        builder: (___, memoryPack, ____) => Status(
+      builder: (_, timelineOverlay, __) => Consumer<TimelineModel>(
+        builder: (___, timeline, ____) => Status(
           controller: controller,
-          paused: memoryPack.paused,
+          paused: timeline.paused,
           hideProgressBar: !timelineOverlay.showOverlay,
           child: MemoryView(
             creationDate: widget.memory.creationDate,
@@ -104,12 +108,12 @@ class _MemorySlideState extends State<MemorySlide>
               if (mounted) {
                 initializeAnimation(controller.value.duration);
 
-                memoryPack.addListener(() {
+                timeline.addListener(() {
                   if (!mounted) {
                     return;
                   }
 
-                  if (memoryPack.paused) {
+                  if (timeline.paused) {
                     controller.pause();
                   } else {
                     controller.play();

@@ -46,16 +46,22 @@ class _TimelineScrollState extends State<TimelineScroll> with Loadable {
         .execute();
     final memories = List<Memory>.from(
         List<Map<String, dynamic>>.from(response.data).map(Memory.parse));
+    final newTimeline = TimelineModel.fromMemoriesList(memories);
 
     setState(() {
-      timeline = TimelineModel.fromMemoriesList(memories);
+      timeline = newTimeline;
     });
 
-    timeline!.addListener(() {
-      if (mounted) {
-        setState(() {});
+    // Update page
+    newTimeline.addListener(() {
+      if (newTimeline.currentIndex != pageController.page) {
+        pageController.animateToPage(
+          newTimeline.currentIndex,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOutQuad,
+        );
       }
-    });
+    }, ['currentIndex']);
   }
 
   @override
@@ -67,27 +73,22 @@ class _TimelineScrollState extends State<TimelineScroll> with Loadable {
     }
 
     return Scaffold(
-      body: PageView.builder(
-        controller: pageController,
-        scrollDirection: Axis.vertical,
-        itemCount: timeline!.values.length,
-        itemBuilder: (_, index) => ChangeNotifierProvider.value(
-          value: timeline!.atIndex(index),
-          child: TimelinePage(
+      body: ChangeNotifierProvider.value(
+        value: timeline,
+        child: PageView.builder(
+          controller: pageController,
+          scrollDirection: Axis.vertical,
+          itemCount: timeline!.values.length,
+          onPageChanged: (newPage) {
+            if (timeline!.currentIndex != newPage) {
+              // User manually changed page
+              timeline!.setCurrentIndex(newPage);
+
+              timeline!.setMemoryIndex(0);
+            }
+          },
+          itemBuilder: (_, index) => TimelinePage(
             date: timeline!.dateAtIndex(index),
-            onMemoryRemoved: () => timeline!.removeEmptyDates(),
-            onNextTimeline: () {
-              pageController.nextPage(
-                duration: const Duration(milliseconds: 500),
-                curve: Curves.ease,
-              );
-            },
-            onPreviousTimeline: () {
-              pageController.previousPage(
-                duration: const Duration(milliseconds: 500),
-                curve: Curves.ease,
-              );
-            },
           ),
         ),
       ),
