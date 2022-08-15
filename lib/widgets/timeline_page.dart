@@ -108,7 +108,7 @@ class _TimelinePageState extends State<TimelinePage> {
 
   @override
   Widget build(BuildContext context) {
-    final timeline = context.read<TimelineModel>();
+    final timeline = context.watch<TimelineModel>();
 
     return GestureDetector(
       onDoubleTap: () async {
@@ -179,7 +179,7 @@ class _TimelinePageState extends State<TimelinePage> {
             TimelineOverlay(
               date: widget.date,
               memoriesAmount: widget.memoryPack.memories.length,
-              memoryIndex: timeline.memoryIndex,
+              memoryIndex: timeline.memoryIndex + 1,
             ),
           ],
         ),
