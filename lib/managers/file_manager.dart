@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:path_provider/path_provider.dart';
 import 'package:share_location/enums.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
@@ -65,7 +66,7 @@ class FileManager {
         location.split('.').last == 'jpg' ? MemoryType.photo : MemoryType.video;
 
     try {
-      final file = await downloadFile('memories', location);
+      final file = await getFileData('memories', location);
 
       return [file, memoryType];
     } catch (error) {
@@ -73,13 +74,11 @@ class FileManager {
     }
   }
 
-  static Future<Uint8List> downloadFile(
-    final String table,
-    final String path,
-  ) async {
+  static Future<Uint8List> getFileData(final String table, final String path,
+      {final bool disableCache = false}) async {
     final key = '$table:$path';
 
-    if (fileCache.containsKey(key)) {
+    if (!disableCache && fileCache.containsKey(key)) {
       return fileCache[key]!;
     }
 
@@ -94,6 +93,30 @@ class FileManager {
     fileCache[key] = data;
 
     return data;
+  }
+
+  static Future<File> downloadFile(
+    final String table,
+    final String path, {
+    final bool disableDownloadCache = false,
+    final bool disableFileCache = false,
+  }) async {
+    final tempDirectory = await getTemporaryDirectory();
+    final filename = '${tempDirectory.path}/$path';
+    final file = File(filename);
+
+    if (!disableFileCache && (await file.exists())) {
+      return file;
+    }
+
+    final data =
+        await getFileData(table, path, disableCache: disableDownloadCache);
+
+    // Create file
+    await file.create(recursive: true);
+    await file.writeAsBytes(data);
+
+    return file;
   }
 
   static Future<void> deleteFile(final String path) async {

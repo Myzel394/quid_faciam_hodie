@@ -12,11 +12,12 @@ extension ShowSnackBar on BuildContext {
     required final String message,
     final Color backgroundColor = Colors.white,
     final Duration duration = const Duration(seconds: 4),
+    final BuildContext? context,
   }) {
     pendingSnackBar?.close();
     pendingSnackBar = null;
 
-    return ScaffoldMessenger.of(this).showSnackBar(
+    return ScaffoldMessenger.of(context ?? this).showSnackBar(
       SnackBar(
         content: Text(message),
         backgroundColor: backgroundColor,
@@ -25,14 +26,20 @@ extension ShowSnackBar on BuildContext {
     );
   }
 
-  void showErrorSnackBar({required final String message}) {
+  void showErrorSnackBar({
+    required final String message,
+    final BuildContext? context,
+  }) {
     showSnackBar(
       message: message,
       backgroundColor: Colors.red,
     );
   }
 
-  void showSuccessSnackBar({required final String message}) {
+  void showSuccessSnackBar({
+    required final String message,
+    final BuildContext? context,
+  }) {
     showSnackBar(
       message: message,
       duration: const Duration(milliseconds: 550),
@@ -40,7 +47,10 @@ extension ShowSnackBar on BuildContext {
     );
   }
 
-  void showPendingSnackBar({required final String message}) {
+  void showPendingSnackBar({
+    required final String message,
+    final BuildContext? context,
+  }) {
     pendingSnackBar = showSnackBar(
       message: message,
       backgroundColor: Colors.yellow,

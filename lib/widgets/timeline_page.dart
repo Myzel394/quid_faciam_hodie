@@ -119,8 +119,9 @@ class _TimelinePageState extends State<TimelinePage> {
           context: context,
           backgroundColor: Colors.transparent,
           isScrollControlled: true,
-          builder: (_) => MemorySheet(
+          builder: (sheetContext) => MemorySheet(
             memory: timeline.currentMemory,
+            sheetContext: sheetContext,
             onMemoryDeleted: timeline.removeEmptyDates,
           ),
         );

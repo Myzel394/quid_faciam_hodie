@@ -98,7 +98,7 @@ class _MemoryViewState extends AuthRequiredState<MemoryView> {
         location.split('.').last == 'jpg' ? MemoryType.photo : MemoryType.video;
 
     try {
-      final fileData = await FileManager.downloadFile('memories', location);
+      final fileData = await FileManager.getFileData('memories', location);
 
       if (!mounted) {
         return;

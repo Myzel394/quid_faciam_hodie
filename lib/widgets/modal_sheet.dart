@@ -19,18 +19,17 @@ class ModalSheet extends StatelessWidget {
         Padding(
           padding:
               EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(MEDIUM_SPACE),
-            decoration: BoxDecoration(
-              color: theme.bottomSheetTheme.modalBackgroundColor ??
-                  theme.bottomAppBarColor,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(LARGE_SPACE),
-                topRight: Radius.circular(LARGE_SPACE),
-              ),
+          child: Material(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(LARGE_SPACE),
+              topRight: Radius.circular(LARGE_SPACE),
             ),
-            child: child,
+            color: theme.bottomSheetTheme.modalBackgroundColor ??
+                theme.bottomAppBarColor,
+            child: Container(
+              padding: const EdgeInsets.all(MEDIUM_SPACE),
+              child: child,
+            ),
           ),
         ),
       ],
