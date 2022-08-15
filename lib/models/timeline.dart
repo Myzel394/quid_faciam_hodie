@@ -4,6 +4,9 @@ import 'package:intl/intl.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:share_location/foreign_types/memory.dart';
 import 'package:share_location/models/memory_pack.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+final supabase = Supabase.instance.client;
 
 class TimelineModel extends PropertyChangeNotifier<String> {
   final Map<String, MemoryPack> _timeline;
@@ -15,14 +18,16 @@ class TimelineModel extends PropertyChangeNotifier<String> {
   int _currentIndex = 0;
   int _memoryIndex = 0;
   bool _paused = false;
+  bool _isInitializing = true;
 
   Map<String, MemoryPack> get values => _timeline;
   int get length => _timeline.length;
   int get currentIndex => _currentIndex;
   int get memoryIndex => _memoryIndex;
   bool get paused => _paused;
+  bool get isInitializing => _isInitializing;
 
-  static TimelineModel fromMemoriesList(
+  static Map<String, MemoryPack> mapFromMemoriesList(
     final List<Memory> memories,
   ) {
     final map = <String, List<Memory>>{};
@@ -36,17 +41,13 @@ class TimelineModel extends PropertyChangeNotifier<String> {
       }
     }
 
-    final data = Map.fromEntries(
+    return Map.fromEntries(
       map.entries.map(
         (entry) => MapEntry<String, MemoryPack>(
           entry.key,
           MemoryPack(entry.value),
         ),
       ),
-    );
-
-    return TimelineModel(
-      timeline: data,
     );
   }
 
@@ -62,16 +63,8 @@ class TimelineModel extends PropertyChangeNotifier<String> {
   Memory get currentMemory =>
       currentMemoryPack.memories.elementAt(_memoryIndex);
 
-  void removeEmptyDates() {
-    final previousLength = _timeline.length;
-
+  void _removeEmptyDates() {
     _timeline.removeWhere((key, value) => value.memories.isEmpty);
-
-    final newLength = _timeline.length;
-
-    if (previousLength != newLength) {
-      notifyListeners();
-    }
   }
 
   void setCurrentIndex(final int index) {
@@ -92,13 +85,21 @@ class TimelineModel extends PropertyChangeNotifier<String> {
     notifyListeners('paused');
   }
 
+  void setIsInitializing(bool isInitializing) {
+    _isInitializing = isInitializing;
+    notifyListeners('isInitializing');
+  }
+
   void removeMemory(
     final int timelineIndex,
     final int memoryIndex,
   ) {
     _timeline.values.elementAt(timelineIndex).memories.removeAt(memoryIndex);
+    _removeEmptyDates();
     notifyListeners();
   }
+
+  void removeCurrentMemory() => removeMemory(_currentIndex, _memoryIndex);
 
   void pause() => setPaused(true);
   void resume() => setPaused(false);
@@ -134,5 +135,30 @@ class TimelineModel extends PropertyChangeNotifier<String> {
     } else {
       setMemoryIndex(memoryIndex - 1);
     }
+  }
+
+  Future<void> initialize() async {
+    setIsInitializing(true);
+
+    await refreshFromServer();
+
+    setIsInitializing(false);
+  }
+
+  Future<void> refreshFromServer() async {
+    final response = await supabase
+        .from('memories')
+        .select()
+        .order('created_at', ascending: false)
+        .execute();
+    final memories = List<Memory>.from(
+      List<Map<String, dynamic>>.from(response.data).map(Memory.parse),
+    );
+
+    values
+      ..clear()
+      ..addAll(mapFromMemoriesList(memories));
+
+    notifyListeners();
   }
 }

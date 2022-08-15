@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:share_location/constants/values.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -26,35 +27,69 @@ extension ShowSnackBar on BuildContext {
     );
   }
 
+  showToast({
+    required final String message,
+    final Toast toastLength = Toast.LENGTH_SHORT,
+    final Color backgroundColor = Colors.white,
+    final Color textColor = Colors.black,
+  }) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: toastLength,
+      backgroundColor: backgroundColor,
+      textColor: textColor,
+    );
+  }
+
   void showErrorSnackBar({
     required final String message,
-    final BuildContext? context,
   }) {
     showSnackBar(
       message: message,
       backgroundColor: Colors.red,
+      duration: const Duration(milliseconds: 550),
     );
   }
 
   void showSuccessSnackBar({
     required final String message,
-    final BuildContext? context,
   }) {
     showSnackBar(
       message: message,
-      duration: const Duration(milliseconds: 550),
       backgroundColor: Colors.green,
+      duration: const Duration(milliseconds: 550),
     );
   }
 
   void showPendingSnackBar({
     required final String message,
-    final BuildContext? context,
   }) {
     pendingSnackBar = showSnackBar(
       message: message,
       backgroundColor: Colors.yellow,
       duration: DURATION_INFINITY,
+    );
+  }
+
+  void showSuccessToast({
+    required final String message,
+  }) {
+    showToast(
+      message: message,
+      backgroundColor: Colors.green,
+      textColor: Colors.white,
+      toastLength: Toast.LENGTH_SHORT,
+    );
+  }
+
+  void showErrorToast({
+    required final String message,
+  }) {
+    showToast(
+      message: message,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      toastLength: Toast.LENGTH_SHORT,
     );
   }
 }

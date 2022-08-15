@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:share_location/constants/spacing.dart';
 import 'package:share_location/enums.dart';
@@ -8,31 +7,37 @@ import 'package:share_location/foreign_types/memory.dart';
 import 'package:share_location/managers/file_manager.dart';
 import 'package:share_location/utils/loadable.dart';
 import 'package:share_location/widgets/modal_sheet.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MemorySheet extends StatefulWidget {
   final Memory memory;
-  final VoidCallback onMemoryDeleted;
   final BuildContext sheetContext;
+  final VoidCallback onDelete;
+  final VoidCallback onVisibilityChanged;
 
   const MemorySheet({
     Key? key,
     required this.memory,
-    required this.onMemoryDeleted,
     required this.sheetContext,
+    required this.onDelete,
+    required this.onVisibilityChanged,
   }) : super(key: key);
 
   @override
   State<MemorySheet> createState() => _MemorySheetState();
 }
 
+final supabase = Supabase.instance.client;
+
 class _MemorySheetState extends State<MemorySheet> with Loadable {
   Future<void> deleteFile() async {
     await FileManager.deleteFile(widget.memory.location);
-    widget.onMemoryDeleted();
 
     if (mounted) {
       Navigator.pop(context);
     }
+
+    widget.onDelete();
   }
 
   Future<void> downloadFile() async {
@@ -57,13 +62,31 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
 
       context.showSuccessSnackBar(message: 'File saved to Gallery!');
     } catch (error) {
-      context.showErrorSnackBar(message: 'There was an error');
-      Fluttertoast.showToast(
-        msg: 'There was an error',
-        toastLength: Toast.LENGTH_SHORT,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
+      context.showErrorSnackBar(message: 'There was an error.');
+    }
+  }
+
+  Future<void> changeVisibility() async {
+    final isNowPublic = !widget.memory.isPublic == true;
+
+    try {
+      await supabase.from('memories').update({
+        'is_public': !widget.memory.isPublic,
+      }).match({
+        'id': widget.memory.id,
+      }).execute();
+
+      Navigator.pop(context);
+
+      if (isNowPublic) {
+        context.showSuccessSnackBar(message: 'Your Memory is public now!');
+      } else {
+        context.showSuccessSnackBar(message: 'Your Memory is private now.');
+      }
+
+      widget.onVisibilityChanged();
+    } catch (error) {
+      context.showErrorSnackBar(message: 'There was an error.');
     }
   }
 
@@ -100,6 +123,20 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
                 ? null
                 : () => callWithLoading(downloadFile, 'download'),
             trailing: getIsLoadingSpecificID('download')
+                ? buildLoadingIndicator()
+                : null,
+          ),
+          ListTile(
+            leading: Icon(widget.memory.isPublic
+                ? Icons.public_off_rounded
+                : Icons.public_rounded),
+            title:
+                Text(widget.memory.isPublic ? 'Make private' : 'Make public'),
+            enabled: !getIsLoadingSpecificID('public'),
+            onTap: getIsLoadingSpecificID('public')
+                ? null
+                : () => callWithLoading(changeVisibility, 'public'),
+            trailing: getIsLoadingSpecificID('public')
                 ? buildLoadingIndicator()
                 : null,
           ),
