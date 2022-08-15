@@ -4,14 +4,16 @@ import 'dart:typed_data';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:share_location/constants/spacing.dart';
+import 'package:share_location/constants/values.dart';
 import 'package:share_location/extensions/snackbar.dart';
 import 'package:share_location/managers/file_manager.dart';
 import 'package:share_location/managers/global_values_manager.dart';
-import 'package:share_location/screens/main_screen/permissions_required_page.dart';
 import 'package:share_location/utils/auth_required.dart';
 import 'package:share_location/utils/loadable.dart';
+import 'package:share_location/widgets/animate_in_builder.dart';
 import 'package:share_location/widgets/camera_button.dart';
 import 'package:share_location/widgets/change_camera_button.dart';
+import 'package:share_location/widgets/fade_and_move_in_animation.dart';
 import 'package:share_location/widgets/today_photo_button.dart';
 import 'package:share_location/widgets/uploading_photo.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -27,7 +29,6 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
   bool isRecording = false;
-  bool hasGrantedPermissions = false;
   bool lockCamera = false;
   List? lastPhoto;
   Uint8List? uploadingPhotoAnimation;
@@ -45,6 +46,7 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
     super.initState();
 
     callWithLoading(getLastPhoto);
+    onNewCameraSelected(GlobalValuesManager.cameras[0]);
   }
 
   @override
@@ -55,6 +57,10 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    _updateCamera(state);
+  }
+
+  void _updateCamera(final AppLifecycleState state) {
     final CameraController? cameraController = controller;
 
     // App state changed before we got the chance to initialize.
@@ -109,6 +115,7 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
       if (!mounted) {
         return;
       }
+
       setState(() {});
     });
   }
@@ -203,20 +210,6 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
       backgroundColor: Colors.black,
       body: SafeArea(
         child: () {
-          if (!hasGrantedPermissions) {
-            return Center(
-              child: PermissionsRequiredPage(
-                onPermissionsGranted: () {
-                  onNewCameraSelected(GlobalValuesManager.cameras[0]);
-
-                  setState(() {
-                    hasGrantedPermissions = true;
-                  });
-                },
-              ),
-            );
-          }
-
           if (isLoading) {
             return const Center(
               child: CircularProgressIndicator(),
@@ -229,57 +222,93 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
             child: Stack(
               alignment: Alignment.center,
               children: <Widget>[
-                controller!.buildPreview(),
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(LARGE_SPACE),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    AnimateInBuilder(
+                      builder: (showPreview) => AnimatedOpacity(
+                        opacity: showPreview ? 1.0 : 0.0,
+                        duration: const Duration(milliseconds: 1100),
+                        curve: Curves.easeOutQuad,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(SMALL_SPACE),
+                          child: AspectRatio(
+                            aspectRatio: 1 / controller!.value.aspectRatio,
+                            child: controller!.buildPreview(),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          ChangeCameraButton(
-                            onChangeCamera: () {
-                              final currentCameraIndex = GlobalValuesManager
-                                  .cameras
-                                  .indexOf(controller!.description);
-                              final availableCameras =
-                                  GlobalValuesManager.cameras.length;
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: LARGE_SPACE),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                FadeAndMoveInAnimation(
+                                  translationDuration:
+                                      DEFAULT_TRANSLATION_DURATION *
+                                          SECONDARY_BUTTONS_DURATION_MULTIPLIER,
+                                  opacityDuration: DEFAULT_OPACITY_DURATION *
+                                      SECONDARY_BUTTONS_DURATION_MULTIPLIER,
+                                  child: ChangeCameraButton(
+                                    onChangeCamera: () {
+                                      final currentCameraIndex =
+                                          GlobalValuesManager.cameras
+                                              .indexOf(controller!.description);
+                                      final availableCameras =
+                                          GlobalValuesManager.cameras.length;
 
-                              onNewCameraSelected(
-                                GlobalValuesManager.cameras[
-                                    (currentCameraIndex + 1) %
-                                        availableCameras],
-                              );
-                            },
-                          ),
-                          CameraButton(
-                            disabled: lockCamera,
-                            active: isRecording,
-                            onVideoBegin: () async {
-                              setState(() {
-                                isRecording = true;
-                              });
-
-                              if (controller!.value.isRecordingVideo) {
-                                // A recording has already started, do nothing.
-                                return;
-                              }
-
-                              await controller!.startVideoRecording();
-                            },
-                            onVideoEnd: takeVideo,
-                            onPhotoShot: takePhoto,
-                          ),
-                          lastPhoto == null
-                              ? const TodayPhotoButton()
-                              : TodayPhotoButton(
-                                  data: lastPhoto![0],
-                                  type: lastPhoto![1],
+                                      onNewCameraSelected(
+                                        GlobalValuesManager.cameras[
+                                            (currentCameraIndex + 1) %
+                                                availableCameras],
+                                      );
+                                    },
+                                  ),
                                 ),
+                                FadeAndMoveInAnimation(
+                                  child: CameraButton(
+                                    disabled: lockCamera,
+                                    active: isRecording,
+                                    onVideoBegin: () async {
+                                      setState(() {
+                                        isRecording = true;
+                                      });
+
+                                      if (controller!.value.isRecordingVideo) {
+                                        // A recording has already started, do nothing.
+                                        return;
+                                      }
+
+                                      await controller!.startVideoRecording();
+                                    },
+                                    onVideoEnd: takeVideo,
+                                    onPhotoShot: takePhoto,
+                                  ),
+                                ),
+                                FadeAndMoveInAnimation(
+                                  translationDuration:
+                                      DEFAULT_TRANSLATION_DURATION *
+                                          SECONDARY_BUTTONS_DURATION_MULTIPLIER,
+                                  opacityDuration: DEFAULT_OPACITY_DURATION *
+                                      SECONDARY_BUTTONS_DURATION_MULTIPLIER,
+                                  child: lastPhoto == null
+                                      ? const TodayPhotoButton()
+                                      : TodayPhotoButton(
+                                          data: lastPhoto![0],
+                                          type: lastPhoto![1],
+                                        ),
+                                ),
+                              ],
+                            ),
+                          )
                         ],
                       ),
-                    )
+                    ),
                   ],
                 ),
                 if (uploadingPhotoAnimation != null)

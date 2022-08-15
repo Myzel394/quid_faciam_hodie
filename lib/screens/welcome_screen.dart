@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:share_location/constants/spacing.dart';
 import 'package:share_location/managers/startup_page_manager.dart';
-import 'package:share_location/screens/main_screen.dart';
 import 'package:share_location/widgets/logo.dart';
+
+import 'grant_permission_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   static const ID = 'welcome';
@@ -43,7 +44,10 @@ class WelcomeScreen extends StatelessWidget {
               icon: const Icon(Icons.arrow_right),
               label: const Text('Start'),
               onPressed: () {
-                StartupPageManager.navigateToNewPage(context, MainScreen.ID);
+                StartupPageManager.navigateToNewPage(
+                  context,
+                  GrantPermissionScreen.ID,
+                );
               },
             ),
           ],

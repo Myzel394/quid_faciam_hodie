@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:share_location/constants/spacing.dart';
+import 'package:share_location/constants/values.dart';
 
 class UploadingPhoto extends StatefulWidget {
   final Uint8List data;
@@ -39,7 +40,7 @@ class _UploadingPhotoState extends State<UploadingPhoto>
 
     controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        Future.delayed(const Duration(milliseconds: 500), () {
+        Future.delayed(PHOTO_SHOW_AFTER_CREATION_DURATION, () {
           if (mounted) {
             widget.onDone();
           }
@@ -67,9 +68,9 @@ class _UploadingPhotoState extends State<UploadingPhoto>
         decoration: BoxDecoration(
           border: Border.all(
             color: Colors.white,
-            width: 15,
+            width: 12,
           ),
-          borderRadius: BorderRadius.circular(SMALL_SPACE),
+          borderRadius: BorderRadius.circular(MEDIUM_SPACE),
         ),
         child: Image.memory(widget.data, fit: BoxFit.cover),
       ),

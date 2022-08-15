@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:share_location/constants/apis.dart';
+import 'package:share_location/screens/grant_permission_screen.dart';
 import 'package:share_location/screens/login_screen.dart';
 import 'package:share_location/screens/main_screen.dart';
 import 'package:share_location/screens/timeline_screen.dart';
@@ -60,6 +61,7 @@ class MyApp extends StatelessWidget {
         MainScreen.ID: (context) => const MainScreen(),
         LoginScreen.ID: (context) => const LoginScreen(),
         TimelineScreen.ID: (context) => const TimelineScreen(),
+        GrantPermissionScreen.ID: (context) => const GrantPermissionScreen(),
       },
       initialRoute: initialPage,
     );
