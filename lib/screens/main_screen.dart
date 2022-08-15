@@ -29,6 +29,9 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
+  final List<double> zoomLevels = [1.0];
+  int currentZoomLevelIndex = 0;
+
   bool isRecording = false;
   bool lockCamera = false;
   bool isTorchEnabled = false;
@@ -38,6 +41,17 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
   late User _user;
 
   CameraController? controller;
+
+  static String formatZoomLevel(double zoomLevel) {
+    if (zoomLevel.floor() == zoomLevel) {
+      // Zoom level is a whole number
+      return '${zoomLevel.floor()}x';
+    } else {
+      return '${zoomLevel.toStringAsFixed(1)}x';
+    }
+  }
+
+  double get currentZoomLevel => zoomLevels[currentZoomLevelIndex];
 
   @override
   bool get isLoading =>
@@ -113,12 +127,34 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
       if (mounted) setState(() {});
     });
 
-    controller!.initialize().then((_) {
-      if (!mounted) {
-        return;
-      }
+    await controller!.initialize();
 
-      setState(() {});
+    await determineZoomLevels();
+
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {});
+  }
+
+  Future<void> determineZoomLevels() async {
+    final minZoomLevel = await controller!.getMinZoomLevel();
+    final maxZoomLevel = await controller!.getMaxZoomLevel();
+
+    final availableZoomLevels = List<double>.from(
+      DEFAULT_ZOOM_LEVELS
+          .where((zoomLevel) =>
+              zoomLevel >= minZoomLevel && zoomLevel <= maxZoomLevel)
+          .toSet(),
+    )
+      ..add(minZoomLevel)
+      ..add(maxZoomLevel)
+      ..toList()
+      ..sort();
+
+    setState(() {
+      zoomLevels.addAll(availableZoomLevels);
     });
   }
 
@@ -328,6 +364,7 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
             expandableContent: Padding(
               padding: const EdgeInsets.all(LARGE_SPACE),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   ElevatedButton.icon(
                     icon: const Icon(Icons.flashlight_on_rounded),
@@ -351,6 +388,31 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
                         }
                       });
                     },
+                  ),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                        (_) => Colors.white10,
+                      ),
+                      foregroundColor: MaterialStateProperty.resolveWith<Color>(
+                        (_) => Colors.white,
+                      ),
+                    ),
+                    onPressed: () {
+                      final newZoomLevelIndex =
+                          ((currentZoomLevel + 1) % zoomLevels.length).toInt();
+                      print(newZoomLevelIndex);
+                      print(zoomLevels);
+
+                      controller!.setZoomLevel(zoomLevels[newZoomLevelIndex]);
+
+                      setState(() {
+                        currentZoomLevelIndex = newZoomLevelIndex;
+                      });
+                    },
+                    child: Text(
+                      formatZoomLevel(currentZoomLevel),
+                    ),
                   ),
                 ],
               ),
