@@ -15,6 +15,7 @@ import 'package:share_location/widgets/animate_in_builder.dart';
 import 'package:share_location/widgets/camera_button.dart';
 import 'package:share_location/widgets/change_camera_button.dart';
 import 'package:share_location/widgets/fade_and_move_in_animation.dart';
+import 'package:share_location/widgets/sheet_indicator.dart';
 import 'package:share_location/widgets/today_photo_button.dart';
 import 'package:share_location/widgets/uploading_photo.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -292,64 +293,74 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
                   topRight: Radius.circular(LARGE_SPACE),
                 ),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(LARGE_SPACE),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    FadeAndMoveInAnimation(
-                      translationDuration: DEFAULT_TRANSLATION_DURATION *
-                          SECONDARY_BUTTONS_DURATION_MULTIPLIER,
-                      opacityDuration: DEFAULT_OPACITY_DURATION *
-                          SECONDARY_BUTTONS_DURATION_MULTIPLIER,
-                      child: ChangeCameraButton(
-                        onChangeCamera: () {
-                          final currentCameraIndex = GlobalValuesManager.cameras
-                              .indexOf(controller!.description);
-                          final availableCameras =
-                              GlobalValuesManager.cameras.length;
+              child: Column(
+                children: <Widget>[
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: MEDIUM_SPACE),
+                    child: SheetIndicator(),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(LARGE_SPACE),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        FadeAndMoveInAnimation(
+                          translationDuration: DEFAULT_TRANSLATION_DURATION *
+                              SECONDARY_BUTTONS_DURATION_MULTIPLIER,
+                          opacityDuration: DEFAULT_OPACITY_DURATION *
+                              SECONDARY_BUTTONS_DURATION_MULTIPLIER,
+                          child: ChangeCameraButton(
+                            onChangeCamera: () {
+                              final currentCameraIndex = GlobalValuesManager
+                                  .cameras
+                                  .indexOf(controller!.description);
+                              final availableCameras =
+                                  GlobalValuesManager.cameras.length;
 
-                          onNewCameraSelected(
-                            GlobalValuesManager.cameras[
-                                (currentCameraIndex + 1) % availableCameras],
-                          );
-                        },
-                      ),
-                    ),
-                    FadeAndMoveInAnimation(
-                      child: CameraButton(
-                        disabled: lockCamera,
-                        active: isRecording,
-                        onVideoBegin: () async {
-                          setState(() {
-                            isRecording = true;
-                          });
+                              onNewCameraSelected(
+                                GlobalValuesManager.cameras[
+                                    (currentCameraIndex + 1) %
+                                        availableCameras],
+                              );
+                            },
+                          ),
+                        ),
+                        FadeAndMoveInAnimation(
+                          child: CameraButton(
+                            disabled: lockCamera,
+                            active: isRecording,
+                            onVideoBegin: () async {
+                              setState(() {
+                                isRecording = true;
+                              });
 
-                          if (controller!.value.isRecordingVideo) {
-                            // A recording has already started, do nothing.
-                            return;
-                          }
+                              if (controller!.value.isRecordingVideo) {
+                                // A recording has already started, do nothing.
+                                return;
+                              }
 
-                          await controller!.startVideoRecording();
-                        },
-                        onVideoEnd: takeVideo,
-                        onPhotoShot: takePhoto,
-                      ),
+                              await controller!.startVideoRecording();
+                            },
+                            onVideoEnd: takeVideo,
+                            onPhotoShot: takePhoto,
+                          ),
+                        ),
+                        FadeAndMoveInAnimation(
+                          translationDuration: DEFAULT_TRANSLATION_DURATION *
+                              SECONDARY_BUTTONS_DURATION_MULTIPLIER,
+                          opacityDuration: DEFAULT_OPACITY_DURATION *
+                              SECONDARY_BUTTONS_DURATION_MULTIPLIER,
+                          child: lastPhoto == null
+                              ? const TodayPhotoButton()
+                              : TodayPhotoButton(
+                                  data: lastPhoto![0],
+                                  type: lastPhoto![1],
+                                ),
+                        ),
+                      ],
                     ),
-                    FadeAndMoveInAnimation(
-                      translationDuration: DEFAULT_TRANSLATION_DURATION *
-                          SECONDARY_BUTTONS_DURATION_MULTIPLIER,
-                      opacityDuration: DEFAULT_OPACITY_DURATION *
-                          SECONDARY_BUTTONS_DURATION_MULTIPLIER,
-                      child: lastPhoto == null
-                          ? const TodayPhotoButton()
-                          : TodayPhotoButton(
-                              data: lastPhoto![0],
-                              type: lastPhoto![1],
-                            ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
             expandableContent: Padding(
@@ -392,8 +403,6 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
                     onPressed: () {
                       final newZoomLevelIndex =
                           ((currentZoomLevel + 1) % zoomLevels.length).toInt();
-                      print(newZoomLevelIndex);
-                      print(zoomLevels);
 
                       controller!.setZoomLevel(zoomLevels[newZoomLevelIndex]);
 
