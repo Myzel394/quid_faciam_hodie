@@ -1,3 +1,4 @@
+import 'package:share_location/extensions/date.dart';
 import 'package:share_location/foreign_types/memory.dart';
 import 'package:share_location/helpers/iterate_months.dart';
 
@@ -8,15 +9,12 @@ class CalendarManager {
     required final List<Memory> memories,
   }) : _values = mapFromMemoriesList(memories);
 
-  static DateTime createDateKey(final DateTime date) =>
-      DateTime(date.year, date.month, date.day);
-
   static Map<DateTime, Set<String>> mapFromMemoriesList(
       final List<Memory> memories) {
     final map = <DateTime, Set<String>>{};
 
     for (final memory in memories) {
-      final key = createDateKey(memory.creationDate);
+      final key = memory.creationDate.asNormalizedDate();
 
       if (map.containsKey(key)) {
         map[key]!.add(memory.id);

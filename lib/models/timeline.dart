@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:share_location/extensions/date.dart';
 import 'package:share_location/foreign_types/memory.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -43,9 +44,6 @@ class TimelineModel extends PropertyChangeNotifier<String> {
     _timeline.removeWhere((key, memories) => memories.isEmpty);
   }
 
-  static DateTime createDateKey(final DateTime date) =>
-      DateTime(date.year, date.month, date.day);
-
   void restoreOverlay() => setShowOverlay(true);
   void hideOverlay() => setShowOverlay(false);
 
@@ -55,7 +53,7 @@ class TimelineModel extends PropertyChangeNotifier<String> {
     final map = <DateTime, List<Memory>>{};
 
     for (final memory in memories) {
-      final key = createDateKey(memory.creationDate);
+      final key = memory.creationDate.asNormalizedDate();
 
       if (map.containsKey(key)) {
         map[key]!.add(memory);

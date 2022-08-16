@@ -5,6 +5,7 @@ import 'package:flutter_calendar_widget/flutter_calendar_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:share_location/constants/spacing.dart';
 import 'package:share_location/constants/values.dart';
+import 'package:share_location/extensions/date.dart';
 import 'package:share_location/screens/timeline_screen.dart';
 import 'package:share_location/widgets/delay_render.dart';
 import 'package:share_location/widgets/fade_and_move_in_animation.dart';
@@ -113,6 +114,8 @@ class CalendarMonth extends StatelessWidget {
   DateTime get firstDate => DateTime(year, month, 1);
   DateTime get lastDate =>
       DateTime(year, month, DateUtils.getDaysInMonth(year, month));
+  bool doesDateExist(final DateTime date) =>
+      dayAmountMap.keys.contains(date.asNormalizedDate());
 
   @override
   Widget build(BuildContext context) {
@@ -139,6 +142,10 @@ class CalendarMonth extends StatelessWidget {
       maxDate: lastDate,
       startingDayOfWeek: DayOfWeek.mon,
       onDayPressed: (date) {
+        if (!doesDateExist(date)) {
+          return;
+        }
+
         Navigator.push(
           context,
           MaterialPageRoute(
