@@ -43,7 +43,7 @@ class _TimelinePageState extends State<TimelinePage> {
     }
   }
 
-  void _jumpToCorrectPageFromMemoryPack() {
+  void _jumpToCorrectPage() {
     if (!mounted) {
       return;
     }
@@ -77,7 +77,7 @@ class _TimelinePageState extends State<TimelinePage> {
     timelineOverlayController
         .addListener(_handleOverlayChangeBasedOnMemoryPack, ['state']);
 
-    timeline.addListener(_jumpToCorrectPageFromMemoryPack);
+    timeline.addListener(_jumpToCorrectPage, ['memoryIndex']);
   }
 
   @override
@@ -87,7 +87,7 @@ class _TimelinePageState extends State<TimelinePage> {
     try {
       final timeline = context.read<TimelineModel>();
 
-      timeline.removeListener(_jumpToCorrectPageFromMemoryPack);
+      timeline.removeListener(_jumpToCorrectPage);
     } catch (error) {
       // Timeline has been removed completely
     }
