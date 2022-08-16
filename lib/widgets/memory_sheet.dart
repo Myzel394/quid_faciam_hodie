@@ -36,8 +36,7 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
 
   Future<void> downloadFile() async {
     try {
-      final file =
-          await FileManager.downloadFile('memories', widget.memory.location);
+      final file = await widget.memory.downloadToFile();
 
       if (!mounted) {
         return;

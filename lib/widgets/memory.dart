@@ -4,33 +4,25 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:share_location/constants/spacing.dart';
 import 'package:share_location/enums.dart';
-import 'package:share_location/managers/file_manager.dart';
-import 'package:share_location/utils/auth_required.dart';
+import 'package:share_location/foreign_types/memory.dart';
 import 'package:share_location/widgets/raw_memory_display.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:video_player/video_player.dart';
 
 enum MemoryFetchStatus {
-  preparing,
-  loadingMetadata,
   downloading,
   error,
   done,
 }
 
 class MemoryView extends StatefulWidget {
-  final String location;
-  final DateTime creationDate;
-  final String filename;
+  final Memory memory;
   final bool loopVideo;
   final void Function(VideoPlayerController)? onVideoControllerInitialized;
   final VoidCallback? onFileDownloaded;
 
   const MemoryView({
     Key? key,
-    required this.location,
-    required this.creationDate,
-    required this.filename,
+    required this.memory,
     this.loopVideo = false,
     this.onVideoControllerInitialized,
     this.onFileDownloaded,
@@ -40,11 +32,9 @@ class MemoryView extends StatefulWidget {
   State<MemoryView> createState() => _MemoryViewState();
 }
 
-class _MemoryViewState extends AuthRequiredState<MemoryView> {
-  late final User _user;
-  MemoryFetchStatus status = MemoryFetchStatus.preparing;
+class _MemoryViewState extends State<MemoryView> {
+  MemoryFetchStatus status = MemoryFetchStatus.downloading;
   Uint8List? data;
-  MemoryType? type;
 
   @override
   void initState() {
@@ -53,61 +43,23 @@ class _MemoryViewState extends AuthRequiredState<MemoryView> {
     loadMemoryFile();
   }
 
-  @override
-  void onAuthenticated(Session session) {
-    final user = session.user;
-
-    if (user != null) {
-      _user = user;
-    }
-  }
-
   Future<void> loadMemoryFile() async {
-    final filename = widget.location.split('/').last;
-
-    setState(() {
-      status = MemoryFetchStatus.loadingMetadata;
-    });
-
-    final response = await supabase
-        .from('memories')
-        .select()
-        .eq('location', '${_user.id}/$filename')
-        .limit(1)
-        .single()
-        .execute();
-
-    if (!mounted) {
-      return;
-    }
-
-    if (response.data == null) {
-      setState(() {
-        status = MemoryFetchStatus.error;
-      });
-      return;
-    }
-
     setState(() {
       status = MemoryFetchStatus.downloading;
     });
 
-    final memory = response.data;
-    final location = memory['location'];
-    final memoryType =
-        location.split('.').last == 'jpg' ? MemoryType.photo : MemoryType.video;
-
     try {
-      final fileData = await FileManager.getFileData('memories', location);
+      final file = await widget.memory.downloadToFile();
 
       if (!mounted) {
         return;
       }
 
+      final fileData = await file.readAsBytes();
+
       setState(() {
         status = MemoryFetchStatus.done;
         data = fileData;
-        type = memoryType;
       });
 
       if (widget.onFileDownloaded != null) {
@@ -138,21 +90,21 @@ class _MemoryViewState extends AuthRequiredState<MemoryView> {
         fit: StackFit.expand,
         alignment: Alignment.center,
         children: <Widget>[
-          if (type == MemoryType.photo)
+          if (widget.memory.type == MemoryType.photo)
             ImageFiltered(
               imageFilter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
               child: RawMemoryDisplay(
-                filename: widget.filename,
+                filename: widget.memory.filename,
                 data: data!,
-                type: type!,
+                type: widget.memory.type,
                 loopVideo: widget.loopVideo,
                 fit: BoxFit.cover,
               ),
             ),
           RawMemoryDisplay(
-            filename: widget.filename,
+            filename: widget.memory.filename,
             data: data!,
-            type: type!,
+            type: widget.memory.type,
             fit: BoxFit.contain,
             loopVideo: widget.loopVideo,
             onVideoControllerInitialized: widget.onVideoControllerInitialized,
@@ -169,11 +121,6 @@ class _MemoryViewState extends AuthRequiredState<MemoryView> {
         const SizedBox(height: SMALL_SPACE),
         () {
           switch (status) {
-            // ADD dot loading text
-            case MemoryFetchStatus.preparing:
-              return const Text('Preparing to download memory');
-            case MemoryFetchStatus.loadingMetadata:
-              return const Text('Loading memory metadata');
             case MemoryFetchStatus.downloading:
               return const Text('Downloading memory');
             default:

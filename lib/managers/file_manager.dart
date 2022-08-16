@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:share_location/enums.dart';
+import 'package:share_location/foreign_types/memory.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 
@@ -13,15 +14,19 @@ final supabase = Supabase.instance.client;
 class FileManager {
   static Map<String, Uint8List> fileCache = {};
 
-  static Future<User> getUser(final String userID) async {
+  static Future<Memory> getMemoryMetadata(final String id) async {
     final response = await supabase
-        .from('users')
+        .from('memories')
         .select()
-        .eq('id', userID)
+        .eq('id', id)
         .single()
         .execute();
 
-    return response.data;
+    if (response.error != null) {
+      throw Exception(response.error);
+    }
+
+    return Memory.parse(response.data);
   }
 
   static uploadFile(final User user, final File file) async {
@@ -66,7 +71,7 @@ class FileManager {
         location.split('.').last == 'jpg' ? MemoryType.photo : MemoryType.video;
 
     try {
-      final file = await getFileData('memories', location);
+      final file = await _getFileData('memories', location);
 
       return [file, memoryType];
     } catch (error) {
@@ -74,7 +79,7 @@ class FileManager {
     }
   }
 
-  static Future<Uint8List> getFileData(final String table, final String path,
+  static Future<Uint8List> _getFileData(final String table, final String path,
       {final bool disableCache = false}) async {
     final key = '$table:$path';
 
@@ -110,7 +115,7 @@ class FileManager {
     }
 
     final data =
-        await getFileData(table, path, disableCache: disableDownloadCache);
+        await _getFileData(table, path, disableCache: disableDownloadCache);
 
     // Create file
     await file.create(recursive: true);

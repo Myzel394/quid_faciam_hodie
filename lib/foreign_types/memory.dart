@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:path/path.dart';
 import 'package:share_location/enums.dart';
+import 'package:share_location/managers/file_manager.dart';
 
 class Memory {
   final String id;
@@ -30,4 +33,9 @@ class Memory {
 
   MemoryType get type =>
       filename.split('.').last == 'jpg' ? MemoryType.photo : MemoryType.video;
+
+  Future<File> downloadToFile() => FileManager.downloadFile(
+        'memories',
+        location,
+      );
 }
