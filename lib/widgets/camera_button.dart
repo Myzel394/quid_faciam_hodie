@@ -72,6 +72,18 @@ class _CameraButtonState extends State<CameraButton> {
           widget.onVideoEnd();
         }
       },
+      onTapCancel: () {
+        setState(() {
+          videoInAnimationActive = false;
+          animateToVideoIcon = false;
+        });
+      },
+      onPanCancel: () {
+        setState(() {
+          videoInAnimationActive = false;
+          animateToVideoIcon = false;
+        });
+      },
       onLongPress: () {
         if (widget.disabled) {
           return;
