@@ -4,7 +4,6 @@ import 'package:share_location/controllers/status_controller.dart';
 import 'package:share_location/enums.dart';
 import 'package:share_location/foreign_types/memory.dart';
 import 'package:share_location/models/timeline.dart';
-import 'package:share_location/models/timeline_overlay.dart';
 import 'package:share_location/widgets/status.dart';
 
 import 'memory.dart';
@@ -34,21 +33,19 @@ class _MemorySlideState extends State<MemorySlide>
   void initState() {
     super.initState();
 
-    final timelineOverlay = context.read<TimelineOverlayModel>();
+    final timeline = context.read<TimelineModel>();
 
-    timelineOverlay.addListener(() {
+    timeline.addListener(() {
       if (!mounted) {
         return;
       }
 
-      switch (timelineOverlay.state) {
-        case TimelineState.playing:
-          controller?.start();
-          break;
-        default:
-          controller?.stop();
+      if (timeline.paused) {
+        controller?.stop();
+      } else {
+        controller?.start();
       }
-    });
+    }, ['paused']);
   }
 
   @override
@@ -59,8 +56,6 @@ class _MemorySlideState extends State<MemorySlide>
   }
 
   void initializeAnimation(final Duration newDuration) {
-    final timelineOverlay = context.read<TimelineOverlayModel>();
-
     duration = newDuration;
 
     controller = StatusController(
@@ -75,7 +70,6 @@ class _MemorySlideState extends State<MemorySlide>
       final timeline = context.read<TimelineModel>();
 
       if (controller!.done) {
-        timelineOverlay.reset();
         timeline.nextMemory();
       }
     }, ['done']);
@@ -85,38 +79,36 @@ class _MemorySlideState extends State<MemorySlide>
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<TimelineOverlayModel>(
-      builder: (_, timelineOverlay, __) => Consumer<TimelineModel>(
-        builder: (___, timeline, ____) => Status(
-          controller: controller,
-          paused: timeline.paused,
-          hideProgressBar: !timelineOverlay.showOverlay,
-          child: MemoryView(
-            memory: widget.memory,
-            loopVideo: false,
-            onFileDownloaded: () {
-              if (widget.memory.type == MemoryType.photo) {
-                initializeAnimation(DEFAULT_IMAGE_DURATION);
-              }
-            },
-            onVideoControllerInitialized: (controller) {
-              if (mounted) {
-                initializeAnimation(controller.value.duration);
+    return Consumer<TimelineModel>(
+      builder: (___, timeline, ____) => Status(
+        controller: controller,
+        paused: timeline.paused,
+        hideProgressBar: !timeline.showOverlay,
+        child: MemoryView(
+          memory: widget.memory,
+          loopVideo: false,
+          onFileDownloaded: () {
+            if (widget.memory.type == MemoryType.photo) {
+              initializeAnimation(DEFAULT_IMAGE_DURATION);
+            }
+          },
+          onVideoControllerInitialized: (controller) {
+            if (mounted) {
+              initializeAnimation(controller.value.duration);
 
-                timeline.addListener(() {
-                  if (!mounted) {
-                    return;
-                  }
+              timeline.addListener(() {
+                if (!mounted) {
+                  return;
+                }
 
-                  if (timeline.paused) {
-                    controller.pause();
-                  } else {
-                    controller.play();
-                  }
-                }, ['paused']);
-              }
-            },
-          ),
+                if (timeline.paused) {
+                  controller.pause();
+                } else {
+                  controller.play();
+                }
+              }, ['paused']);
+            }
+          },
         ),
       ),
     );

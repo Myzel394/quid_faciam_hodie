@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:property_change_notifier/property_change_notifier.dart';
@@ -19,6 +20,8 @@ class TimelineModel extends PropertyChangeNotifier<String> {
   int _memoryIndex = 0;
   bool _paused = false;
   bool _isInitializing = false;
+  bool _showOverlay = true;
+  Timer? _overlayRemoverTimer;
 
   Map<DateTime, List<Memory>> get values => _timeline;
   int get length => _timeline.length;
@@ -26,6 +29,7 @@ class TimelineModel extends PropertyChangeNotifier<String> {
   int get memoryIndex => _memoryIndex;
   bool get paused => _paused;
   bool get isInitializing => _isInitializing;
+  bool get showOverlay => _showOverlay;
 
   DateTime dateAtIndex(final int index) => _timeline.keys.elementAt(index);
 
@@ -41,6 +45,9 @@ class TimelineModel extends PropertyChangeNotifier<String> {
 
   static DateTime createDateKey(final DateTime date) =>
       DateTime(date.year, date.month, date.day);
+
+  void restoreOverlay() => setShowOverlay(true);
+  void hideOverlay() => setShowOverlay(false);
 
   static Map<DateTime, List<Memory>> mapFromMemoriesList(
     final List<Memory> memories,
@@ -76,17 +83,35 @@ class TimelineModel extends PropertyChangeNotifier<String> {
       _timeline.values.elementAt(_currentIndex).length - 1,
       max(0, index),
     );
+    resume();
     notifyListeners('memoryIndex');
   }
 
-  void setPaused(bool paused) {
+  void setPaused(final bool paused) {
     _paused = paused;
+
+    _overlayRemoverTimer?.cancel();
+
+    if (paused) {
+      _overlayRemoverTimer = Timer(
+        const Duration(milliseconds: 600),
+        hideOverlay,
+      );
+    } else {
+      restoreOverlay();
+    }
+
     notifyListeners('paused');
   }
 
-  void setIsInitializing(bool isInitializing) {
+  void setIsInitializing(final bool isInitializing) {
     _isInitializing = isInitializing;
     notifyListeners('isInitializing');
+  }
+
+  void setShowOverlay(final bool showOverlay) {
+    _showOverlay = showOverlay;
+    notifyListeners('showOverlay');
   }
 
   void pause() => setPaused(true);

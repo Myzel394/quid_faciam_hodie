@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:share_location/constants/spacing.dart';
 import 'package:share_location/models/timeline.dart';
-import 'package:share_location/models/timeline_overlay.dart';
 
 class TimelineOverlay extends StatelessWidget {
   final DateTime date;
@@ -21,7 +20,6 @@ class TimelineOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final timeline = context.watch<TimelineModel>();
-    final overlayController = context.watch<TimelineOverlayModel>();
 
     return Stack(
       children: <Widget>[
@@ -34,7 +32,7 @@ class TimelineOverlay extends StatelessWidget {
           child: AnimatedOpacity(
             duration: const Duration(milliseconds: 500),
             curve: Curves.linearToEaseOut,
-            opacity: overlayController.showOverlay ? 1.0 : 0.0,
+            opacity: timeline.showOverlay ? 1.0 : 0.0,
             child: Text(
               DateFormat('dd. MMMM yyyy').format(date),
               textAlign: TextAlign.center,
@@ -50,7 +48,7 @@ class TimelineOverlay extends StatelessWidget {
             child: AnimatedOpacity(
               duration: const Duration(milliseconds: 500),
               curve: Curves.linearToEaseOut,
-              opacity: overlayController.showOverlay ? 1.0 : 0.0,
+              opacity: timeline.showOverlay ? 1.0 : 0.0,
               child: Row(
                 children: <Widget>[
                   AnimatedOpacity(
