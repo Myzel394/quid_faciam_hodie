@@ -30,7 +30,6 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
-  final List<double> zoomLevels = [1.0];
   int currentZoomLevelIndex = 0;
 
   bool isRecording = false;
@@ -38,6 +37,7 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
   bool isTorchEnabled = false;
   List? lastPhoto;
   Uint8List? uploadingPhotoAnimation;
+  List<double>? zoomLevels;
 
   late User _user;
 
@@ -52,7 +52,7 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
     }
   }
 
-  double get currentZoomLevel => zoomLevels[currentZoomLevelIndex];
+  double get currentZoomLevel => zoomLevels![currentZoomLevelIndex];
 
   @override
   bool get isLoading =>
@@ -143,19 +143,17 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
     final minZoomLevel = await controller!.getMinZoomLevel();
     final maxZoomLevel = await controller!.getMaxZoomLevel();
 
-    final availableZoomLevels = List<double>.from(
-      DEFAULT_ZOOM_LEVELS
-          .where((zoomLevel) =>
-              zoomLevel >= minZoomLevel && zoomLevel <= maxZoomLevel)
-          .toSet(),
-    )
-      ..add(minZoomLevel)
-      ..add(maxZoomLevel)
-      ..toList()
+    final availableZoomLevels = ([...DEFAULT_ZOOM_LEVELS]
+            .where((zoomLevel) =>
+                zoomLevel >= minZoomLevel && zoomLevel <= maxZoomLevel)
+            .toSet()
+          ..add(minZoomLevel)
+          ..add(maxZoomLevel))
+        .toList()
       ..sort();
 
     setState(() {
-      zoomLevels.addAll(availableZoomLevels);
+      zoomLevels = availableZoomLevels;
     });
   }
 
@@ -400,19 +398,26 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
                         (_) => Colors.white,
                       ),
                     ),
-                    onPressed: () {
-                      final newZoomLevelIndex =
-                          ((currentZoomLevel + 1) % zoomLevels.length).toInt();
+                    onPressed: zoomLevels == null
+                        ? null
+                        : () {
+                            final newZoomLevelIndex =
+                                ((currentZoomLevelIndex + 1) %
+                                        zoomLevels!.length)
+                                    .toInt();
 
-                      controller!.setZoomLevel(zoomLevels[newZoomLevelIndex]);
+                            controller!
+                                .setZoomLevel(zoomLevels![newZoomLevelIndex]);
 
-                      setState(() {
-                        currentZoomLevelIndex = newZoomLevelIndex;
-                      });
-                    },
-                    child: Text(
-                      formatZoomLevel(currentZoomLevel),
-                    ),
+                            setState(() {
+                              currentZoomLevelIndex = newZoomLevelIndex;
+                            });
+                          },
+                    child: zoomLevels == null
+                        ? Text('1x')
+                        : Text(
+                            formatZoomLevel(currentZoomLevel),
+                          ),
                   ),
                 ],
               ),
