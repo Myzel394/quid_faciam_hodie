@@ -46,31 +46,32 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData.dark().copyWith(
-          textTheme: ThemeData.dark().textTheme.copyWith(
-                headline1: const TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.w500,
-                ),
+      title: 'Flutter Demo',
+      theme: ThemeData.dark().copyWith(
+        textTheme: ThemeData.dark().textTheme.copyWith(
+              headline1: const TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.w500,
               ),
-          inputDecorationTheme: InputDecorationTheme(
-            filled: true,
-            helperMaxLines: 10,
-            errorMaxLines: 10,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
             ),
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          helperMaxLines: 10,
+          errorMaxLines: 10,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
           ),
         ),
-        routes: {
-          WelcomeScreen.ID: (context) => const WelcomeScreen(),
-          MainScreen.ID: (context) => const MainScreen(),
-          LoginScreen.ID: (context) => const LoginScreen(),
-          TimelineScreen.ID: (context) => const TimelineScreen(),
-          GrantPermissionScreen.ID: (context) => const GrantPermissionScreen(),
-          CalendarScreen.ID: (context) => const CalendarScreen(),
-        },
-        initialRoute: CalendarScreen.ID);
+      ),
+      routes: {
+        WelcomeScreen.ID: (context) => const WelcomeScreen(),
+        MainScreen.ID: (context) => const MainScreen(),
+        LoginScreen.ID: (context) => const LoginScreen(),
+        TimelineScreen.ID: (context) => const TimelineScreen(),
+        GrantPermissionScreen.ID: (context) => const GrantPermissionScreen(),
+        CalendarScreen.ID: (context) => const CalendarScreen(),
+      },
+      initialRoute: initialPage,
+    );
   }
 }

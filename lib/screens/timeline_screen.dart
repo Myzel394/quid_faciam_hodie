@@ -6,6 +6,8 @@ import 'package:share_location/utils/loadable.dart';
 import 'package:share_location/widgets/timeline_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'calendar_screen.dart';
+
 final supabase = Supabase.instance.client;
 
 class TimelineScreen extends StatefulWidget {
@@ -95,28 +97,35 @@ class _TimelineScreenState extends State<TimelineScreen> with Loadable {
       );
     }
 
-    return Scaffold(
-      body: ChangeNotifierProvider.value(
-        value: timeline,
-        child: PageView.builder(
-          controller: pageController,
-          scrollDirection: Axis.vertical,
-          itemCount: timeline.values.length,
-          onPageChanged: (newPage) {
-            if (_ignorePageChanges) {
-              return;
-            }
+    return WillPopScope(
+      onWillPop: () async {
+        await Navigator.pushNamed(context, CalendarScreen.ID);
 
-            if (timeline.currentIndex != newPage) {
-              // User manually changed page
-              timeline.setCurrentIndex(newPage);
+        return true;
+      },
+      child: Scaffold(
+        body: ChangeNotifierProvider.value(
+          value: timeline,
+          child: PageView.builder(
+            controller: pageController,
+            scrollDirection: Axis.vertical,
+            itemCount: timeline.values.length,
+            onPageChanged: (newPage) {
+              if (_ignorePageChanges) {
+                return;
+              }
 
-              timeline.setMemoryIndex(0);
-            }
-          },
-          itemBuilder: (_, index) => TimelinePage(
-            date: timeline.dateAtIndex(index),
-            memoryPack: timeline.atIndex(index),
+              if (timeline.currentIndex != newPage) {
+                // User manually changed page
+                timeline.setCurrentIndex(newPage);
+
+                timeline.setMemoryIndex(0);
+              }
+            },
+            itemBuilder: (_, index) => TimelinePage(
+              date: timeline.dateAtIndex(index),
+              memoryPack: timeline.atIndex(index),
+            ),
           ),
         ),
       ),

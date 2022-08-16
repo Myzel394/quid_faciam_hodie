@@ -47,7 +47,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
   @override
   Widget build(BuildContext context) {
     if (calendar.isInitializing) {
-      return CircularProgressIndicator();
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
     }
 
     final theme = Theme.of(context);

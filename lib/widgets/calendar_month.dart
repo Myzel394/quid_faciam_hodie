@@ -5,6 +5,8 @@ import 'package:flutter_calendar_widget/flutter_calendar_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:share_location/constants/spacing.dart';
 import 'package:share_location/screens/timeline_screen.dart';
+import 'package:share_location/widgets/delay_render.dart';
+import 'package:share_location/widgets/fade_and_move_in_animation.dart';
 
 class MonthCalendarBuilder extends CalendarBuilder {
   @override
@@ -35,43 +37,50 @@ class MonthCalendarBuilder extends CalendarBuilder {
       return amount / highestAmountOfEvents;
     }();
 
-    return Opacity(
-      opacity: () {
-        if (type.isOutSide) {
-          return 0.0;
-        }
+    final duration = Duration(milliseconds: Random().nextInt(800));
 
-        if (dateTime.isAfter(DateTime.now())) {
-          return 0.4;
-        }
+    return DelayRender(
+      delay: duration,
+      child: FadeAndMoveInAnimation(
+        child: Opacity(
+          opacity: () {
+            if (type.isOutSide) {
+              return 0.0;
+            }
 
-        return 1.0;
-      }(),
-      child: Padding(
-        padding: const EdgeInsets.all(TINY_SPACE),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(SMALL_SPACE),
-          child: Stack(
-            alignment: style.dayAlignment,
-            children: [
-              SizedBox(
-                child: Container(
-                  color: textStyle.selectedDayTextColor
-                      .withOpacity(backgroundPercentage),
-                ),
-              ),
-              Container(
-                alignment: Alignment.center,
-                child: Text(
-                  dateTime.day.toString(),
-                  style: TextStyle(
-                    color: backgroundPercentage > .5
-                        ? textStyle.focusedDayTextColor
-                        : textStyle.dayTextColor,
+            if (dateTime.isAfter(DateTime.now())) {
+              return 0.4;
+            }
+
+            return 1.0;
+          }(),
+          child: Padding(
+            padding: const EdgeInsets.all(TINY_SPACE),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(SMALL_SPACE),
+              child: Stack(
+                alignment: style.dayAlignment,
+                children: [
+                  SizedBox(
+                    child: Container(
+                      color: textStyle.selectedDayTextColor
+                          .withOpacity(backgroundPercentage),
+                    ),
                   ),
-                ),
+                  Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      dateTime.day.toString(),
+                      style: TextStyle(
+                        color: backgroundPercentage > .5
+                            ? textStyle.focusedDayTextColor
+                            : textStyle.dayTextColor,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
