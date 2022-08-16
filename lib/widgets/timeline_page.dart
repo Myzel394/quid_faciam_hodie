@@ -70,17 +70,6 @@ class _TimelinePageState extends State<TimelinePage> {
         return;
       }
 
-      if (timelineOverlayController.state == TimelineState.completed) {
-        timelineOverlayController.reset();
-        timeline.nextMemory();
-      }
-    }, ['state']);
-
-    timelineOverlayController.addListener(() {
-      if (!mounted) {
-        return;
-      }
-
       // Force update to ensure overlays are up-to-date.
       setState(() {});
     }, ['showOverlay']);

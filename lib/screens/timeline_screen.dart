@@ -63,12 +63,8 @@ class _TimelineScreenState extends State<TimelineScreen> with Loadable {
       }
     }, ['currentIndex']);
 
-    print("blaaa");
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final initialIndex = getIndexFromDate();
-
-      print("#" * 50);
-      print(initialIndex);
 
       await _goToPage(initialIndex);
 
