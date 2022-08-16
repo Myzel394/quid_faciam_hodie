@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/extensions/snackbar.dart';
 import 'package:quid_faciam_hodie/managers/authentication_manager.dart';
-import 'package:quid_faciam_hodie/screens/main_screen.dart';
+import 'package:quid_faciam_hodie/screens/server_loading_screen.dart';
 import 'package:quid_faciam_hodie/utils/loadable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -73,7 +73,7 @@ class _LoginScreenState extends AuthState<LoginScreen> with Loadable {
     }
 
     if (mounted) {
-      Navigator.pushReplacementNamed(context, MainScreen.ID);
+      Navigator.pushReplacementNamed(context, ServerLoadingScreen.ID);
     }
   }
 

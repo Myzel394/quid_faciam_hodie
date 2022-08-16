@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
-import 'package:quid_faciam_hodie/managers/startup_page_manager.dart';
 import 'package:quid_faciam_hodie/widgets/logo.dart';
 
 import 'grant_permission_screen.dart';
@@ -44,7 +43,7 @@ class WelcomeScreen extends StatelessWidget {
               icon: const Icon(Icons.arrow_right),
               label: const Text('Start'),
               onPressed: () {
-                StartupPageManager.navigateToNewPage(
+                Navigator.pushReplacementNamed(
                   context,
                   GrantPermissionScreen.ID,
                 );

@@ -59,7 +59,7 @@ class _DotAnimationState extends State<DotAnimation> {
         if (animateIn) {
           // Animate out
           _timer = Timer(widget.fadeOutDelay, () {
-            if (mounted) {
+            if (!mounted) {
               return;
             }
 
@@ -70,7 +70,7 @@ class _DotAnimationState extends State<DotAnimation> {
         } else {
           // Animate in
           _timer = Timer(widget.fadeInDelay, () {
-            if (mounted) {
+            if (!mounted) {
               return;
             }
 

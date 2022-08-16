@@ -25,17 +25,20 @@ class _ServerLoadingScreenState extends State<ServerLoadingScreen> {
   @override
   void initState() {
     super.initState();
-
-    load();
   }
 
   Future<void> load() async {
-    GlobalValuesManager.setCameras(await availableCameras());
-    await Supabase.initialize(
-      url: SUPABASE_API_URL,
-      anonKey: SUPABASE_API_KEY,
-      debug: kDebugMode,
-    );
+    if (!GlobalValuesManager.hasBeenInitialized) {
+      GlobalValuesManager.setCameras(await availableCameras());
+
+      await Supabase.initialize(
+        url: SUPABASE_API_URL,
+        anonKey: SUPABASE_API_KEY,
+        debug: kDebugMode,
+      );
+
+      GlobalValuesManager.setHasBeenInitialized(true);
+    }
 
     final memories = context.read<Memories>();
     final session = Supabase.instance.client.auth.session();
@@ -64,21 +67,21 @@ class _ServerLoadingScreenState extends State<ServerLoadingScreen> {
               initialFadeInDelay: Duration.zero,
               fadeInDuration: Duration(seconds: 1),
               fadeOutDuration: Duration(seconds: 1),
-              fadeInDelay: Duration(seconds: 6),
+              fadeInDelay: Duration(seconds: 4),
               fadeOutDelay: Duration.zero,
             ),
             DotAnimation(
               initialFadeInDelay: Duration(seconds: 2),
               fadeInDuration: Duration(seconds: 1),
               fadeOutDuration: Duration(seconds: 1),
-              fadeInDelay: Duration(seconds: 6),
+              fadeInDelay: Duration(seconds: 4),
               fadeOutDelay: Duration.zero,
             ),
             DotAnimation(
               initialFadeInDelay: Duration(seconds: 4),
               fadeInDuration: Duration(seconds: 1),
               fadeOutDuration: Duration(seconds: 1),
-              fadeInDelay: Duration(seconds: 6),
+              fadeInDelay: Duration(seconds: 4),
               fadeOutDelay: Duration.zero,
             ),
             SizedBox(height: SMALL_SPACE),
