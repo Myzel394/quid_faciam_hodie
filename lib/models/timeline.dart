@@ -18,7 +18,7 @@ class TimelineModel extends PropertyChangeNotifier<String> {
   int _currentIndex = 0;
   int _memoryIndex = 0;
   bool _paused = false;
-  bool _isInitializing = true;
+  bool _isInitializing = false;
 
   Map<DateTime, List<Memory>> get values => _timeline;
   int get length => _timeline.length;

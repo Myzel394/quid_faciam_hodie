@@ -21,6 +21,8 @@ class TimelineScreen extends StatefulWidget {
     this.date,
   }) : super(key: key);
 
+  bool get popToCalendarScreen => date == null;
+
   @override
   State<TimelineScreen> createState() => _TimelineScreenState();
 }
@@ -61,22 +63,17 @@ class _TimelineScreenState extends State<TimelineScreen> with Loadable {
       }
     }, ['currentIndex']);
 
-    // Update page when initializing is done
-    timeline.addListener(() {
-      if (!mounted) {
-        return;
-      }
+    print("blaaa");
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final initialIndex = getIndexFromDate();
 
-      setState(() {});
+      print("#" * 50);
+      print(initialIndex);
 
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        final initialIndex = getIndexFromDate();
+      await _goToPage(initialIndex);
 
-        await _goToPage(initialIndex);
-
-        timeline.setCurrentIndex(initialIndex);
-      });
-    }, ['isInitializing']);
+      timeline.setCurrentIndex(initialIndex);
+    });
   }
 
   @override
@@ -100,9 +97,13 @@ class _TimelineScreenState extends State<TimelineScreen> with Loadable {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        await Navigator.pushReplacementNamed(context, CalendarScreen.ID);
+        if (widget.popToCalendarScreen) {
+          await Navigator.pushReplacementNamed(context, CalendarScreen.ID);
 
-        return false;
+          return false;
+        }
+
+        return true;
       },
       child: Scaffold(
         body: ChangeNotifierProvider.value(
