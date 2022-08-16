@@ -15,7 +15,7 @@ class TimelineModel extends PropertyChangeNotifier<String> {
     Map<String, MemoryPack>? timeline,
   }) : _timeline = timeline ?? {};
 
-  late RealtimeSubscription _serverSubscription;
+  RealtimeSubscription? _serverSubscription;
 
   int _currentIndex = 0;
   int _memoryIndex = 0;
@@ -29,17 +29,36 @@ class TimelineModel extends PropertyChangeNotifier<String> {
   bool get paused => _paused;
   bool get isInitializing => _isInitializing;
 
+  DateTime dateAtIndex(final int index) =>
+      DateTime.parse(_timeline.keys.elementAt(index));
+
+  MemoryPack atIndex(final int index) => _timeline.values.elementAt(index);
+
+  MemoryPack get _currentMemoryPack => atIndex(currentIndex);
+  bool get _isAtLastMemory =>
+      _memoryIndex == _currentMemoryPack.memories.length - 1;
+  Memory get currentMemory =>
+      _currentMemoryPack.memories.elementAt(_memoryIndex);
+
+  void _removeEmptyDates() {
+    _timeline.removeWhere((key, value) => value.memories.isEmpty);
+  }
+
+  static formatCreationDateKey(final DateTime date) =>
+      DateFormat('yyyy-MM-dd').format(date);
+
   static Map<String, MemoryPack> mapFromMemoriesList(
     final List<Memory> memories,
   ) {
     final map = <String, List<Memory>>{};
 
     for (final memory in memories) {
-      final date = DateFormat('yyyy-MM-dd').format(memory.creationDate);
-      if (map.containsKey(date)) {
-        map[date]!.add(memory);
+      final key = formatCreationDateKey(memory.creationDate);
+
+      if (map.containsKey(key)) {
+        map[key]!.add(memory);
       } else {
-        map[date] = [memory];
+        map[key] = [memory];
       }
     }
 
@@ -55,23 +74,8 @@ class TimelineModel extends PropertyChangeNotifier<String> {
 
   @override
   void dispose() {
-    _serverSubscription.unsubscribe(timeout: Duration.zero);
+    _serverSubscription?.unsubscribe(timeout: Duration.zero);
     super.dispose();
-  }
-
-  DateTime dateAtIndex(final int index) =>
-      DateTime.parse(_timeline.keys.elementAt(index));
-
-  MemoryPack atIndex(final int index) => _timeline.values.elementAt(index);
-
-  MemoryPack get _currentMemoryPack => atIndex(currentIndex);
-  bool get _isAtLastMemory =>
-      _memoryIndex == _currentMemoryPack.memories.length - 1;
-  Memory get currentMemory =>
-      _currentMemoryPack.memories.elementAt(_memoryIndex);
-
-  void _removeEmptyDates() {
-    _timeline.removeWhere((key, value) => value.memories.isEmpty);
   }
 
   void setCurrentIndex(final int index) {
@@ -96,17 +100,6 @@ class TimelineModel extends PropertyChangeNotifier<String> {
     _isInitializing = isInitializing;
     notifyListeners('isInitializing');
   }
-
-  void removeMemory(
-    final int timelineIndex,
-    final int memoryIndex,
-  ) {
-    _timeline.values.elementAt(timelineIndex).memories.removeAt(memoryIndex);
-    _removeEmptyDates();
-    notifyListeners();
-  }
-
-  void removeCurrentMemory() => removeMemory(_currentIndex, _memoryIndex);
 
   void pause() => setPaused(true);
   void resume() => setPaused(false);
@@ -153,61 +146,41 @@ class TimelineModel extends PropertyChangeNotifier<String> {
   }
 
   void _insertMemory(final Memory memory) {
-    final date = DateFormat('yyyy-MM-dd').format(memory.creationDate);
-    if (_timeline.containsKey(date)) {
-      _timeline[date]!.memories.add(memory);
-      // Sort descending based on creation date
-      _timeline[date]!.memories.sort(
-            (a, b) => b.creationDate.compareTo(a.creationDate),
-          );
-    } else {
-      _timeline[date] = MemoryPack([memory]);
-    }
-  }
+    final key = formatCreationDateKey(memory.creationDate);
 
-  void _updateMemory(final String id, final Memory memory) {
-    final date = DateFormat('yyyy-MM-dd').format(memory.creationDate);
-    if (_timeline.containsKey(date)) {
-      _timeline[date]!.memories.removeWhere((m) => m.id == id);
-      _timeline[date]!.memories.add(memory);
-      // Sort descending based on creation date
-      _timeline[date]!.memories.sort(
-            (a, b) => b.creationDate.compareTo(a.creationDate),
-          );
-    } else {
-      _timeline[date] = MemoryPack([memory]);
-    }
-  }
-
-  void _deleteMemory(final String id) {
-    for (final date in _timeline.keys) {
-      _timeline[date]!.memories.removeWhere((m) => m.id == id);
-    }
-  }
-
-  Future<void> _onMemoriesUpdate(
-    final SupabaseRealtimePayload response,
-  ) async {
-    if (response == null) {
+    if (!_timeline.containsKey(key)) {
+      _timeline[key] = MemoryPack([memory]);
       return;
     }
 
-    switch (response.eventType) {
-      case 'INSERT':
-        final memory = Memory.parse(response.newRecord!);
-        _insertMemory(memory);
-        break;
-      case 'UPDATE':
-        final memory = Memory.parse(response.newRecord!);
-        _updateMemory(response.oldRecord!['id'], memory);
-        break;
-      case 'DELETE':
-        _deleteMemory(response.oldRecord!['id']);
-        break;
-    }
+    final memoryPack = _timeline[key]!;
+
+    memoryPack.addMemory(memory);
   }
 
-  Future<void> _listenToServer() async {
+  void _updateMemory(final String id, final Memory memory) {
+    final key = formatCreationDateKey(memory.creationDate);
+
+    if (!_timeline.containsKey(key)) {
+      _timeline[key] = MemoryPack([memory]);
+      return;
+    }
+
+    final memoryPack = _timeline[key]!;
+
+    memoryPack.updateWithNewMemory(id, memory);
+  }
+
+  void _deleteMemory(final String id) {
+    // Search for correct `Memory` and remove it
+    for (final memories in _timeline.values) {
+      memories.memories.removeWhere((memory) => memory.id == id);
+    }
+
+    _removeEmptyDates();
+  }
+
+  Future<void> _fetchInitialData() async {
     final response = await supabase
         .from('memories')
         .select()
@@ -220,12 +193,44 @@ class TimelineModel extends PropertyChangeNotifier<String> {
     values
       ..clear()
       ..addAll(mapFromMemoriesList(memories));
+  }
 
-    _serverSubscription = supabase
-        .from('memories')
-        .on(SupabaseEventTypes.all, _onMemoriesUpdate)
-        .subscribe();
+  Future<void> _onServerUpdate(
+    final SupabaseRealtimePayload response,
+  ) async {
+    if (response == null) {
+      return;
+    }
+
+    switch (response.eventType) {
+      case 'INSERT':
+        final memory = Memory.parse(response.newRecord!);
+        _insertMemory(memory);
+        break;
+      case 'UPDATE':
+        final memoryID = response.oldRecord!['id'];
+        final memory = Memory.parse(response.newRecord!);
+
+        _updateMemory(memoryID, memory);
+        break;
+      case 'DELETE':
+        final id = response.oldRecord!['id'];
+
+        _deleteMemory(id);
+        break;
+    }
 
     notifyListeners();
+  }
+
+  Future<void> _listenToServer() async {
+    await _fetchInitialData();
+    notifyListeners();
+
+    // Watch new updates
+    _serverSubscription = supabase
+        .from('memories')
+        .on(SupabaseEventTypes.all, _onServerUpdate)
+        .subscribe();
   }
 }
