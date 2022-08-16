@@ -63,7 +63,7 @@ class _LoginScreenState extends AuthState<LoginScreen> with Loadable {
         await _signIn();
       } catch (error) {
         if (mounted) {
-          context.showErrorSnackBar(message: error.toString());
+          context.showLongErrorSnackBar(message: 'Invalid password or email');
 
           emailController.clear();
           passwordController.clear();
@@ -100,19 +100,26 @@ class _LoginScreenState extends AuthState<LoginScreen> with Loadable {
               'Sign in to your account. If you do not have one already, we will automatically set up one for you.',
             ),
             const SizedBox(height: MEDIUM_SPACE),
-            TextFormField(
+            TextField(
               controller: emailController,
               autofocus: true,
               autofillHints: const [AutofillHints.email],
-              decoration: const InputDecoration(labelText: 'Email'),
+              keyboardType: TextInputType.emailAddress,
+              textInputAction: TextInputAction.next,
+              decoration: const InputDecoration(
+                labelText: 'Email',
+                prefixIcon: Icon(Icons.email),
+              ),
             ),
             const SizedBox(height: SMALL_SPACE),
-            TextFormField(
+            TextField(
               obscureText: true,
               controller: passwordController,
               decoration: const InputDecoration(
                 labelText: 'Password',
+                prefixIcon: Icon(Icons.lock),
               ),
+              onSubmitted: (value) => callWithLoading(signIn),
             ),
             const SizedBox(height: MEDIUM_SPACE),
             ElevatedButton.icon(

@@ -51,6 +51,16 @@ extension ShowSnackBar on BuildContext {
     );
   }
 
+  void showLongErrorSnackBar({
+    required final String message,
+  }) {
+    showSnackBar(
+      message: message,
+      backgroundColor: Colors.red,
+      duration: const Duration(seconds: 6),
+    );
+  }
+
   void showSuccessSnackBar({
     required final String message,
   }) {

@@ -121,6 +121,10 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
 
     await previousCameraController?.dispose();
 
+    if (!mounted) {
+      return;
+    }
+
     controller = cameraController;
 
     // Update UI if controller updates
