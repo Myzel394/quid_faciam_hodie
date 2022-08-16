@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_calendar_widget/flutter_calendar_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:share_location/constants/spacing.dart';
+import 'package:share_location/constants/values.dart';
 import 'package:share_location/screens/timeline_screen.dart';
 import 'package:share_location/widgets/delay_render.dart';
 import 'package:share_location/widgets/fade_and_move_in_animation.dart';
@@ -37,11 +38,18 @@ class MonthCalendarBuilder extends CalendarBuilder {
       return amount / highestAmountOfEvents;
     }();
 
-    final duration = Duration(milliseconds: Random().nextInt(800));
+    final delay = Duration(
+        microseconds:
+            Random().nextInt(CALENDAR_DATE_IN_MAX_DELAY.inMicroseconds));
 
     return DelayRender(
-      delay: duration,
+      delay: delay,
       child: FadeAndMoveInAnimation(
+        opacityDuration:
+            DEFAULT_OPACITY_DURATION * CALENDAR_DATE_IN_DURATION_MULTIPLIER,
+        translationDuration:
+            DEFAULT_TRANSLATION_DURATION * CALENDAR_DATE_IN_DURATION_MULTIPLIER,
+        translationOffset: const Offset(0.0, -MEDIUM_SPACE),
         child: Opacity(
           opacity: () {
             if (type.isOutSide) {

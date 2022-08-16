@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:share_location/models/memory_pack.dart';
+import 'package:share_location/foreign_types/memory.dart';
 import 'package:share_location/models/timeline.dart';
 import 'package:share_location/models/timeline_overlay.dart';
 import 'package:share_location/widgets/memory_sheet.dart';
@@ -11,12 +11,12 @@ import 'package:share_location/widgets/timeline_overlay.dart';
 
 class TimelinePage extends StatefulWidget {
   final DateTime date;
-  final MemoryPack memoryPack;
+  final List<Memory> memories;
 
   const TimelinePage({
     Key? key,
     required this.date,
-    required this.memoryPack,
+    required this.memories,
   }) : super(key: key);
 
   @override
@@ -165,14 +165,14 @@ class _TimelinePageState extends State<TimelinePage> {
               physics: const NeverScrollableScrollPhysics(),
               scrollDirection: Axis.horizontal,
               itemBuilder: (_, index) => MemorySlide(
-                key: Key(widget.memoryPack.memories[index].filename),
-                memory: widget.memoryPack.memories[index],
+                key: Key(widget.memories[index].filename),
+                memory: widget.memories[index],
               ),
-              itemCount: widget.memoryPack.memories.length,
+              itemCount: widget.memories.length,
             ),
             TimelineOverlay(
               date: widget.date,
-              memoriesAmount: widget.memoryPack.memories.length,
+              memoriesAmount: widget.memories.length,
               memoryIndex: timeline.memoryIndex + 1,
             ),
           ],

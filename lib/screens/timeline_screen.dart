@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:share_location/extensions/date.dart';
+import 'package:share_location/models/memories.dart';
 import 'package:share_location/models/timeline.dart';
 import 'package:share_location/utils/loadable.dart';
 import 'package:share_location/widgets/timeline_page.dart';
@@ -26,7 +27,7 @@ class TimelineScreen extends StatefulWidget {
 
 class _TimelineScreenState extends State<TimelineScreen> with Loadable {
   final pageController = PageController();
-  final timeline = TimelineModel();
+  late final TimelineModel timeline;
   bool _ignorePageChanges = false;
 
   Future<void> _goToPage(final int page) async {
@@ -45,7 +46,13 @@ class _TimelineScreenState extends State<TimelineScreen> with Loadable {
   initState() {
     super.initState();
 
-    timeline.initialize();
+    final memoriesModel = context.read<Memories>();
+
+    timeline = TimelineModel(memories: memoriesModel.memories);
+
+    memoriesModel.addListener(() {
+      timeline.refresh(memoriesModel.memories);
+    }, ['memories']);
 
     // Update page view
     timeline.addListener(() async {
@@ -86,22 +93,16 @@ class _TimelineScreenState extends State<TimelineScreen> with Loadable {
 
     return timeline.values.keys
         .toList()
-        .indexWhere((date) => DateTime.parse(date).isSameDay(widget.date!));
+        .indexWhere((date) => date.isSameDay(widget.date!));
   }
 
   @override
   Widget build(BuildContext context) {
-    if (timeline.isInitializing) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    }
-
     return WillPopScope(
       onWillPop: () async {
-        await Navigator.pushNamed(context, CalendarScreen.ID);
+        await Navigator.pushReplacementNamed(context, CalendarScreen.ID);
 
-        return true;
+        return false;
       },
       child: Scaffold(
         body: ChangeNotifierProvider.value(
@@ -124,7 +125,7 @@ class _TimelineScreenState extends State<TimelineScreen> with Loadable {
             },
             itemBuilder: (_, index) => TimelinePage(
               date: timeline.dateAtIndex(index),
-              memoryPack: timeline.atIndex(index),
+              memories: timeline.atIndex(index),
             ),
           ),
         ),
