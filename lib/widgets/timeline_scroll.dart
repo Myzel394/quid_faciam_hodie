@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:share_location/extensions/date.dart';
 import 'package:share_location/models/timeline.dart';
 import 'package:share_location/utils/loadable.dart';
 import 'package:share_location/widgets/timeline_page.dart';
@@ -8,8 +9,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 final supabase = Supabase.instance.client;
 
 class TimelineScroll extends StatefulWidget {
+  final DateTime? date;
+
   TimelineScroll({
     Key? key,
+    this.date,
   }) : super(key: key);
 
   @override
@@ -19,6 +23,19 @@ class TimelineScroll extends StatefulWidget {
 class _TimelineScrollState extends State<TimelineScroll> with Loadable {
   final pageController = PageController();
   final timeline = TimelineModel();
+  bool _ignorePageChanges = false;
+
+  Future<void> _goToPage(final int page) async {
+    _ignorePageChanges = true;
+
+    await pageController.animateToPage(
+      page,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOutQuad,
+    );
+
+    _ignorePageChanges = false;
+  }
 
   @override
   initState() {
@@ -27,19 +44,27 @@ class _TimelineScrollState extends State<TimelineScroll> with Loadable {
     timeline.initialize();
 
     // Update page view
-    timeline.addListener(() {
+    timeline.addListener(() async {
       if (timeline.currentIndex != pageController.page) {
-        pageController.animateToPage(
-          timeline.currentIndex,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOutQuad,
-        );
+        _goToPage(timeline.currentIndex);
       }
     }, ['currentIndex']);
 
     // Update page when initializing is done
     timeline.addListener(() {
+      if (!mounted) {
+        return;
+      }
+
       setState(() {});
+
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        final initialIndex = getIndexFromDate();
+
+        await _goToPage(initialIndex);
+
+        timeline.setCurrentIndex(initialIndex);
+      });
     }, ['isInitializing']);
   }
 
@@ -48,6 +73,16 @@ class _TimelineScrollState extends State<TimelineScroll> with Loadable {
     pageController.dispose();
 
     super.dispose();
+  }
+
+  int getIndexFromDate() {
+    if (widget.date == null) {
+      return 0;
+    }
+
+    return timeline.values.keys
+        .toList()
+        .indexWhere((date) => DateTime.parse(date).isSameDay(widget.date!));
   }
 
   @override
@@ -66,6 +101,10 @@ class _TimelineScrollState extends State<TimelineScroll> with Loadable {
           scrollDirection: Axis.vertical,
           itemCount: timeline.values.length,
           onPageChanged: (newPage) {
+            if (_ignorePageChanges) {
+              return;
+            }
+
             if (timeline.currentIndex != newPage) {
               // User manually changed page
               timeline.setCurrentIndex(newPage);

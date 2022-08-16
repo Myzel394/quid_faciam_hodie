@@ -49,6 +49,8 @@ dependencies:
   gallery_saver: ^2.3.2
   fluttertoast: ^8.0.9
   expandable_bottom_sheet: ^1.1.1+1
+  flutter_sticky_header: ^0.6.4
+  flutter_calendar_widget: ^0.0.2
 
 dev_dependencies:
   flutter_test:
