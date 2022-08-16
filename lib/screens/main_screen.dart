@@ -248,8 +248,16 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
       backgroundColor: Colors.black,
       bottomSheet: () {
         if (isLoading) {
-          return const Center(
-            child: CircularProgressIndicator(),
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: const <Widget>[
+                CircularProgressIndicator(),
+                SizedBox(height: MEDIUM_SPACE),
+                Text('Loading camera'),
+              ],
+            ),
           );
         }
 
