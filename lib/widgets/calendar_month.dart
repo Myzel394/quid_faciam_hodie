@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_calendar_widget/flutter_calendar_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:share_location/constants/spacing.dart';
-import 'package:share_location/widgets/timeline_scroll.dart';
+import 'package:share_location/screens/timeline_screen.dart';
 
 class MonthCalendarBuilder extends CalendarBuilder {
   @override
   Widget buildDayOfWeek(DateTime dateTime, String weekdayString) {
-    return SizedBox.shrink();
+    return const SizedBox.shrink();
   }
 
   @override
@@ -123,10 +123,11 @@ class CalendarMonth extends StatelessWidget {
       startingDayOfWeek: DayOfWeek.mon,
       onDayPressed: (date) {
         Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => TimelineScroll(date: date),
-            ));
+          context,
+          MaterialPageRoute(
+            builder: (context) => TimelineScreen(date: date),
+          ),
+        );
       },
       style: const CalendarStyle(
         calenderMargin: EdgeInsets.symmetric(vertical: MEDIUM_SPACE),
