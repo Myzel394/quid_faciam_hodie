@@ -121,12 +121,6 @@ class _TimelinePageState extends State<TimelinePage> {
           builder: (sheetContext) => MemorySheet(
             memory: timeline.currentMemory,
             sheetContext: sheetContext,
-            onDelete: () async {
-              timeline.removeCurrentMemory();
-            },
-            onVisibilityChanged: () async {
-              timeline.refreshFromServer();
-            },
           ),
         );
 

@@ -12,15 +12,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class MemorySheet extends StatefulWidget {
   final Memory memory;
   final BuildContext sheetContext;
-  final VoidCallback onDelete;
-  final VoidCallback onVisibilityChanged;
 
   const MemorySheet({
     Key? key,
     required this.memory,
     required this.sheetContext,
-    required this.onDelete,
-    required this.onVisibilityChanged,
   }) : super(key: key);
 
   @override
@@ -36,8 +32,6 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
     if (mounted) {
       Navigator.pop(context);
     }
-
-    widget.onDelete();
   }
 
   Future<void> downloadFile() async {
@@ -83,8 +77,6 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
       } else {
         context.showSuccessSnackBar(message: 'Your Memory is private now.');
       }
-
-      widget.onVisibilityChanged();
     } catch (error) {
       context.showErrorSnackBar(message: 'There was an error.');
     }

@@ -15,6 +15,8 @@ class TimelineModel extends PropertyChangeNotifier<String> {
     Map<String, MemoryPack>? timeline,
   }) : _timeline = timeline ?? {};
 
+  late RealtimeSubscription _serverSubscription;
+
   int _currentIndex = 0;
   int _memoryIndex = 0;
   bool _paused = false;
@@ -49,6 +51,12 @@ class TimelineModel extends PropertyChangeNotifier<String> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _serverSubscription.unsubscribe(timeout: Duration.zero);
+    super.dispose();
   }
 
   DateTime dateAtIndex(final int index) =>
@@ -139,12 +147,67 @@ class TimelineModel extends PropertyChangeNotifier<String> {
   Future<void> initialize() async {
     setIsInitializing(true);
 
-    await refreshFromServer();
+    await _listenToServer();
 
     setIsInitializing(false);
   }
 
-  Future<void> refreshFromServer() async {
+  void _insertMemory(final Memory memory) {
+    final date = DateFormat('yyyy-MM-dd').format(memory.creationDate);
+    if (_timeline.containsKey(date)) {
+      _timeline[date]!.memories.add(memory);
+      // Sort descending based on creation date
+      _timeline[date]!.memories.sort(
+            (a, b) => b.creationDate.compareTo(a.creationDate),
+          );
+    } else {
+      _timeline[date] = MemoryPack([memory]);
+    }
+  }
+
+  void _updateMemory(final String id, final Memory memory) {
+    final date = DateFormat('yyyy-MM-dd').format(memory.creationDate);
+    if (_timeline.containsKey(date)) {
+      _timeline[date]!.memories.removeWhere((m) => m.id == id);
+      _timeline[date]!.memories.add(memory);
+      // Sort descending based on creation date
+      _timeline[date]!.memories.sort(
+            (a, b) => b.creationDate.compareTo(a.creationDate),
+          );
+    } else {
+      _timeline[date] = MemoryPack([memory]);
+    }
+  }
+
+  void _deleteMemory(final String id) {
+    for (final date in _timeline.keys) {
+      _timeline[date]!.memories.removeWhere((m) => m.id == id);
+    }
+  }
+
+  Future<void> _onMemoriesUpdate(
+    final SupabaseRealtimePayload response,
+  ) async {
+    if (response == null) {
+      return;
+    }
+
+    switch (response.eventType) {
+      case 'INSERT':
+        final memory = Memory.parse(response.newRecord!);
+        _insertMemory(memory);
+        break;
+      case 'UPDATE':
+        final memory = Memory.parse(response.newRecord!);
+        _updateMemory(response.oldRecord!['id'], memory);
+        break;
+      case 'DELETE':
+        _deleteMemory(response.oldRecord!['id']);
+        break;
+    }
+  }
+
+  Future<void> _listenToServer() async {
     final response = await supabase
         .from('memories')
         .select()
@@ -157,6 +220,11 @@ class TimelineModel extends PropertyChangeNotifier<String> {
     values
       ..clear()
       ..addAll(mapFromMemoriesList(memories));
+
+    _serverSubscription = supabase
+        .from('memories')
+        .on(SupabaseEventTypes.all, _onMemoriesUpdate)
+        .subscribe();
 
     notifyListeners();
   }
