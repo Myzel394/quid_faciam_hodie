@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:share_location/constants/spacing.dart';
-import 'package:share_location/managers/startup_page_manager.dart';
-import 'package:share_location/widgets/logo.dart';
+import 'package:quid_faciam_hodie/constants/spacing.dart';
+import 'package:quid_faciam_hodie/managers/startup_page_manager.dart';
+import 'package:quid_faciam_hodie/widgets/logo.dart';
 
 import 'grant_permission_screen.dart';
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:share_location/constants/spacing.dart';
-import 'package:share_location/models/timeline.dart';
+import 'package:quid_faciam_hodie/constants/spacing.dart';
+import 'package:quid_faciam_hodie/models/timeline.dart';
 
 class TimelineOverlay extends StatelessWidget {
   final DateTime date;

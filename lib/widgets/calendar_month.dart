@@ -3,12 +3,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_widget/flutter_calendar_widget.dart';
 import 'package:intl/intl.dart';
-import 'package:share_location/constants/spacing.dart';
-import 'package:share_location/constants/values.dart';
-import 'package:share_location/extensions/date.dart';
-import 'package:share_location/screens/timeline_screen.dart';
-import 'package:share_location/widgets/delay_render.dart';
-import 'package:share_location/widgets/fade_and_move_in_animation.dart';
+import 'package:quid_faciam_hodie/constants/spacing.dart';
+import 'package:quid_faciam_hodie/constants/values.dart';
+import 'package:quid_faciam_hodie/extensions/date.dart';
+import 'package:quid_faciam_hodie/screens/timeline_screen.dart';
+import 'package:quid_faciam_hodie/widgets/delay_render.dart';
+import 'package:quid_faciam_hodie/widgets/fade_and_move_in_animation.dart';
 
 class MonthCalendarBuilder extends CalendarBuilder {
   @override

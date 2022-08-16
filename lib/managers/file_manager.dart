@@ -2,8 +2,8 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:path_provider/path_provider.dart';
-import 'package:share_location/enums.dart';
-import 'package:share_location/foreign_types/memory.dart';
+import 'package:quid_faciam_hodie/enums.dart';
+import 'package:quid_faciam_hodie/foreign_types/memory.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 

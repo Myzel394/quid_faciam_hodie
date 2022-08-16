@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:share_location/foreign_types/memory.dart';
-import 'package:share_location/models/timeline.dart';
-import 'package:share_location/widgets/memory_sheet.dart';
-import 'package:share_location/widgets/memory_slide.dart';
-import 'package:share_location/widgets/timeline_overlay.dart';
+import 'package:quid_faciam_hodie/foreign_types/memory.dart';
+import 'package:quid_faciam_hodie/models/timeline.dart';
+import 'package:quid_faciam_hodie/widgets/memory_sheet.dart';
+import 'package:quid_faciam_hodie/widgets/memory_slide.dart';
+import 'package:quid_faciam_hodie/widgets/timeline_overlay.dart';
 
 class TimelinePage extends StatefulWidget {
   final DateTime date;

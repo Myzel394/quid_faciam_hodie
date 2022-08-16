@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:share_location/extensions/snackbar.dart';
-import 'package:share_location/screens/login_screen.dart';
-import 'package:share_location/screens/main_screen.dart';
+import 'package:quid_faciam_hodie/extensions/snackbar.dart';
+import 'package:quid_faciam_hodie/screens/login_screen.dart';
+import 'package:quid_faciam_hodie/screens/main_screen.dart';
 import 'package:supabase/supabase.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 

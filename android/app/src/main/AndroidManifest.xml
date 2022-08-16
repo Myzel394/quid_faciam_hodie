@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.share_location">
+    package="floss.myzel394.quid_faciam_hodie">
    <application
-        android:label="share_location"
+        android:label="Quid faciam hodie?"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

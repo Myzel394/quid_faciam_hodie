@@ -1,4 +1,4 @@
-import 'package:share_location/foreign_types/memory.dart';
+import 'package:quid_faciam_hodie/foreign_types/memory.dart';
 
 class MemoryPack {
   final List<Memory> _memories;

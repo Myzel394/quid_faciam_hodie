@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:share_location/screens/main_screen.dart';
+import 'package:quid_faciam_hodie/screens/main_screen.dart';
 
 import 'main_screen/permissions_required_page.dart';
 

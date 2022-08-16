@@ -2,13 +2,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:share_location/screens/calendar_screen.dart';
-import 'package:share_location/screens/grant_permission_screen.dart';
-import 'package:share_location/screens/login_screen.dart';
-import 'package:share_location/screens/main_screen.dart';
-import 'package:share_location/screens/server_loading_screen.dart';
-import 'package:share_location/screens/timeline_screen.dart';
-import 'package:share_location/screens/welcome_screen.dart';
+import 'package:quid_faciam_hodie/screens/calendar_screen.dart';
+import 'package:quid_faciam_hodie/screens/grant_permission_screen.dart';
+import 'package:quid_faciam_hodie/screens/login_screen.dart';
+import 'package:quid_faciam_hodie/screens/main_screen.dart';
+import 'package:quid_faciam_hodie/screens/server_loading_screen.dart';
+import 'package:quid_faciam_hodie/screens/timeline_screen.dart';
+import 'package:quid_faciam_hodie/screens/welcome_screen.dart';
 
 import 'models/memories.dart';
 
@@ -40,7 +40,7 @@ class _MyAppState extends State<MyApp> {
     return ChangeNotifierProvider.value(
       value: memories,
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Quid faciam hodie?',
         theme: ThemeData.dark().copyWith(
           textTheme: ThemeData.dark().textTheme.copyWith(
                 headline1: const TextStyle(

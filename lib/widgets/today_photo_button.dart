@@ -1,9 +1,9 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:share_location/constants/spacing.dart';
-import 'package:share_location/enums.dart';
-import 'package:share_location/screens/timeline_screen.dart';
+import 'package:quid_faciam_hodie/constants/spacing.dart';
+import 'package:quid_faciam_hodie/enums.dart';
+import 'package:quid_faciam_hodie/screens/timeline_screen.dart';
 
 import 'raw_memory_display.dart';
 

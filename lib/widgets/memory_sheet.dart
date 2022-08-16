@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gallery_saver/gallery_saver.dart';
-import 'package:share_location/constants/spacing.dart';
-import 'package:share_location/enums.dart';
-import 'package:share_location/extensions/snackbar.dart';
-import 'package:share_location/foreign_types/memory.dart';
-import 'package:share_location/managers/file_manager.dart';
-import 'package:share_location/utils/loadable.dart';
-import 'package:share_location/widgets/modal_sheet.dart';
+import 'package:quid_faciam_hodie/constants/spacing.dart';
+import 'package:quid_faciam_hodie/enums.dart';
+import 'package:quid_faciam_hodie/extensions/snackbar.dart';
+import 'package:quid_faciam_hodie/foreign_types/memory.dart';
+import 'package:quid_faciam_hodie/managers/file_manager.dart';
+import 'package:quid_faciam_hodie/utils/loadable.dart';
+import 'package:quid_faciam_hodie/widgets/modal_sheet.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MemorySheet extends StatefulWidget {

@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:share_location/enums.dart';
+import 'package:quid_faciam_hodie/enums.dart';
 import 'package:video_player/video_player.dart';
 
 class RawMemoryDisplay extends StatefulWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:share_location/constants/spacing.dart';
-import 'package:share_location/controllers/status_controller.dart';
+import 'package:quid_faciam_hodie/constants/spacing.dart';
+import 'package:quid_faciam_hodie/controllers/status_controller.dart';
 
 const BAR_HEIGHT = 4.0;
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:share_location/constants/spacing.dart';
-import 'package:share_location/extensions/snackbar.dart';
-import 'package:share_location/managers/authentication_manager.dart';
-import 'package:share_location/screens/main_screen.dart';
-import 'package:share_location/utils/loadable.dart';
+import 'package:quid_faciam_hodie/constants/spacing.dart';
+import 'package:quid_faciam_hodie/extensions/snackbar.dart';
+import 'package:quid_faciam_hodie/managers/authentication_manager.dart';
+import 'package:quid_faciam_hodie/screens/main_screen.dart';
+import 'package:quid_faciam_hodie/utils/loadable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final supabase = Supabase.instance.client;

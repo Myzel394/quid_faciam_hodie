@@ -2,11 +2,11 @@ import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:share_location/constants/apis.dart';
-import 'package:share_location/constants/spacing.dart';
-import 'package:share_location/managers/global_values_manager.dart';
-import 'package:share_location/models/memories.dart';
-import 'package:share_location/widgets/dot_animation.dart';
+import 'package:quid_faciam_hodie/constants/apis.dart';
+import 'package:quid_faciam_hodie/constants/spacing.dart';
+import 'package:quid_faciam_hodie/managers/global_values_manager.dart';
+import 'package:quid_faciam_hodie/models/memories.dart';
+import 'package:quid_faciam_hodie/widgets/dot_animation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'main_screen.dart';

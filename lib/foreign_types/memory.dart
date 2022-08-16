@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:path/path.dart';
-import 'package:share_location/enums.dart';
-import 'package:share_location/managers/file_manager.dart';
+import 'package:quid_faciam_hodie/enums.dart';
+import 'package:quid_faciam_hodie/managers/file_manager.dart';
 
 class Memory {
   final String id;

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:provider/provider.dart';
-import 'package:share_location/constants/spacing.dart';
-import 'package:share_location/managers/calendar_manager.dart';
-import 'package:share_location/models/memories.dart';
-import 'package:share_location/widgets/calendar_month.dart';
-import 'package:share_location/widgets/days_of_week_strip.dart';
+import 'package:quid_faciam_hodie/constants/spacing.dart';
+import 'package:quid_faciam_hodie/managers/calendar_manager.dart';
+import 'package:quid_faciam_hodie/models/memories.dart';
+import 'package:quid_faciam_hodie/widgets/calendar_month.dart';
+import 'package:quid_faciam_hodie/widgets/days_of_week_strip.dart';
 
 class CalendarScreen extends StatelessWidget {
   static const ID = 'calendar';

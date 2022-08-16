@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:property_change_notifier/property_change_notifier.dart';
-import 'package:share_location/extensions/date.dart';
-import 'package:share_location/foreign_types/memory.dart';
+import 'package:quid_faciam_hodie/extensions/date.dart';
+import 'package:quid_faciam_hodie/foreign_types/memory.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final supabase = Supabase.instance.client;

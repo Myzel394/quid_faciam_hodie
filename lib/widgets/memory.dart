@@ -2,10 +2,10 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:share_location/constants/spacing.dart';
-import 'package:share_location/enums.dart';
-import 'package:share_location/foreign_types/memory.dart';
-import 'package:share_location/widgets/raw_memory_display.dart';
+import 'package:quid_faciam_hodie/constants/spacing.dart';
+import 'package:quid_faciam_hodie/enums.dart';
+import 'package:quid_faciam_hodie/foreign_types/memory.dart';
+import 'package:quid_faciam_hodie/widgets/raw_memory_display.dart';
 import 'package:video_player/video_player.dart';
 
 enum MemoryFetchStatus {

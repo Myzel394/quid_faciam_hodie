@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:share_location/constants/spacing.dart';
+import 'package:quid_faciam_hodie/constants/spacing.dart';
 
 class UploadingPhoto extends StatefulWidget {
   final Uint8List data;

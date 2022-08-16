@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:share_location/constants/spacing.dart';
+import 'package:quid_faciam_hodie/constants/spacing.dart';
 
 class Logo extends StatelessWidget {
   const Logo({Key? key}) : super(key: key);

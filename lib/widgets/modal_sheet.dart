@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:share_location/constants/spacing.dart';
+import 'package:quid_faciam_hodie/constants/spacing.dart';
 
 class ModalSheet extends StatelessWidget {
   final Widget child;

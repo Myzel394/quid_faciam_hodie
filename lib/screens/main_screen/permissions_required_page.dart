@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:share_location/constants/spacing.dart';
+import 'package:quid_faciam_hodie/constants/spacing.dart';
 
 class PermissionsRequiredPage extends StatefulWidget {
   final VoidCallback onPermissionsGranted;

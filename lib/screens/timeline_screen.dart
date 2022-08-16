@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:share_location/extensions/date.dart';
-import 'package:share_location/models/memories.dart';
-import 'package:share_location/models/timeline.dart';
-import 'package:share_location/utils/loadable.dart';
-import 'package:share_location/widgets/timeline_page.dart';
+import 'package:quid_faciam_hodie/extensions/date.dart';
+import 'package:quid_faciam_hodie/models/memories.dart';
+import 'package:quid_faciam_hodie/models/timeline.dart';
+import 'package:quid_faciam_hodie/utils/loadable.dart';
+import 'package:quid_faciam_hodie/widgets/timeline_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'calendar_screen.dart';
