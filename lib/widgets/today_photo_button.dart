@@ -10,9 +10,13 @@ import 'raw_memory_display.dart';
 class TodayPhotoButton extends StatelessWidget {
   final Uint8List? data;
   final MemoryType? type;
+  final VoidCallback onLeave;
+  final VoidCallback onComeBack;
 
   const TodayPhotoButton({
     Key? key,
+    required this.onLeave,
+    required this.onComeBack,
     this.data,
     this.type,
   }) : super(key: key);
@@ -20,8 +24,12 @@ class TodayPhotoButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        Navigator.pushNamed(context, TimelineScreen.ID);
+      onTap: () async {
+        onLeave();
+
+        await Navigator.pushNamed(context, TimelineScreen.ID);
+
+        onComeBack();
       },
       child: Container(
         width: 45,

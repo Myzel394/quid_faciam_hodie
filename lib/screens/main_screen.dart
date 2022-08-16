@@ -308,6 +308,7 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
                           opacityDuration: DEFAULT_OPACITY_DURATION *
                               SECONDARY_BUTTONS_DURATION_MULTIPLIER,
                           child: ChangeCameraButton(
+                            disabled: lockCamera,
                             onChangeCamera: () {
                               final currentCameraIndex = GlobalValuesManager
                                   .cameras
@@ -348,12 +349,18 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
                               SECONDARY_BUTTONS_DURATION_MULTIPLIER,
                           opacityDuration: DEFAULT_OPACITY_DURATION *
                               SECONDARY_BUTTONS_DURATION_MULTIPLIER,
-                          child: lastPhoto == null
-                              ? const TodayPhotoButton()
-                              : TodayPhotoButton(
-                                  data: lastPhoto![0],
-                                  type: lastPhoto![1],
-                                ),
+                          child: TodayPhotoButton(
+                            data: lastPhoto == null ? null : lastPhoto![0],
+                            type: lastPhoto == null ? null : lastPhoto![1],
+                            onLeave: () {
+                              controller!.setFlashMode(FlashMode.off);
+                            },
+                            onComeBack: () {
+                              if (isTorchEnabled) {
+                                controller!.setFlashMode(FlashMode.torch);
+                              }
+                            },
+                          ),
                         ),
                       ],
                     ),
@@ -362,7 +369,11 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
               ),
             ),
             expandableContent: Padding(
-              padding: const EdgeInsets.all(LARGE_SPACE),
+              padding: const EdgeInsets.only(
+                left: LARGE_SPACE,
+                right: LARGE_SPACE,
+                bottom: MEDIUM_SPACE,
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
@@ -403,8 +414,7 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
                         : () {
                             final newZoomLevelIndex =
                                 ((currentZoomLevelIndex + 1) %
-                                        zoomLevels!.length)
-                                    .toInt();
+                                    zoomLevels!.length);
 
                             controller!
                                 .setZoomLevel(zoomLevels![newZoomLevelIndex]);
