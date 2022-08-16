@@ -2,16 +2,13 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:share_location/constants/spacing.dart';
-import 'package:share_location/constants/values.dart';
 
 class UploadingPhoto extends StatefulWidget {
   final Uint8List data;
-  final VoidCallback onDone;
 
   const UploadingPhoto({
     Key? key,
     required this.data,
-    required this.onDone,
   }) : super(key: key);
 
   @override
@@ -37,16 +34,6 @@ class _UploadingPhotoState extends State<UploadingPhoto>
         curve: Curves.easeOutQuad,
       ),
     );
-
-    controller.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        Future.delayed(PHOTO_SHOW_AFTER_CREATION_DURATION, () {
-          if (mounted) {
-            widget.onDone();
-          }
-        });
-      }
-    });
 
     controller.forward();
   }

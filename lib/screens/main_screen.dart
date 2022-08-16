@@ -192,6 +192,7 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
     } finally {
       setState(() {
         lockCamera = false;
+        uploadingPhotoAnimation = null;
       });
     }
 
@@ -257,39 +258,29 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
           color: Colors.black,
           child: ExpandableBottomSheet(
             background: SafeArea(
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: <Widget>[
-                    Align(
-                      alignment: Alignment.topCenter,
-                      child: AnimateInBuilder(
-                        builder: (showPreview) => AnimatedOpacity(
-                          opacity: showPreview ? 1.0 : 0.0,
-                          duration: const Duration(milliseconds: 1100),
-                          curve: Curves.easeOutQuad,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(SMALL_SPACE),
-                            child: AspectRatio(
-                              aspectRatio: 1 / controller!.value.aspectRatio,
-                              child: controller!.buildPreview(),
-                            ),
-                          ),
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: AnimateInBuilder(
+                  builder: (showPreview) => AnimatedOpacity(
+                    opacity: showPreview ? 1.0 : 0.0,
+                    duration: const Duration(milliseconds: 1100),
+                    curve: Curves.easeOutQuad,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(SMALL_SPACE),
+                      child: AspectRatio(
+                        aspectRatio: 1 / controller!.value.aspectRatio,
+                        child: Stack(
+                          children: <Widget>[
+                            controller!.buildPreview(),
+                            if (uploadingPhotoAnimation != null)
+                              UploadingPhoto(
+                                data: uploadingPhotoAnimation!,
+                              ),
+                          ],
                         ),
                       ),
                     ),
-                    if (uploadingPhotoAnimation != null)
-                      UploadingPhoto(
-                        data: uploadingPhotoAnimation!,
-                        onDone: () {
-                          setState(() {
-                            uploadingPhotoAnimation = null;
-                          });
-                        },
-                      ),
-                  ],
+                  ),
                 ),
               ),
             ),
