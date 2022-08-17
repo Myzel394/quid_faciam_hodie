@@ -35,7 +35,6 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
   bool isRecording = false;
   bool lockCamera = false;
   bool isTorchEnabled = false;
-  List? lastPhoto;
   Uint8List? uploadingPhotoAnimation;
   List<double>? zoomLevels;
 
@@ -62,7 +61,6 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
   void initState() {
     super.initState();
 
-    getLastPhoto();
     onNewCameraSelected(GlobalValuesManager.cameras[0]);
   }
 
@@ -99,14 +97,6 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
     if (user != null) {
       _user = user;
     }
-  }
-
-  Future<void> getLastPhoto() async {
-    final data = await FileManager.getLastFile(_user);
-
-    setState(() {
-      lastPhoto = data;
-    });
   }
 
   void onNewCameraSelected(final CameraDescription cameraDescription) async {
@@ -198,10 +188,6 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
         uploadingPhotoAnimation = null;
       });
     }
-
-    if (mounted) {
-      await getLastPhoto();
-    }
   }
 
   Future<void> takeVideo() async {
@@ -239,10 +225,6 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
       setState(() {
         lockCamera = false;
       });
-    }
-
-    if (mounted) {
-      await getLastPhoto();
     }
   }
 
@@ -362,8 +344,6 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
                           opacityDuration: DEFAULT_OPACITY_DURATION *
                               SECONDARY_BUTTONS_DURATION_MULTIPLIER,
                           child: TodayPhotoButton(
-                            data: lastPhoto == null ? null : lastPhoto![0],
-                            type: lastPhoto == null ? null : lastPhoto![1],
                             onLeave: () {
                               controller!.setFlashMode(FlashMode.off);
                             },
@@ -436,7 +416,7 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
                             });
                           },
                     child: zoomLevels == null
-                        ? Text('1x')
+                        ? const Text('1x')
                         : Text(
                             formatZoomLevel(currentZoomLevel),
                           ),

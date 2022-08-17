@@ -62,6 +62,10 @@ class _RawMemoryDisplayState extends State<RawMemoryDisplay> {
 
     videoController = VideoPlayerController.file(file);
     videoController!.initialize().then((value) {
+      if (!mounted) {
+        return;
+      }
+
       setState(() {});
       videoController!.setLooping(widget.loopVideo);
       videoController!.play();
