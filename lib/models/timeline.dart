@@ -13,7 +13,9 @@ class TimelineModel extends PropertyChangeNotifier<String> {
 
   TimelineModel({
     required final List<Memory> memories,
-  }) : _timeline = mapFromMemoriesList(memories);
+    final int initialndex = 0,
+  })  : _timeline = mapFromMemoriesList(memories),
+        _currentIndex = initialndex;
 
   RealtimeSubscription? _serverSubscription;
 

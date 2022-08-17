@@ -28,21 +28,8 @@ class TimelineScreen extends StatefulWidget {
 }
 
 class _TimelineScreenState extends State<TimelineScreen> with Loadable {
-  final pageController = PageController();
+  late final pageController;
   late final TimelineModel timeline;
-  bool _ignorePageChanges = false;
-
-  Future<void> _goToPage(final int page) async {
-    _ignorePageChanges = true;
-
-    await pageController.animateToPage(
-      page,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeOutQuad,
-    );
-
-    _ignorePageChanges = false;
-  }
 
   @override
   initState() {
@@ -50,7 +37,15 @@ class _TimelineScreenState extends State<TimelineScreen> with Loadable {
 
     final memoriesModel = context.read<Memories>();
 
-    timeline = TimelineModel(memories: memoriesModel.memories);
+    timeline = TimelineModel(
+      memories: memoriesModel.memories,
+    );
+    final initialIndex = getIndexFromDate();
+    pageController = PageController(
+      initialPage: initialIndex,
+    );
+
+    timeline.setCurrentIndex(initialIndex);
 
     memoriesModel.addListener(() {
       timeline.refresh(memoriesModel.memories);
@@ -59,17 +54,13 @@ class _TimelineScreenState extends State<TimelineScreen> with Loadable {
     // Update page view
     timeline.addListener(() async {
       if (timeline.currentIndex != pageController.page) {
-        _goToPage(timeline.currentIndex);
+        await pageController.animateToPage(
+          timeline.currentIndex,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOutQuad,
+        );
       }
     }, ['currentIndex']);
-
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final initialIndex = getIndexFromDate();
-
-      await _goToPage(initialIndex);
-
-      timeline.setCurrentIndex(initialIndex);
-    });
   }
 
   @override
@@ -109,10 +100,6 @@ class _TimelineScreenState extends State<TimelineScreen> with Loadable {
             scrollDirection: Axis.vertical,
             itemCount: timeline.values.length,
             onPageChanged: (newPage) {
-              if (_ignorePageChanges) {
-                return;
-              }
-
               if (timeline.currentIndex != newPage) {
                 // User manually changed page
                 timeline.setCurrentIndex(newPage);
