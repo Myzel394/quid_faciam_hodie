@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/enums.dart';
+import 'package:quid_faciam_hodie/screens/server_loading_screen.dart';
 import 'package:quid_faciam_hodie/screens/timeline_screen.dart';
 
 import 'raw_memory_display.dart';
@@ -27,7 +28,14 @@ class TodayPhotoButton extends StatelessWidget {
       onTap: () async {
         onLeave();
 
-        await Navigator.pushNamed(context, TimelineScreen.ID);
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ServerLoadingScreen(
+              nextScreen: TimelineScreen.ID,
+            ),
+          ),
+        );
 
         onComeBack();
       },

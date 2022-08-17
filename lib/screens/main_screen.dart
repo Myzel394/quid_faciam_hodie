@@ -62,7 +62,7 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
   void initState() {
     super.initState();
 
-    callWithLoading(getLastPhoto);
+    getLastPhoto();
     onNewCameraSelected(GlobalValuesManager.cameras[0]);
   }
 

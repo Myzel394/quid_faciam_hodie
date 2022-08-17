@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
 import 'package:quid_faciam_hodie/enums.dart';
 import 'package:quid_faciam_hodie/foreign_types/memory.dart';
+import 'package:quid_faciam_hodie/managers/global_values_manager.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 
@@ -15,6 +16,8 @@ class FileManager {
   static Map<String, Uint8List> fileCache = {};
 
   static Future<Memory> getMemoryMetadata(final String id) async {
+    await GlobalValuesManager.waitForServerInitialization();
+
     final response = await supabase
         .from('memories')
         .select()
@@ -30,6 +33,8 @@ class FileManager {
   }
 
   static uploadFile(final User user, final File file) async {
+    await GlobalValuesManager.waitForServerInitialization();
+
     final basename = uuid.v4();
     final extension = file.path.split('.').last;
     final filename = '$basename.$extension';
@@ -106,6 +111,8 @@ class FileManager {
     final bool disableDownloadCache = false,
     final bool disableFileCache = false,
   }) async {
+    await GlobalValuesManager.waitForServerInitialization();
+
     final tempDirectory = await getTemporaryDirectory();
     final filename = '${tempDirectory.path}/$path';
     final file = File(filename);
@@ -125,6 +132,8 @@ class FileManager {
   }
 
   static Future<void> deleteFile(final String path) async {
+    await GlobalValuesManager.waitForServerInitialization();
+
     final response =
         await supabase.from('memories').delete().eq('location', path).execute();
 

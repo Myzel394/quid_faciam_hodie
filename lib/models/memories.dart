@@ -1,5 +1,6 @@
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:quid_faciam_hodie/foreign_types/memory.dart';
+import 'package:quid_faciam_hodie/managers/global_values_manager.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final supabase = Supabase.instance.client;
@@ -10,10 +11,10 @@ class Memories extends PropertyChangeNotifier<String> {
   Memories();
 
   RealtimeSubscription? _serverSubscription;
-  bool _isInitializing = true;
+  bool _isInitialized = false;
 
   List<Memory> get memories => _memories;
-  bool get isInitializing => _isInitializing;
+  bool get isInitialized => _isInitialized;
 
   @override
   void dispose() {
@@ -42,9 +43,9 @@ class Memories extends PropertyChangeNotifier<String> {
     notifyListeners('memories');
   }
 
-  void setIsInitializing(final bool value) {
-    _isInitializing = value;
-    notifyListeners('isInitializing');
+  void setIsInitialized(final bool value) {
+    _isInitialized = value;
+    notifyListeners('isInitialized');
   }
 
   void sortMemories() {
@@ -53,11 +54,11 @@ class Memories extends PropertyChangeNotifier<String> {
   }
 
   Future<void> initialize() async {
-    setIsInitializing(true);
+    setIsInitialized(false);
 
     await _loadInitialData();
 
-    setIsInitializing(false);
+    setIsInitialized(true);
     notifyListeners();
 
     // Watch new updates
@@ -100,6 +101,8 @@ class Memories extends PropertyChangeNotifier<String> {
   }
 
   Future<void> _loadInitialData() async {
+    await GlobalValuesManager.waitForServerInitialization();
+
     final response = await supabase
         .from('memories')
         .select()

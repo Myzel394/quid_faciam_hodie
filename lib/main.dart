@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,6 +12,7 @@ import 'package:quid_faciam_hodie/screens/server_loading_screen.dart';
 import 'package:quid_faciam_hodie/screens/timeline_screen.dart';
 import 'package:quid_faciam_hodie/screens/welcome_screen.dart';
 
+import 'managers/global_values_manager.dart';
 import 'models/memories.dart';
 
 void main() async {
@@ -20,6 +22,9 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+
+  GlobalValuesManager.setCameras(await availableCameras());
+  GlobalValuesManager.initializeServer();
 
   runApp(const MyApp());
 }

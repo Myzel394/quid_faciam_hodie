@@ -1,8 +1,6 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quid_faciam_hodie/constants/apis.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/managers/global_values_manager.dart';
 import 'package:quid_faciam_hodie/models/memories.dart';
@@ -15,7 +13,12 @@ import 'welcome_screen.dart';
 class ServerLoadingScreen extends StatefulWidget {
   static const ID = 'server_loading';
 
-  const ServerLoadingScreen({Key? key}) : super(key: key);
+  final String? nextScreen;
+
+  const ServerLoadingScreen({
+    Key? key,
+    this.nextScreen,
+  }) : super(key: key);
 
   @override
   State<ServerLoadingScreen> createState() => _ServerLoadingScreenState();
@@ -30,25 +33,20 @@ class _ServerLoadingScreenState extends State<ServerLoadingScreen> {
   }
 
   Future<void> load() async {
-    if (!GlobalValuesManager.hasBeenInitialized) {
-      GlobalValuesManager.setCameras(await availableCameras());
-
-      await Supabase.initialize(
-        url: SUPABASE_API_URL,
-        anonKey: SUPABASE_API_KEY,
-        debug: kDebugMode,
-      );
-
-      GlobalValuesManager.setHasBeenInitialized(true);
-    }
+    await GlobalValuesManager.waitForServerInitialization();
 
     final memories = context.read<Memories>();
     final session = Supabase.instance.client.auth.session();
 
     if (session != null) {
-      memories.initialize().then((_) {
-        Navigator.pushReplacementNamed(context, MainScreen.ID);
-      });
+      if (!memories.isInitialized) {
+        await memories.initialize();
+      }
+
+      Navigator.pushReplacementNamed(
+        context,
+        widget.nextScreen ?? MainScreen.ID,
+      );
     } else {
       Navigator.pushReplacementNamed(context, WelcomeScreen.ID);
     }
