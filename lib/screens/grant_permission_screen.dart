@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/screens/main_screen.dart';
 
 import 'grant_permission_screen/permissions_required_page.dart';
 
 class GrantPermissionScreen extends StatelessWidget {
-  static const ID = 'grant_permission';
+  static const ID = '/grant_permission';
 
   const GrantPermissionScreen({Key? key}) : super(key: key);
 
@@ -13,15 +15,18 @@ class GrantPermissionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
 
-    return Scaffold(
-      appBar: AppBar(
+    return PlatformScaffold(
+      appBar: PlatformAppBar(
         title: Text(localizations.grantPermissionScreenTitle),
       ),
-      body: Center(
-        child: PermissionsRequiredPage(
-          onPermissionsGranted: () {
-            Navigator.pushReplacementNamed(context, MainScreen.ID);
-          },
+      body: Padding(
+        padding: const EdgeInsets.all(MEDIUM_SPACE),
+        child: Center(
+          child: PermissionsRequiredPage(
+            onPermissionsGranted: () {
+              Navigator.pushReplacementNamed(context, MainScreen.ID);
+            },
+          ),
         ),
       ),
     );

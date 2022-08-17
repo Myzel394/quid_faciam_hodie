@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
@@ -18,14 +19,14 @@ class TimelineOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final timeline = context.watch<TimelineModel>();
 
     return Stack(
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(
-            top: LARGE_SPACE,
+          padding: EdgeInsets.only(
+            // Cupertino needs more space as the top bar is shown to provide a pop button
+            top: isCupertino(context) ? HUGE_SPACE : LARGE_SPACE,
             left: MEDIUM_SPACE,
             right: MEDIUM_SPACE,
           ),
@@ -36,9 +37,16 @@ class TimelineOverlay extends StatelessWidget {
             child: Text(
               DateFormat.yMMMd().format(date),
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headline1!.copyWith(
-                    color: Colors.white,
-                  ),
+              style: platformThemeData(
+                context,
+                material: (data) => data.textTheme.headline1!.copyWith(
+                  color: Colors.white,
+                ),
+                cupertino: (data) =>
+                    data.textTheme.navLargeTitleTextStyle.copyWith(
+                  color: Colors.white,
+                ),
+              ),
             ),
           ),
         ),
@@ -59,16 +67,27 @@ class TimelineOverlay extends StatelessWidget {
                     curve: Curves.linearToEaseOut,
                     child: Icon(
                       Icons.public,
-                      size: theme.textTheme.titleSmall!.fontSize,
+                      size: platformThemeData(
+                        context,
+                        material: (data) => data.textTheme.bodyLarge!.fontSize,
+                        cupertino: (data) => data.textTheme.textStyle.fontSize,
+                      ),
                       color: Colors.white,
                     ),
                   ),
                   const SizedBox(width: SMALL_SPACE),
                   Text(
                     '$memoryIndex/$memoriesAmount',
-                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                          color: Colors.white,
-                        ),
+                    style: platformThemeData(
+                      context,
+                      material: (data) => data.textTheme.titleSmall!.copyWith(
+                        color: Colors.white,
+                      ),
+                      cupertino: (data) =>
+                          data.textTheme.navTitleTextStyle.copyWith(
+                        color: Colors.white,
+                      ),
+                    ),
                   )
                 ],
               ),

@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_widget/flutter_calendar_widget.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/constants/values.dart';
@@ -119,8 +120,6 @@ class CalendarMonth extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return FlutterCalendar(
       focusedDate: firstDate,
       selectionMode: CalendarSelectionMode.single,
@@ -157,13 +156,28 @@ class CalendarMonth extends StatelessWidget {
         calenderMargin: EdgeInsets.symmetric(vertical: MEDIUM_SPACE),
       ),
       textStyle: CalendarTextStyle(
-        headerTextStyle: theme.textTheme.subtitle1!,
-        dayOfWeekTextColor: theme.textTheme.bodyText2!.color!,
-        dayTextColor: theme.textTheme.bodyText1!.color!,
+        headerTextStyle: platformThemeData(
+          context,
+          material: (data) => data.textTheme.subtitle1!,
+          cupertino: (data) => data.textTheme.navTitleTextStyle,
+        ),
+        dayTextColor: platformThemeData(
+          context,
+          material: (data) => data.textTheme.bodyText1!.color!,
+          cupertino: (data) => data.textTheme.textStyle.color!,
+        ),
         // Background color
-        selectedDayTextColor: theme.textTheme.bodyText1!.color!,
+        selectedDayTextColor: platformThemeData(
+          context,
+          material: (data) => data.textTheme.bodyText1!.color!,
+          cupertino: (data) => data.textTheme.textStyle.color!,
+        ),
         // Foreground color
-        focusedDayTextColor: theme.dialogBackgroundColor,
+        focusedDayTextColor: platformThemeData(
+          context,
+          material: (data) => data.dialogBackgroundColor,
+          cupertino: (data) => data.barBackgroundColor,
+        ),
       ),
     );
   }

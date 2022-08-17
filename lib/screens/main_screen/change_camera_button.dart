@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class ChangeCameraButton extends StatelessWidget {
   final VoidCallback onChangeCamera;
@@ -13,9 +14,7 @@ class ChangeCameraButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      enableFeedback: false,
-      highlightColor: Colors.transparent,
+    return GestureDetector(
       onTap: () {
         if (disabled) {
           return;
@@ -34,9 +33,9 @@ class ChangeCameraButton extends StatelessWidget {
               size: 60,
               color: Colors.white.withOpacity(.2),
             ),
-            const Icon(
-              Icons.camera_alt,
-              size: 30,
+            Icon(
+              context.platformIcons.switchCamera,
+              size: 25,
               color: Colors.white,
             ),
           ],

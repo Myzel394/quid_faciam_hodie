@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/enums.dart';
 import 'package:quid_faciam_hodie/foreign_types/memory.dart';
@@ -81,14 +82,19 @@ class _MemoryViewState extends State<MemoryView> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    final theme = Theme.of(context);
 
     if (status == MemoryFetchStatus.error) {
       return Center(
         child: Text(
           localizations.memoryViewDownloadFailed,
-          style: theme.textTheme.bodyText2!.copyWith(
-            color: Colors.white,
+          style: platformThemeData(
+            context,
+            material: (data) => data.textTheme.bodyText2!.copyWith(
+              color: Colors.white,
+            ),
+            cupertino: (data) => data.textTheme.textStyle.copyWith(
+              color: Colors.white,
+            ),
           ),
         ),
       );
@@ -126,15 +132,21 @@ class _MemoryViewState extends State<MemoryView> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        const CircularProgressIndicator(),
+        PlatformCircularProgressIndicator(),
         const SizedBox(height: SMALL_SPACE),
         () {
           switch (status) {
             case MemoryFetchStatus.downloading:
               return Text(
                 localizations.memoryViewIsDownloading,
-                style: theme.textTheme.bodyText2!.copyWith(
-                  color: Colors.white,
+                style: platformThemeData(
+                  context,
+                  material: (data) => data.textTheme.bodyText2!.copyWith(
+                    color: Colors.white,
+                  ),
+                  cupertino: (data) => data.textTheme.textStyle.copyWith(
+                    color: Colors.white,
+                  ),
                 ),
               );
             default:

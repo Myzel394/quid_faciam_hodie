@@ -1,16 +1,19 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/extensions/snackbar.dart';
 import 'package:quid_faciam_hodie/managers/authentication_manager.dart';
 import 'package:quid_faciam_hodie/screens/server_loading_screen.dart';
 import 'package:quid_faciam_hodie/utils/loadable.dart';
+import 'package:quid_faciam_hodie/widgets/icon_button_child.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final supabase = Supabase.instance.client;
 
 class LoginScreen extends StatefulWidget {
-  static const ID = 'login';
+  static const ID = '/login';
 
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -85,10 +88,9 @@ class _LoginScreenState extends AuthState<LoginScreen> with Loadable {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    final theme = Theme.of(context);
 
-    return Scaffold(
-      appBar: AppBar(
+    return PlatformScaffold(
+      appBar: PlatformAppBar(
         title: Text(localizations.loginScreenTitle),
       ),
       body: Padding(
@@ -99,38 +101,63 @@ class _LoginScreenState extends AuthState<LoginScreen> with Loadable {
           children: <Widget>[
             Text(
               localizations.loginScreenTitle,
-              style: theme.textTheme.headline1,
+              style: platformThemeData(
+                context,
+                material: (data) => data.textTheme.headline1,
+                cupertino: (data) => data.textTheme.navLargeTitleTextStyle,
+              ),
             ),
             const SizedBox(height: LARGE_SPACE),
-            Text(localizations.loginScreenHelpText),
+            Text(
+              localizations.loginScreenHelpText,
+              style: platformThemeData(
+                context,
+                material: (data) => data.textTheme.bodyText1,
+                cupertino: (data) => data.textTheme.textStyle,
+              ),
+            ),
             const SizedBox(height: MEDIUM_SPACE),
-            TextField(
+            PlatformTextField(
               controller: emailController,
               autofocus: true,
               autofillHints: const [AutofillHints.email],
               keyboardType: TextInputType.emailAddress,
               textInputAction: TextInputAction.next,
-              decoration: InputDecoration(
-                labelText: localizations.loginScreenFormEmailLabel,
-                prefixIcon: const Icon(Icons.email),
+              material: (_, __) => MaterialTextFieldData(
+                decoration: InputDecoration(
+                  labelText: localizations.loginScreenFormEmailLabel,
+                  prefixIcon: Icon(context.platformIcons.mail),
+                ),
+              ),
+              cupertino: (_, __) => CupertinoTextFieldData(
+                placeholder: localizations.loginScreenFormEmailLabel,
+                prefix: Icon(context.platformIcons.mail),
               ),
             ),
             const SizedBox(height: SMALL_SPACE),
-            TextField(
+            PlatformTextField(
               obscureText: true,
               controller: passwordController,
-              decoration: InputDecoration(
-                labelText: localizations.loginScreenFormPasswordLabel,
-                prefixIcon: const Icon(Icons.lock),
+              material: (_, __) => MaterialTextFieldData(
+                decoration: InputDecoration(
+                  labelText: localizations.loginScreenFormPasswordLabel,
+                  prefixIcon: Icon(context.platformIcons.padLock),
+                ),
+              ),
+              cupertino: (_, __) => CupertinoTextFieldData(
+                placeholder: localizations.loginScreenFormPasswordLabel,
+                prefix: Icon(context.platformIcons.padLock),
               ),
               onSubmitted: (value) => callWithLoading(signIn),
             ),
             const SizedBox(height: MEDIUM_SPACE),
-            ElevatedButton.icon(
-              icon: const Icon(Icons.arrow_right),
-              label: Text(localizations.loginScreenFormSubmitButton),
+            PlatformElevatedButton(
               onPressed: isLoading ? null : () => callWithLoading(signIn),
-            )
+              child: IconButtonChild(
+                icon: Icon(context.platformIcons.forward),
+                label: Text(localizations.loginScreenFormSubmitButton),
+              ),
+            ),
           ],
         ),
       ),

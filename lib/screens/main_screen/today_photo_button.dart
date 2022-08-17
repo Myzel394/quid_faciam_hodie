@@ -70,7 +70,7 @@ class _TodayPhotoButtonState extends State<TodayPhotoButton> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: () async {
         widget.onLeave();
 
@@ -85,25 +85,27 @@ class _TodayPhotoButtonState extends State<TodayPhotoButton> {
 
         widget.onComeBack();
       },
-      child: Container(
-        width: 45,
-        height: 45,
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: Colors.white,
-            width: 2,
+      child: Align(
+        child: Container(
+          width: 45,
+          height: 45,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.white,
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(SMALL_SPACE),
+            color: Colors.grey,
           ),
-          borderRadius: BorderRadius.circular(SMALL_SPACE),
-          color: Colors.grey,
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(SMALL_SPACE),
-          child: (data == null || type == null)
-              ? const SizedBox.shrink()
-              : RawMemoryDisplay(
-                  data: data!,
-                  type: type!,
-                ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(SMALL_SPACE),
+            child: (data == null || type == null)
+                ? const SizedBox.shrink()
+                : RawMemoryDisplay(
+                    data: data!,
+                    type: type!,
+                  ),
+          ),
         ),
       ),
     );

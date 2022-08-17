@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:provider/provider.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
@@ -9,7 +10,7 @@ import 'calendar_screen/calendar_month.dart';
 import 'calendar_screen/days_of_week_strip.dart';
 
 class CalendarScreen extends StatelessWidget {
-  static const ID = 'calendar';
+  static const ID = '/calendar';
 
   const CalendarScreen({
     Key? key,
@@ -18,21 +19,31 @@ class CalendarScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final memoriesManager = context.read<Memories>();
-    final theme = Theme.of(context);
 
     final calendarManager = CalendarManager(memories: memoriesManager.memories);
     final monthMapping = calendarManager.getMappingForList();
 
     return Consumer<Memories>(
-      builder: (context, memories, _) => Scaffold(
+      builder: (context, memories, _) => PlatformScaffold(
+        appBar: isCupertino(context)
+            ? PlatformAppBar(
+                title: Text('Calendar'),
+              )
+            : null,
         body: Padding(
-          padding: const EdgeInsets.symmetric(vertical: MEDIUM_SPACE),
+          padding: EdgeInsets.only(
+            top: isCupertino(context) ? HUGE_SPACE : MEDIUM_SPACE,
+          ),
           child: CustomScrollView(
             reverse: true,
             slivers: [
               SliverStickyHeader(
                 header: Container(
-                  color: theme.canvasColor,
+                  color: platformThemeData(
+                    context,
+                    material: (data) => data.canvasColor,
+                    cupertino: (data) => data.barBackgroundColor,
+                  ),
                   padding: const EdgeInsets.symmetric(vertical: SMALL_SPACE),
                   child: const DaysOfWeekStrip(),
                 ),

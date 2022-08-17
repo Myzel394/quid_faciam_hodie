@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/managers/global_values_manager.dart';
@@ -11,7 +12,7 @@ import 'server_loading_screen/dot_animation.dart';
 import 'welcome_screen.dart';
 
 class ServerLoadingScreen extends StatefulWidget {
-  static const ID = 'server_loading';
+  static const ID = '/server_loading';
 
   final String? nextScreen;
 
@@ -63,7 +64,11 @@ class _ServerLoadingScreenState extends State<ServerLoadingScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            const Icon(Icons.cloud, size: 60),
+            const Icon(
+              Icons.cloud,
+              size: 60,
+              color: Colors.white,
+            ),
             const SizedBox(height: SMALL_SPACE),
             const DotAnimation(
               initialFadeInDelay: Duration.zero,
@@ -87,9 +92,20 @@ class _ServerLoadingScreenState extends State<ServerLoadingScreen> {
               fadeOutDelay: Duration.zero,
             ),
             const SizedBox(height: SMALL_SPACE),
-            const Icon(Icons.smartphone, size: 60),
+            const Icon(
+              Icons.phone_android_rounded,
+              size: 60,
+              color: Colors.white,
+            ),
             const SizedBox(height: LARGE_SPACE),
-            Text(localizations.serverLoadingScreenDescription),
+            Text(
+              localizations.serverLoadingScreenDescription,
+              style: platformThemeData(
+                context,
+                material: (data) => data.textTheme.bodyText1,
+                cupertino: (data) => data.textTheme.textStyle,
+              ),
+            ),
           ],
         ),
       ),

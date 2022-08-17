@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:quid_faciam_hodie/extensions/date.dart';
 import 'package:quid_faciam_hodie/models/memories.dart';
@@ -12,7 +13,7 @@ import 'timeline_screen/timeline_page.dart';
 final supabase = Supabase.instance.client;
 
 class TimelineScreen extends StatefulWidget {
-  static const ID = 'timeline';
+  static const ID = '/timeline';
 
   final DateTime? date;
 
@@ -92,7 +93,12 @@ class _TimelineScreenState extends State<TimelineScreen> with Loadable {
 
         return true;
       },
-      child: Scaffold(
+      child: PlatformScaffold(
+        appBar: isCupertino(context)
+            ? PlatformAppBar(
+                title: Text('Timeline'),
+              )
+            : null,
         body: ChangeNotifierProvider.value(
           value: timeline,
           child: PageView.builder(

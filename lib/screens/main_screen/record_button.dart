@@ -28,6 +28,17 @@ class _RecordButtonState extends State<RecordButton> {
   bool animateToVideoIcon = false;
   bool videoInAnimationActive = false;
 
+  void cancelAnimation() {
+    if (videoInAnimationActive || animateToVideoIcon) {
+      return;
+    }
+
+    setState(() {
+      videoInAnimationActive = false;
+      animateToVideoIcon = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -57,6 +68,7 @@ class _RecordButtonState extends State<RecordButton> {
         }
 
         setState(() {
+          animateToVideoIcon = false;
           videoInAnimationActive = true;
         });
 
@@ -96,69 +108,69 @@ class _RecordButtonState extends State<RecordButton> {
         });
       },
       // Cancel icon animation
-      onTapCancel: () {
-        if (videoInAnimationActive || animateToVideoIcon) {
-          return;
-        }
-
-        setState(() {
-          videoInAnimationActive = false;
-          animateToVideoIcon = false;
-        });
-      },
-      // Cancel icon animation
-      onPanCancel: () {
-        if (videoInAnimationActive || animateToVideoIcon) {
-          return;
-        }
-
-        setState(() {
-          videoInAnimationActive = false;
-          animateToVideoIcon = false;
-        });
-      },
+      onTapCancel: cancelAnimation,
+      onPanCancel: cancelAnimation,
+      onLongPressCancel: cancelAnimation,
       child: Opacity(
         opacity: widget.disabled ? 0.5 : 1.0,
         child: Stack(
           alignment: Alignment.center,
           children: <Widget>[
-            Icon(
-              Icons.circle,
-              size: 75,
-              color: Colors.white.withOpacity(.2),
-            ),
-            AnimatedScale(
-              duration: animateToVideoIcon ? kLongPressTimeout : OUT_DURATION,
-              curve: Curves.easeInOut,
-              scale: animateToVideoIcon ? (75 / 50) : 1,
-              child: const Icon(
-                Icons.circle,
-                size: 50,
-                color: Colors.white,
+            AnimatedContainer(
+              duration: videoInAnimationActive ? Duration.zero : OUT_DURATION,
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                color: videoInAnimationActive
+                    ? Colors.white
+                    : Colors.white.withOpacity(.2),
+                borderRadius: BorderRadius.circular(30),
               ),
             ),
             AnimatedScale(
+              duration: () {
+                if (videoInAnimationActive) {
+                  return Duration(milliseconds: 400);
+                }
+
+                if (animateToVideoIcon) {
+                  return kLongPressTimeout;
+                }
+
+                return OUT_DURATION;
+              }(),
               curve: Curves.easeInOut,
-              duration: animateToVideoIcon
-                  ? const Duration(milliseconds: 180)
-                  : OUT_DURATION,
-              scale: videoInAnimationActive ? 1 : 0,
-              child: const Icon(
-                Icons.circle,
-                size: 65,
-                color: Colors.red,
-              ),
-            ),
-            AnimatedScale(
-              curve: animateToVideoIcon ? Curves.easeOut : Curves.linear,
-              duration: animateToVideoIcon
-                  ? const Duration(milliseconds: 250)
-                  : OUT_DURATION,
-              scale: videoInAnimationActive ? 1 : .6,
-              child: const Icon(
-                Icons.stop,
-                size: 45,
-                color: Colors.white,
+              scale: () {
+                if (videoInAnimationActive) {
+                  return .6;
+                }
+
+                if (animateToVideoIcon) {
+                  return 60 / 40;
+                }
+
+                return 1.0;
+              }(),
+              child: AnimatedContainer(
+                duration: () {
+                  if (videoInAnimationActive) {
+                    return Duration(milliseconds: 400);
+                  }
+
+                  if (animateToVideoIcon) {
+                    return kLongPressTimeout;
+                  }
+
+                  return OUT_DURATION;
+                }(),
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: videoInAnimationActive ? Colors.red : Colors.white,
+                  borderRadius: videoInAnimationActive
+                      ? BorderRadius.circular(4)
+                      : BorderRadius.circular(50),
+                ),
               ),
             ),
           ],

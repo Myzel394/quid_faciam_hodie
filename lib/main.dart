@@ -1,8 +1,8 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:quid_faciam_hodie/constants/themes.dart';
 import 'package:quid_faciam_hodie/screens/calendar_screen.dart';
@@ -24,7 +24,6 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
-  GlobalValuesManager.setCameras(await availableCameras());
   GlobalValuesManager.initializeServer();
 
   runApp(const MyApp());
@@ -46,11 +45,16 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
       value: memories,
-      child: MaterialApp(
+      child: PlatformApp(
         title: 'Quid faciam hodie?',
-        theme: LIGHT_THEME,
-        darkTheme: DARK_THEME,
-        themeMode: ThemeMode.system,
+        material: (_, __) => MaterialAppData(
+          theme: LIGHT_THEME_MATERIAL,
+          darkTheme: DARK_THEME_MATERIAL,
+          themeMode: ThemeMode.system,
+        ),
+        cupertino: (_, __) => CupertinoAppData(
+          theme: LIGHT_THEME_CUPERTINO,
+        ),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         routes: {
