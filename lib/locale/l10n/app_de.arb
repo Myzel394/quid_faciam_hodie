@@ -41,6 +41,7 @@
 
 
   "memoryViewIsDownloading": "Erinnerung wird heruntergeladen",
+  "memoryViewDownloadFailed": "Erinnerung konnte nicht geladen werden.",
 
 
   "memorySheetSavedToGallery": "In Gallerie gespeichert!",

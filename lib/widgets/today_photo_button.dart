@@ -41,9 +41,11 @@ class _TodayPhotoButtonState extends State<TodayPhotoButton> {
 
   @override
   void dispose() {
-    final memories = context.read<Memories>();
+    try {
+      final memories = context.read<Memories>();
 
-    memories.removeListener(loadMemory);
+      memories.removeListener(loadMemory);
+    } catch (_) {}
 
     super.dispose();
   }

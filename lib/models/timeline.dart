@@ -36,9 +36,9 @@ class TimelineModel extends PropertyChangeNotifier<String> {
 
   List<Memory> atIndex(final int index) => _timeline.values.elementAt(index);
 
-  List<Memory> get _currentMemoryPack => atIndex(currentIndex);
-  bool get _isAtLastMemory => _memoryIndex == _currentMemoryPack.length - 1;
-  Memory get currentMemory => _currentMemoryPack.elementAt(_memoryIndex);
+  List<Memory> get _currentMemories => atIndex(currentIndex);
+  bool get _isAtLastMemory => _memoryIndex == _currentMemories.length - 1;
+  Memory get currentMemory => _currentMemories.elementAt(_memoryIndex);
 
   void _removeEmptyDates() {
     _timeline.removeWhere((key, memories) => memories.isEmpty);
@@ -129,7 +129,7 @@ class TimelineModel extends PropertyChangeNotifier<String> {
     }
 
     setCurrentIndex(currentIndex - 1);
-    setMemoryIndex(_currentMemoryPack.length - 1);
+    setMemoryIndex(_currentMemories.length - 1);
   }
 
   void nextMemory() {

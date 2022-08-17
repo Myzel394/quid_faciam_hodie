@@ -33,7 +33,7 @@
   "grantPermissionScreenTitle": "Grant Permissions",
 
   "permissionsRequiredPageTitle": "Permissions Required",
-    "permissionsRequiredPageDescription": "Please grant the following permissions to use this app.",
+  "permissionsRequiredPageDescription": "Please grant the following permissions to use this app.",
   "permissionsRequiredPagePermanentlyDenied": "You have permanently denied permissions required to use this app. Please enable them in the settings.",
   "permissionsRequiredPageOpenSettings": "Open Settings",
   "permissionsRequiredPageGrantCameraPermission": "Grant camera permission",
@@ -41,6 +41,7 @@
 
 
   "memoryViewIsDownloading": "Downloading memory",
+  "memoryViewDownloadFailed": "Memory could not be loaded.",
 
 
   "memorySheetSavedToGallery": "Saved to Gallery!",

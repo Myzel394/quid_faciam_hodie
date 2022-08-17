@@ -86,7 +86,7 @@ class _MemoryViewState extends State<MemoryView> {
     if (status == MemoryFetchStatus.error) {
       return Center(
         child: Text(
-          'Memory could not be loaded.',
+          localizations.memoryViewDownloadFailed,
           style: theme.textTheme.bodyText2!.copyWith(
             color: Colors.white,
           ),

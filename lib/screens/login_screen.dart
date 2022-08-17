@@ -98,7 +98,7 @@ class _LoginScreenState extends AuthState<LoginScreen> with Loadable {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Login',
+              localizations.loginScreenTitle,
               style: theme.textTheme.headline1,
             ),
             const SizedBox(height: LARGE_SPACE),
