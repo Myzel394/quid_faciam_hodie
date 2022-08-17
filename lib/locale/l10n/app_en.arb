@@ -52,5 +52,11 @@
   "memorySheetDownloadMemory": "Download to Gallery",
   "memorySheetUpdateMemoryMakePublic": "Make Public",
   "memorySheetUpdateMemoryMakePrivate": "Make Private",
-  "memorySheetDeleteMemory": "Delete Memory"
+  "memorySheetDeleteMemory": "Delete Memory",
+
+
+  "emptyScreenTitle": "Houston, we have a problem",
+  "emptyScreenSubtitle": "The user hasn't created any memories yet!",
+  "emptyScreenDescription": "To view your timeline you need to create some memories first! :)",
+  "emptyScreenCreateMemory": "Create a Memory"
 }

@@ -25,7 +25,7 @@ class Memory {
       creationDate: DateTime.parse(jsonData['created_at']),
       location: jsonData['location'],
       isPublic: jsonData['is_public'],
-      userID: jsonData['user'],
+      userID: jsonData['user_id'],
     );
   }
 

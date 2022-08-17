@@ -8,7 +8,7 @@ import 'package:quid_faciam_hodie/widgets/logo.dart';
 import 'grant_permission_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
-  static const ID = '/';
+  static const ID = '/welcome';
 
   const WelcomeScreen({Key? key}) : super(key: key);
 
@@ -60,7 +60,7 @@ class WelcomeScreen extends StatelessWidget {
                   label: Text(localizations.welcomeScreenStartButtonTitle),
                 ),
                 onPressed: () {
-                  Navigator.pushReplacementNamed(
+                  Navigator.pushNamed(
                     context,
                     GrantPermissionScreen.ID,
                   );

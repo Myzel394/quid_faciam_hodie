@@ -54,6 +54,7 @@ dependencies:
   flutter_sticky_header: ^0.6.4
   flutter_calendar_widget: ^0.0.2
   flutter_platform_widgets: ^2.0.0
+  lottie: ^1.4.1
 
 dev_dependencies:
   flutter_test:
@@ -80,6 +81,7 @@ flutter:
 
   assets:
     - assets/
+    - assets/lottie/flying-astronaut.json
 
   # To add assets to your application, add an assets section, like this:
   # assets:

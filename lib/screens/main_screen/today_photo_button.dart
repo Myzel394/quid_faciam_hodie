@@ -57,6 +57,14 @@ class _TodayPhotoButtonState extends State<TodayPhotoButton> {
 
     final memories = context.read<Memories>();
 
+    if (memories.memories.isEmpty) {
+      setState(() {
+        data = null;
+        type = null;
+      });
+      return;
+    }
+
     final lastMemory = memories.memories.first;
 
     final file = await lastMemory.downloadToFile();

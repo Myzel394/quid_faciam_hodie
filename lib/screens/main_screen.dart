@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:camera/camera.dart';
 import 'package:expandable_bottom_sheet/expandable_bottom_sheet.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
@@ -270,233 +271,244 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
 
-    return PlatformScaffold(
-      backgroundColor: Colors.black,
-      body: () {
-        if (isLoading) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                PlatformCircularProgressIndicator(),
-                const SizedBox(height: MEDIUM_SPACE),
-                Text(
-                  localizations.mainScreenLoadingCamera,
-                  style: platformThemeData(
-                    context,
-                    material: (data) => data.textTheme.bodyText1,
-                    cupertino: (data) => data.textTheme.textStyle,
-                  ),
-                ),
-              ],
-            ),
-          );
-        }
-
-        return Container(
-          color: Colors.black,
-          child: ExpandableBottomSheet(
-            background: SafeArea(
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: AnimateInBuilder(
-                  builder: (showPreview) => AnimatedOpacity(
-                    opacity: showPreview ? 1.0 : 0.0,
-                    duration: const Duration(milliseconds: 1100),
-                    curve: Curves.easeOutQuad,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(SMALL_SPACE),
-                      child: AspectRatio(
-                        aspectRatio: 1 / controller!.value.aspectRatio,
-                        child: Stack(
-                          fit: StackFit.expand,
-                          children: <Widget>[
-                            controller!.buildPreview(),
-                            if (isRecording)
-                              RecordingOverlay(controller: controller!),
-                            if (uploadingPhotoAnimation != null)
-                              UploadingPhoto(
-                                data: uploadingPhotoAnimation!,
-                              ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            persistentHeader: Container(
-              decoration: const BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(LARGE_SPACE),
-                  topRight: Radius.circular(LARGE_SPACE),
-                ),
-              ),
+    return WillPopScope(
+      onWillPop: () async {
+        SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+        SystemNavigator.pop();
+        exit(0);
+      },
+      child: PlatformScaffold(
+        backgroundColor: Colors.black,
+        body: () {
+          if (isLoading) {
+            return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  const Padding(
-                    padding: EdgeInsets.symmetric(
-                      vertical: MEDIUM_SPACE,
-                      horizontal: MEDIUM_SPACE,
-                    ),
-                    child: SheetIndicator(),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: SMALL_SPACE),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        Expanded(
-                          child: FadeAndMoveInAnimation(
-                            translationDuration: DEFAULT_TRANSLATION_DURATION *
-                                SECONDARY_BUTTONS_DURATION_MULTIPLIER,
-                            opacityDuration: DEFAULT_OPACITY_DURATION *
-                                SECONDARY_BUTTONS_DURATION_MULTIPLIER,
-                            child: ChangeCameraButton(
-                              disabled: lockCamera || isRecording,
-                              onChangeCamera: () {
-                                final currentCameraIndex = GlobalValuesManager
-                                    .cameras
-                                    .indexOf(controller!.description);
-                                final availableCameras =
-                                    GlobalValuesManager.cameras.length;
-
-                                onNewCameraSelected(
-                                  GlobalValuesManager.cameras[
-                                      (currentCameraIndex + 1) %
-                                          availableCameras],
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: FadeAndMoveInAnimation(
-                            child: RecordButton(
-                              disabled: lockCamera,
-                              active: isRecording,
-                              onVideoBegin: () async {
-                                setState(() {
-                                  isRecording = true;
-                                });
-
-                                if (controller!.value.isRecordingVideo) {
-                                  // A recording has already started, do nothing.
-                                  return;
-                                }
-
-                                await controller!.startVideoRecording();
-                              },
-                              onVideoEnd: takeVideo,
-                              onPhotoShot: takePhoto,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: FadeAndMoveInAnimation(
-                            translationDuration: DEFAULT_TRANSLATION_DURATION *
-                                SECONDARY_BUTTONS_DURATION_MULTIPLIER,
-                            opacityDuration: DEFAULT_OPACITY_DURATION *
-                                SECONDARY_BUTTONS_DURATION_MULTIPLIER,
-                            child: TodayPhotoButton(
-                              onLeave: () {
-                                controller!.setFlashMode(FlashMode.off);
-                              },
-                              onComeBack: () {
-                                if (isTorchEnabled) {
-                                  controller!.setFlashMode(FlashMode.torch);
-                                }
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
+                  PlatformCircularProgressIndicator(),
+                  const SizedBox(height: MEDIUM_SPACE),
+                  Text(
+                    localizations.mainScreenLoadingCamera,
+                    style: platformThemeData(
+                      context,
+                      material: (data) => data.textTheme.bodyText1,
+                      cupertino: (data) => data.textTheme.textStyle,
                     ),
                   ),
                 ],
               ),
-            ),
-            expandableContent: Container(
-              color: Colors.black,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  left: LARGE_SPACE,
-                  right: LARGE_SPACE,
-                  bottom: MEDIUM_SPACE,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.resolveWith<Color>(
-                          (_) => isTorchEnabled ? Colors.white : Colors.black,
-                        ),
-                        foregroundColor:
-                            MaterialStateProperty.resolveWith<Color>(
-                          (_) => isTorchEnabled ? Colors.black : Colors.white,
-                        ),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          isTorchEnabled = !isTorchEnabled;
+            );
+          }
 
-                          if (isTorchEnabled) {
-                            controller!.setFlashMode(FlashMode.torch);
-                          } else {
-                            controller!.setFlashMode(FlashMode.off);
-                          }
-                        });
-                      },
-                      child: IconButtonChild(
-                        icon: const Icon(Icons.flashlight_on_rounded),
-                        label: Text(localizations.mainScreenActionsTorchButton),
+          return Container(
+            color: Colors.black,
+            child: ExpandableBottomSheet(
+              background: SafeArea(
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: AnimateInBuilder(
+                    builder: (showPreview) => AnimatedOpacity(
+                      opacity: showPreview ? 1.0 : 0.0,
+                      duration: const Duration(milliseconds: 1100),
+                      curve: Curves.easeOutQuad,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(SMALL_SPACE),
+                        child: AspectRatio(
+                          aspectRatio: 1 / controller!.value.aspectRatio,
+                          child: Stack(
+                            fit: StackFit.expand,
+                            children: <Widget>[
+                              controller!.buildPreview(),
+                              if (isRecording)
+                                RecordingOverlay(controller: controller!),
+                              if (uploadingPhotoAnimation != null)
+                                UploadingPhoto(
+                                  data: uploadingPhotoAnimation!,
+                                ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
-                    ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.resolveWith<Color>(
-                          (_) => Colors.white10,
-                        ),
-                        foregroundColor:
-                            MaterialStateProperty.resolveWith<Color>(
-                          (_) => Colors.white,
-                        ),
+                  ),
+                ),
+              ),
+              persistentHeader: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(LARGE_SPACE),
+                    topRight: Radius.circular(LARGE_SPACE),
+                  ),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    const Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: MEDIUM_SPACE,
+                        horizontal: MEDIUM_SPACE,
                       ),
-                      onPressed: zoomLevels == null
-                          ? null
-                          : () {
-                              final newZoomLevelIndex =
-                                  ((currentZoomLevelIndex + 1) %
-                                      zoomLevels!.length);
+                      child: SheetIndicator(),
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsets.symmetric(vertical: SMALL_SPACE),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Expanded(
+                            child: FadeAndMoveInAnimation(
+                              translationDuration:
+                                  DEFAULT_TRANSLATION_DURATION *
+                                      SECONDARY_BUTTONS_DURATION_MULTIPLIER,
+                              opacityDuration: DEFAULT_OPACITY_DURATION *
+                                  SECONDARY_BUTTONS_DURATION_MULTIPLIER,
+                              child: ChangeCameraButton(
+                                disabled: lockCamera || isRecording,
+                                onChangeCamera: () {
+                                  final currentCameraIndex = GlobalValuesManager
+                                      .cameras
+                                      .indexOf(controller!.description);
+                                  final availableCameras =
+                                      GlobalValuesManager.cameras.length;
 
-                              controller!
-                                  .setZoomLevel(zoomLevels![newZoomLevelIndex]);
-
-                              setState(() {
-                                currentZoomLevelIndex = newZoomLevelIndex;
-                              });
-                            },
-                      child: zoomLevels == null
-                          ? const Text('1x')
-                          : Text(
-                              formatZoomLevel(currentZoomLevel),
+                                  onNewCameraSelected(
+                                    GlobalValuesManager.cameras[
+                                        (currentCameraIndex + 1) %
+                                            availableCameras],
+                                  );
+                                },
+                              ),
                             ),
+                          ),
+                          Expanded(
+                            child: FadeAndMoveInAnimation(
+                              child: RecordButton(
+                                disabled: lockCamera,
+                                active: isRecording,
+                                onVideoBegin: () async {
+                                  setState(() {
+                                    isRecording = true;
+                                  });
+
+                                  if (controller!.value.isRecordingVideo) {
+                                    // A recording has already started, do nothing.
+                                    return;
+                                  }
+
+                                  await controller!.startVideoRecording();
+                                },
+                                onVideoEnd: takeVideo,
+                                onPhotoShot: takePhoto,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: FadeAndMoveInAnimation(
+                              translationDuration:
+                                  DEFAULT_TRANSLATION_DURATION *
+                                      SECONDARY_BUTTONS_DURATION_MULTIPLIER,
+                              opacityDuration: DEFAULT_OPACITY_DURATION *
+                                  SECONDARY_BUTTONS_DURATION_MULTIPLIER,
+                              child: TodayPhotoButton(
+                                onLeave: () {
+                                  controller!.setFlashMode(FlashMode.off);
+                                },
+                                onComeBack: () {
+                                  if (isTorchEnabled) {
+                                    controller!.setFlashMode(FlashMode.torch);
+                                  }
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
+              expandableContent: Container(
+                color: Colors.black,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    left: LARGE_SPACE,
+                    right: LARGE_SPACE,
+                    bottom: MEDIUM_SPACE,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.resolveWith<Color>(
+                            (_) => isTorchEnabled ? Colors.white : Colors.black,
+                          ),
+                          foregroundColor:
+                              MaterialStateProperty.resolveWith<Color>(
+                            (_) => isTorchEnabled ? Colors.black : Colors.white,
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            isTorchEnabled = !isTorchEnabled;
+
+                            if (isTorchEnabled) {
+                              controller!.setFlashMode(FlashMode.torch);
+                            } else {
+                              controller!.setFlashMode(FlashMode.off);
+                            }
+                          });
+                        },
+                        child: IconButtonChild(
+                          icon: const Icon(Icons.flashlight_on_rounded),
+                          label:
+                              Text(localizations.mainScreenActionsTorchButton),
+                        ),
+                      ),
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.resolveWith<Color>(
+                            (_) => Colors.white10,
+                          ),
+                          foregroundColor:
+                              MaterialStateProperty.resolveWith<Color>(
+                            (_) => Colors.white,
+                          ),
+                        ),
+                        onPressed: zoomLevels == null
+                            ? null
+                            : () {
+                                final newZoomLevelIndex =
+                                    ((currentZoomLevelIndex + 1) %
+                                        zoomLevels!.length);
+
+                                controller!.setZoomLevel(
+                                    zoomLevels![newZoomLevelIndex]);
+
+                                setState(() {
+                                  currentZoomLevelIndex = newZoomLevelIndex;
+                                });
+                              },
+                        child: zoomLevels == null
+                            ? const Text('1x')
+                            : Text(
+                                formatZoomLevel(currentZoomLevel),
+                              ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
-        );
-      }(),
+          );
+        }(),
+      ),
     );
   }
 }

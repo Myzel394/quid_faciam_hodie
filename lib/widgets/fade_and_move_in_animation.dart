@@ -56,6 +56,13 @@ class _FadeAndMoveInAnimationState extends State<FadeAndMoveInAnimation>
   }
 
   @override
+  void dispose() {
+    translationController.dispose();
+
+    super.dispose();
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 

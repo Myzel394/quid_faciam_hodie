@@ -47,7 +47,7 @@ class FileManager {
     }
 
     final memoryResponse = await supabase.from('memories').insert({
-      'user': user.id,
+      'user_id': user.id,
       'location': path,
     }).execute();
 
@@ -60,7 +60,7 @@ class FileManager {
     final response = await supabase
         .from('memories')
         .select()
-        .eq('user', user.id)
+        .eq('user_id', user.id)
         .order('created_at', ascending: false)
         .limit(1)
         .single()

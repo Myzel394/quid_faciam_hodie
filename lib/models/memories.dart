@@ -39,7 +39,6 @@ class Memories extends PropertyChangeNotifier<String> {
   }
 
   void removeMemoryByID(final String id) {
-    print("remooooooved");
     _memories.removeWhere((memory) => memory.id == id);
     notifyListeners('memories');
   }
@@ -93,8 +92,9 @@ class Memories extends PropertyChangeNotifier<String> {
         final memory = Memory.parse(response.newRecord!);
         final id = response.oldRecord!['id'];
 
-        removeMemoryByID(id);
-        addMemory(memory);
+        _memories.removeWhere((memory) => memory.id == id);
+        memories.add(memory);
+
         break;
     }
 

@@ -15,6 +15,7 @@ import 'package:quid_faciam_hodie/screens/welcome_screen.dart';
 
 import 'managers/global_values_manager.dart';
 import 'models/memories.dart';
+import 'screens/empty_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -62,6 +63,7 @@ class _MyAppState extends State<MyApp> {
           GrantPermissionScreen.ID: (context) => const GrantPermissionScreen(),
           CalendarScreen.ID: (context) => const CalendarScreen(),
           ServerLoadingScreen.ID: (context) => const ServerLoadingScreen(),
+          EmptyScreen.ID: (context) => const EmptyScreen(),
         },
         initialRoute: ServerLoadingScreen.ID,
       ),

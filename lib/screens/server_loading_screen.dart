@@ -7,12 +7,13 @@ import 'package:quid_faciam_hodie/managers/global_values_manager.dart';
 import 'package:quid_faciam_hodie/models/memories.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'empty_screen.dart';
 import 'main_screen.dart';
 import 'server_loading_screen/dot_animation.dart';
 import 'welcome_screen.dart';
 
 class ServerLoadingScreen extends StatefulWidget {
-  static const ID = '/server_loading';
+  static const ID = '/';
 
   final String? nextScreen;
 
@@ -44,12 +45,29 @@ class _ServerLoadingScreenState extends State<ServerLoadingScreen> {
         await memories.initialize();
       }
 
+      if (widget.nextScreen == null) {
+        Navigator.pushNamed(
+          context,
+          MainScreen.ID,
+        );
+      } else {
+        if (memories.memories.isEmpty) {
+          Navigator.pushReplacementNamed(
+            context,
+            EmptyScreen.ID,
+          );
+        } else {
+          Navigator.pushReplacementNamed(
+            context,
+            widget.nextScreen!,
+          );
+        }
+      }
+    } else {
       Navigator.pushReplacementNamed(
         context,
-        widget.nextScreen ?? MainScreen.ID,
+        WelcomeScreen.ID,
       );
-    } else {
-      Navigator.pushReplacementNamed(context, WelcomeScreen.ID);
     }
   }
 

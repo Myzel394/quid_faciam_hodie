@@ -8,6 +8,7 @@ import 'package:quid_faciam_hodie/utils/loadable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'calendar_screen.dart';
+import 'empty_screen.dart';
 import 'timeline_screen/timeline_page.dart';
 
 final supabase = Supabase.instance.client;
@@ -49,6 +50,18 @@ class _TimelineScreenState extends State<TimelineScreen> with Loadable {
     timeline.setCurrentIndex(initialIndex);
 
     memoriesModel.addListener(() {
+      if (!mounted) {
+        return;
+      }
+
+      if (memoriesModel.memories.isEmpty) {
+        Navigator.pushReplacementNamed(
+          context,
+          EmptyScreen.ID,
+        );
+        return;
+      }
+
       timeline.refresh(memoriesModel.memories);
 
       setState(() {});
