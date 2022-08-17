@@ -6,7 +6,7 @@ import 'package:quid_faciam_hodie/foreign_types/memory.dart';
 import 'package:quid_faciam_hodie/models/timeline.dart';
 import 'package:quid_faciam_hodie/widgets/status.dart';
 
-import 'memory.dart';
+import 'memory_view.dart';
 
 const BAR_HEIGHT = 4.0;
 const DEFAULT_IMAGE_DURATION = Duration(seconds: 5);

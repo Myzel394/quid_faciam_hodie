@@ -1,14 +1,13 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/managers/global_values_manager.dart';
 import 'package:quid_faciam_hodie/models/memories.dart';
-import 'package:quid_faciam_hodie/widgets/dot_animation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'main_screen.dart';
+import 'server_loading_screen/dot_animation.dart';
 import 'welcome_screen.dart';
 
 class ServerLoadingScreen extends StatefulWidget {

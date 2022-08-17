@@ -8,7 +8,7 @@ import 'package:quid_faciam_hodie/models/memories.dart';
 import 'package:quid_faciam_hodie/screens/server_loading_screen.dart';
 import 'package:quid_faciam_hodie/screens/timeline_screen.dart';
 
-import 'raw_memory_display.dart';
+import '../../widgets/raw_memory_display.dart';
 
 class TodayPhotoButton extends StatefulWidget {
   final VoidCallback onLeave;

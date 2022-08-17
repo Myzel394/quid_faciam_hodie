@@ -2,14 +2,14 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class CameraButton extends StatefulWidget {
+class RecordButton extends StatefulWidget {
   final bool active;
   final VoidCallback onPhotoShot;
   final VoidCallback onVideoBegin;
   final VoidCallback onVideoEnd;
   final bool disabled;
 
-  const CameraButton({
+  const RecordButton({
     Key? key,
     required this.onPhotoShot,
     required this.onVideoBegin,
@@ -19,12 +19,12 @@ class CameraButton extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<CameraButton> createState() => _CameraButtonState();
+  State<RecordButton> createState() => _RecordButtonState();
 }
 
 const OUT_DURATION = Duration(milliseconds: 300);
 
-class _CameraButtonState extends State<CameraButton> {
+class _RecordButtonState extends State<RecordButton> {
   bool animateToVideoIcon = false;
   bool videoInAnimationActive = false;
 

@@ -4,10 +4,10 @@ import 'package:quid_faciam_hodie/extensions/date.dart';
 import 'package:quid_faciam_hodie/models/memories.dart';
 import 'package:quid_faciam_hodie/models/timeline.dart';
 import 'package:quid_faciam_hodie/utils/loadable.dart';
-import 'package:quid_faciam_hodie/widgets/timeline_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'calendar_screen.dart';
+import 'timeline_screen/timeline_page.dart';
 
 final supabase = Supabase.instance.client;
 

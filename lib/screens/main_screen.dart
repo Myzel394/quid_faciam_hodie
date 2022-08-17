@@ -13,13 +13,14 @@ import 'package:quid_faciam_hodie/managers/global_values_manager.dart';
 import 'package:quid_faciam_hodie/utils/auth_required.dart';
 import 'package:quid_faciam_hodie/utils/loadable.dart';
 import 'package:quid_faciam_hodie/widgets/animate_in_builder.dart';
-import 'package:quid_faciam_hodie/widgets/camera_button.dart';
-import 'package:quid_faciam_hodie/widgets/change_camera_button.dart';
 import 'package:quid_faciam_hodie/widgets/fade_and_move_in_animation.dart';
 import 'package:quid_faciam_hodie/widgets/sheet_indicator.dart';
-import 'package:quid_faciam_hodie/widgets/today_photo_button.dart';
-import 'package:quid_faciam_hodie/widgets/uploading_photo.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import 'main_screen/camera_button.dart';
+import 'main_screen/change_camera_button.dart';
+import 'main_screen/today_photo_button.dart';
+import 'main_screen/uploading_photo.dart';
 
 class MainScreen extends StatefulWidget {
   static const ID = 'main';
@@ -336,7 +337,7 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
                           ),
                         ),
                         FadeAndMoveInAnimation(
-                          child: CameraButton(
+                          child: RecordButton(
                             disabled: lockCamera,
                             active: isRecording,
                             onVideoBegin: () async {

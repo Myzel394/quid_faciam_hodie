@@ -4,8 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/managers/calendar_manager.dart';
 import 'package:quid_faciam_hodie/models/memories.dart';
-import 'package:quid_faciam_hodie/widgets/calendar_month.dart';
-import 'package:quid_faciam_hodie/widgets/days_of_week_strip.dart';
+
+import 'calendar_screen/calendar_month.dart';
+import 'calendar_screen/days_of_week_strip.dart';
 
 class CalendarScreen extends StatelessWidget {
   static const ID = 'calendar';
