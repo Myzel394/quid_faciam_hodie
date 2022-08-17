@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:quid_faciam_hodie/constants/themes.dart';
 import 'package:quid_faciam_hodie/screens/calendar_screen.dart';
 import 'package:quid_faciam_hodie/screens/grant_permission_screen.dart';
 import 'package:quid_faciam_hodie/screens/login_screen.dart';
@@ -20,7 +21,7 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -41,22 +42,9 @@ class _MyAppState extends State<MyApp> {
       value: memories,
       child: MaterialApp(
         title: 'Quid faciam hodie?',
-        theme: ThemeData.dark().copyWith(
-          textTheme: ThemeData.dark().textTheme.copyWith(
-                headline1: const TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-          inputDecorationTheme: InputDecorationTheme(
-            filled: true,
-            helperMaxLines: 10,
-            errorMaxLines: 10,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-        ),
+        theme: LIGHT_THEME,
+        darkTheme: DARK_THEME,
+        themeMode: ThemeMode.system,
         routes: {
           WelcomeScreen.ID: (context) => const WelcomeScreen(),
           MainScreen.ID: (context) => const MainScreen(),

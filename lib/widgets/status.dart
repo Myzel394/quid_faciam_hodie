@@ -74,47 +74,50 @@ class _StatusState extends State<Status> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      children: <Widget>[
-        widget.child,
-        Positioned(
-          left: 0,
-          bottom: SMALL_SPACE,
-          width: MediaQuery.of(context).size.width,
-          height: BAR_HEIGHT,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: SMALL_SPACE),
-            child: AnimatedOpacity(
-              duration: const Duration(milliseconds: 500),
-              curve: Curves.linearToEaseOut,
-              opacity: widget.hideProgressBar ? 0.0 : 1.0,
-              child: (widget.controller == null)
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(HUGE_SPACE),
-                      child: LinearProgressIndicator(
-                        value: null,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                            Colors.white.withOpacity(.3)),
-                        backgroundColor: Colors.white.withOpacity(0.1),
-                      ),
-                    )
-                  : AnimatedBuilder(
-                      animation: animation,
-                      builder: (_, __) => ClipRRect(
+    return Container(
+      color: Colors.black,
+      child: Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          widget.child,
+          Positioned(
+            left: 0,
+            bottom: SMALL_SPACE,
+            width: MediaQuery.of(context).size.width,
+            height: BAR_HEIGHT,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: SMALL_SPACE),
+              child: AnimatedOpacity(
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.linearToEaseOut,
+                opacity: widget.hideProgressBar ? 0.0 : 1.0,
+                child: (widget.controller == null)
+                    ? ClipRRect(
                         borderRadius: BorderRadius.circular(HUGE_SPACE),
                         child: LinearProgressIndicator(
-                          value: animation.value,
-                          valueColor:
-                              const AlwaysStoppedAnimation<Color>(Colors.white),
+                          value: null,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.white.withOpacity(.3)),
                           backgroundColor: Colors.white.withOpacity(0.1),
                         ),
+                      )
+                    : AnimatedBuilder(
+                        animation: animation,
+                        builder: (_, __) => ClipRRect(
+                          borderRadius: BorderRadius.circular(HUGE_SPACE),
+                          child: LinearProgressIndicator(
+                            value: animation.value,
+                            valueColor:
+                                const AlwaysStoppedAnimation<Color>(Colors.white),
+                            backgroundColor: Colors.white.withOpacity(0.1),
+                          ),
+                        ),
                       ),
-                    ),
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

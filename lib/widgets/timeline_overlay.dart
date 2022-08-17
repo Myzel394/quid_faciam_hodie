@@ -36,7 +36,9 @@ class TimelineOverlay extends StatelessWidget {
             child: Text(
               DateFormat('dd. MMMM yyyy').format(date),
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headline1,
+              style: Theme.of(context).textTheme.headline1!.copyWith(
+                    color: Colors.white,
+                  ),
             ),
           ),
         ),
@@ -58,12 +60,15 @@ class TimelineOverlay extends StatelessWidget {
                     child: Icon(
                       Icons.public,
                       size: theme.textTheme.titleSmall!.fontSize,
+                      color: Colors.white,
                     ),
                   ),
                   const SizedBox(width: SMALL_SPACE),
                   Text(
                     '$memoryIndex/$memoriesAmount',
-                    style: Theme.of(context).textTheme.titleSmall,
+                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                          color: Colors.white,
+                        ),
                   )
                 ],
               ),

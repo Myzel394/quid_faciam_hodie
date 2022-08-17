@@ -79,9 +79,16 @@ class _MemoryViewState extends State<MemoryView> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     if (status == MemoryFetchStatus.error) {
-      return const Center(
-        child: Text('Memory could not be loaded.'),
+      return Center(
+        child: Text(
+          'Memory could not be loaded.',
+          style: theme.textTheme.bodyText2!.copyWith(
+            color: Colors.white,
+          ),
+        ),
       );
     }
 
@@ -122,7 +129,12 @@ class _MemoryViewState extends State<MemoryView> {
         () {
           switch (status) {
             case MemoryFetchStatus.downloading:
-              return const Text('Downloading memory');
+              return Text(
+                'Downloading memory',
+                style: theme.textTheme.bodyText2!.copyWith(
+                  color: Colors.white,
+                ),
+              );
             default:
               return const SizedBox();
           }

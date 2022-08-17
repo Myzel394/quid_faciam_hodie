@@ -40,8 +40,8 @@ class MonthCalendarBuilder extends CalendarBuilder {
     }();
 
     final delay = Duration(
-        microseconds:
-            Random().nextInt(CALENDAR_DATE_IN_MAX_DELAY.inMicroseconds));
+      microseconds: Random().nextInt(CALENDAR_DATE_IN_MAX_DELAY.inMicroseconds),
+    );
 
     return DelayRender(
       delay: delay,
@@ -163,7 +163,7 @@ class CalendarMonth extends StatelessWidget {
         // Background color
         selectedDayTextColor: theme.textTheme.bodyText1!.color!,
         // Foreground color
-        focusedDayTextColor: theme.bottomAppBarColor,
+        focusedDayTextColor: theme.dialogBackgroundColor,
       ),
     );
   }

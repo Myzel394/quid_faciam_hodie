@@ -25,6 +25,8 @@ class _ServerLoadingScreenState extends State<ServerLoadingScreen> {
   @override
   void initState() {
     super.initState();
+
+    load();
   }
 
   Future<void> load() async {
