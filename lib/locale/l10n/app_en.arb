@@ -21,6 +21,8 @@
   "mainScreenTakeVideoActionSaveVideo": "Taking video, please hold still...",
   "mainScreenTakeVideoActionUploadingVideo": "Uploading video...",
 
+  "recordingOverlayIsRecording": "Recording",
+
 
   "loginScreenTitle": "Login",
   "loginScreenLoginError": "Invalid password or email",

@@ -15,11 +15,13 @@ import 'package:quid_faciam_hodie/utils/auth_required.dart';
 import 'package:quid_faciam_hodie/utils/loadable.dart';
 import 'package:quid_faciam_hodie/widgets/animate_in_builder.dart';
 import 'package:quid_faciam_hodie/widgets/fade_and_move_in_animation.dart';
+import 'package:quid_faciam_hodie/widgets/icon_button_child.dart';
 import 'package:quid_faciam_hodie/widgets/sheet_indicator.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'main_screen/change_camera_button.dart';
 import 'main_screen/record_button.dart';
+import 'main_screen/recording_overlay.dart';
 import 'main_screen/today_photo_button.dart';
 import 'main_screen/uploading_photo.dart';
 
@@ -178,6 +180,12 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
           message: localizations.mainScreenTakePhotoActionTakingPhoto,
         );
 
+      if (isTorchEnabled) {
+        await controller!.setFlashMode(FlashMode.torch);
+      } else {
+        await controller!.setFlashMode(FlashMode.off);
+      }
+
       final file = File((await controller!.takePicture()).path);
 
       setState(() {
@@ -302,8 +310,11 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
                       child: AspectRatio(
                         aspectRatio: 1 / controller!.value.aspectRatio,
                         child: Stack(
+                          fit: StackFit.expand,
                           children: <Widget>[
                             controller!.buildPreview(),
+                            if (isRecording)
+                              RecordingOverlay(controller: controller!),
                             if (uploadingPhotoAnimation != null)
                               UploadingPhoto(
                                 data: uploadingPhotoAnimation!,
@@ -347,7 +358,7 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
                             opacityDuration: DEFAULT_OPACITY_DURATION *
                                 SECONDARY_BUTTONS_DURATION_MULTIPLIER,
                             child: ChangeCameraButton(
-                              disabled: lockCamera,
+                              disabled: lockCamera || isRecording,
                               onChangeCamera: () {
                                 final currentCameraIndex = GlobalValuesManager
                                     .cameras
@@ -421,10 +432,7 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    ElevatedButton.icon(
-                      icon: const Icon(Icons.flashlight_on_rounded),
-                      label: Text(AppLocalizations.of(context)!
-                          .mainScreenActionsTorchButton),
+                    ElevatedButton(
                       style: ButtonStyle(
                         backgroundColor:
                             MaterialStateProperty.resolveWith<Color>(
@@ -446,6 +454,10 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
                           }
                         });
                       },
+                      child: IconButtonChild(
+                        icon: const Icon(Icons.flashlight_on_rounded),
+                        label: Text(localizations.mainScreenActionsTorchButton),
+                      ),
                     ),
                     ElevatedButton(
                       style: ButtonStyle(

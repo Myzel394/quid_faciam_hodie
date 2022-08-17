@@ -29,7 +29,7 @@ class _RecordButtonState extends State<RecordButton> {
   bool videoInAnimationActive = false;
 
   void cancelAnimation() {
-    if (videoInAnimationActive || animateToVideoIcon) {
+    if (videoInAnimationActive) {
       return;
     }
 
@@ -168,7 +168,7 @@ class _RecordButtonState extends State<RecordButton> {
                 decoration: BoxDecoration(
                   color: videoInAnimationActive ? Colors.red : Colors.white,
                   borderRadius: videoInAnimationActive
-                      ? BorderRadius.circular(4)
+                      ? BorderRadius.circular(8)
                       : BorderRadius.circular(50),
                 ),
               ),
