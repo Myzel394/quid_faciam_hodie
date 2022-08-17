@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/enums.dart';
@@ -7,6 +9,7 @@ import 'package:quid_faciam_hodie/extensions/snackbar.dart';
 import 'package:quid_faciam_hodie/foreign_types/memory.dart';
 import 'package:quid_faciam_hodie/managers/file_manager.dart';
 import 'package:quid_faciam_hodie/utils/loadable.dart';
+import 'package:quid_faciam_hodie/utils/theme.dart';
 import 'package:quid_faciam_hodie/widgets/modal_sheet.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -94,14 +97,19 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
   }
 
   Widget buildLoadingIndicator() {
-    final theme = Theme.of(context);
+    final size = platformThemeData(
+      context,
+      material: (data) => data.textTheme.titleLarge!.fontSize,
+      cupertino: (data) => data.textTheme.textStyle.fontSize,
+    );
 
-    return SizedBox(
-      width: theme.textTheme.titleLarge!.fontSize,
-      height: theme.textTheme.titleLarge!.fontSize,
-      child: CircularProgressIndicator(
-        strokeWidth: 2,
-        color: theme.textTheme.bodyText1!.color,
+    return SizedBox.square(
+      dimension: size,
+      child: PlatformCircularProgressIndicator(
+        material: (_, __) => MaterialProgressIndicatorData(
+          strokeWidth: 2,
+          color: Theme.of(context).textTheme.bodyText1!.color,
+        ),
       ),
     );
   }
@@ -109,19 +117,30 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    final theme = Theme.of(context);
 
     return ModalSheet(
       child: Column(
         children: <Widget>[
           Text(
             localizations.memorySheetTitle,
-            style: theme.textTheme.headline1,
+            style: getTitleTextStyle(context),
           ),
           const SizedBox(height: MEDIUM_SPACE),
           ListTile(
-            leading: const Icon(Icons.download),
-            title: Text(localizations.memorySheetDownloadMemory),
+            leading: PlatformWidget(
+              cupertino: (_, __) => Icon(
+                CupertinoIcons.down_arrow,
+                color: getBodyTextColor(context),
+              ),
+              material: (_, __) => Icon(
+                Icons.download,
+                color: getBodyTextColor(context),
+              ),
+            ),
+            title: Text(
+              localizations.memorySheetDownloadMemory,
+              style: getBodyTextTextStyle(context),
+            ),
             enabled: !getIsLoadingSpecificID('download'),
             onTap: getIsLoadingSpecificID('download')
                 ? null
@@ -131,13 +150,15 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
                 : null,
           ),
           ListTile(
-            leading: Icon(widget.memory.isPublic
-                ? Icons.public_off_rounded
-                : Icons.public_rounded),
+            leading: Icon(
+              widget.memory.isPublic ? Icons.public_off_rounded : Icons.public,
+              color: getBodyTextColor(context),
+            ),
             title: Text(
               widget.memory.isPublic
                   ? localizations.memorySheetUpdateMemoryMakePrivate
                   : localizations.memorySheetUpdateMemoryMakePublic,
+              style: getBodyTextTextStyle(context),
             ),
             enabled: !getIsLoadingSpecificID('public'),
             onTap: getIsLoadingSpecificID('public')
@@ -148,8 +169,14 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
                 : null,
           ),
           ListTile(
-            leading: const Icon(Icons.delete_forever_sharp),
-            title: Text(localizations.memorySheetDeleteMemory),
+            leading: Icon(
+              context.platformIcons.delete,
+              color: getBodyTextColor(context),
+            ),
+            title: Text(
+              localizations.memorySheetDeleteMemory,
+              style: getBodyTextTextStyle(context),
+            ),
             enabled: !getIsLoadingSpecificID('delete'),
             onTap: getIsLoadingSpecificID('delete')
                 ? null

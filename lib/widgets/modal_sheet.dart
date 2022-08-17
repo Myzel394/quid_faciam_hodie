@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 
 class ModalSheet extends StatelessWidget {
@@ -11,8 +12,6 @@ class ModalSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Wrap(
       crossAxisAlignment: WrapCrossAlignment.center,
       children: <Widget>[
@@ -24,8 +23,13 @@ class ModalSheet extends StatelessWidget {
               topLeft: Radius.circular(LARGE_SPACE),
               topRight: Radius.circular(LARGE_SPACE),
             ),
-            color: theme.bottomSheetTheme.modalBackgroundColor ??
-                theme.bottomAppBarColor,
+            color: platformThemeData(
+              context,
+              material: (data) =>
+                  data.bottomSheetTheme.modalBackgroundColor ??
+                  data.bottomAppBarColor,
+              cupertino: (data) => data.barBackgroundColor,
+            ),
             child: Container(
               padding: const EdgeInsets.all(MEDIUM_SPACE),
               child: child,
