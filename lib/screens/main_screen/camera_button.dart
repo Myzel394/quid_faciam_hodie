@@ -31,6 +31,7 @@ class _RecordButtonState extends State<RecordButton> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      // Take photo
       onTap: () {
         if (widget.disabled) {
           return;
@@ -49,15 +50,25 @@ class _RecordButtonState extends State<RecordButton> {
           widget.onPhotoShot();
         }
       },
-      onLongPressDown: (_) {
+      // Start Video
+      onLongPress: () {
         if (widget.disabled) {
           return;
         }
 
         setState(() {
-          animateToVideoIcon = true;
+          videoInAnimationActive = true;
         });
+
+        HapticFeedback.heavyImpact();
+
+        if (widget.active) {
+          widget.onVideoEnd();
+        } else {
+          widget.onVideoBegin();
+        }
       },
+      // Stop Video
       onLongPressUp: () {
         if (widget.disabled) {
           return;
@@ -68,38 +79,43 @@ class _RecordButtonState extends State<RecordButton> {
           animateToVideoIcon = false;
         });
 
+        HapticFeedback.lightImpact();
+
         if (widget.active) {
           widget.onVideoEnd();
         }
       },
-      onTapCancel: () {
-        setState(() {
-          videoInAnimationActive = false;
-          animateToVideoIcon = false;
-        });
-      },
-      onPanCancel: () {
-        setState(() {
-          videoInAnimationActive = false;
-          animateToVideoIcon = false;
-        });
-      },
-      onLongPress: () {
+      // Animate to video icon
+      onTapDown: (_) {
         if (widget.disabled) {
           return;
         }
 
-        HapticFeedback.heavyImpact();
+        setState(() {
+          animateToVideoIcon = true;
+        });
+      },
+      // Cancel icon animation
+      onTapCancel: () {
+        if (videoInAnimationActive || animateToVideoIcon) {
+          return;
+        }
 
         setState(() {
-          videoInAnimationActive = true;
+          videoInAnimationActive = false;
+          animateToVideoIcon = false;
         });
-
-        if (widget.active) {
-          widget.onVideoEnd();
-        } else {
-          widget.onVideoBegin();
+      },
+      // Cancel icon animation
+      onPanCancel: () {
+        if (videoInAnimationActive || animateToVideoIcon) {
+          return;
         }
+
+        setState(() {
+          videoInAnimationActive = false;
+          animateToVideoIcon = false;
+        });
       },
       child: Opacity(
         opacity: widget.disabled ? 0.5 : 1.0,
@@ -134,9 +150,9 @@ class _RecordButtonState extends State<RecordButton> {
               ),
             ),
             AnimatedScale(
-              curve: Curves.easeOutCirc,
+              curve: animateToVideoIcon ? Curves.easeOut : Curves.linear,
               duration: animateToVideoIcon
-                  ? const Duration(milliseconds: 1000)
+                  ? const Duration(milliseconds: 250)
                   : OUT_DURATION,
               scale: videoInAnimationActive ? 1 : .6,
               child: const Icon(
