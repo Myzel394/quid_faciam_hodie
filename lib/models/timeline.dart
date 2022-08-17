@@ -22,7 +22,6 @@ class TimelineModel extends PropertyChangeNotifier<String> {
   int _currentIndex = 0;
   int _memoryIndex = 0;
   bool _paused = false;
-  bool _isInitializing = false;
   bool _showOverlay = true;
   Timer? _overlayRemoverTimer;
 
@@ -31,7 +30,6 @@ class TimelineModel extends PropertyChangeNotifier<String> {
   int get currentIndex => _currentIndex;
   int get memoryIndex => _memoryIndex;
   bool get paused => _paused;
-  bool get isInitializing => _isInitializing;
   bool get showOverlay => _showOverlay;
 
   DateTime dateAtIndex(final int index) => _timeline.keys.elementAt(index);
@@ -104,11 +102,6 @@ class TimelineModel extends PropertyChangeNotifier<String> {
     notifyListeners('paused');
   }
 
-  void setIsInitializing(final bool isInitializing) {
-    _isInitializing = isInitializing;
-    notifyListeners('isInitializing');
-  }
-
   void setShowOverlay(final bool showOverlay) {
     _showOverlay = showOverlay;
     notifyListeners('showOverlay');
@@ -151,12 +144,8 @@ class TimelineModel extends PropertyChangeNotifier<String> {
   }
 
   void refresh(final List<Memory> memories) {
-    setIsInitializing(true);
-
     _timeline.clear();
     _timeline.addAll(mapFromMemoriesList(memories));
     _removeEmptyDates();
-
-    setIsInitializing(false);
   }
 }

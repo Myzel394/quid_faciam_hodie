@@ -50,6 +50,8 @@ class _TimelineScreenState extends State<TimelineScreen> with Loadable {
 
     memoriesModel.addListener(() {
       timeline.refresh(memoriesModel.memories);
+
+      setState(() {});
     }, ['memories']);
 
     // Update page view
