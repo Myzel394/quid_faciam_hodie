@@ -17,8 +17,8 @@ import 'package:quid_faciam_hodie/widgets/fade_and_move_in_animation.dart';
 import 'package:quid_faciam_hodie/widgets/sheet_indicator.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'main_screen/camera_button.dart';
 import 'main_screen/change_camera_button.dart';
+import 'main_screen/record_button.dart';
 import 'main_screen/today_photo_button.dart';
 import 'main_screen/uploading_photo.dart';
 
