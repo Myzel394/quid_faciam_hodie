@@ -1,6 +1,54 @@
 {
-  "helloWorld": "Hello World!",
-  "@helloWorld": {
-  "description": "The conventional newborn programmer greeting"
-  }
+  "appTitleQuestion": "Quid faciam hodie?",
+
+  "generalError": "There was an error",
+
+  "welcomeScreenDescription": "Find out what you did all the days and unlock moments you completely forgot!",
+  "welcomeScreenSubtitle": "What did I do today?",
+  "welcomeScreenStartButtonTitle": "Start",
+
+
+  "serverLoadingScreenDescription": "We are loading your data",
+
+
+  "mainScreenLoadingCamera": "Loading camera",
+
+  "mainScreenActionsTorchButton": "Torch",
+  "mainScreenUploadSuccess": "Uploaded successfully!",
+
+  "mainScreenTakePhotoActionTakingPhoto": "Taking photo, please hold still...",
+  "mainScreenTakePhotoActionUploadingPhoto": "Uploading photo...",
+  "mainScreenTakeVideoActionSaveVideo": "Taking video, please hold still...",
+  "mainScreenTakeVideoActionUploadingVideo": "Uploading video...",
+
+
+  "loginScreenTitle": "Login",
+  "loginScreenLoginError": "Invalid password or email",
+  "loginScreenHelpText": "Sign in to your account. If you do not have one already, we will automatically set up one for you.",
+  "loginScreenFormEmailLabel": "Email",
+  "loginScreenFormPasswordLabel": "Password",
+  "loginScreenFormSubmitButton": "Login",
+
+
+  "grantPermissionScreenTitle": "Grant Permissions",
+
+  "permissionsRequiredPageTitle": "Permissions Required",
+    "permissionsRequiredPageDescription": "Please grant the following permissions to use this app.",
+  "permissionsRequiredPagePermanentlyDenied": "You have permanently denied permissions required to use this app. Please enable them in the settings.",
+  "permissionsRequiredPageOpenSettings": "Open Settings",
+  "permissionsRequiredPageGrantCameraPermission": "Grant camera permission",
+  "permissionsRequiredPageGrantMicrophonePermission": "Grant microphone permission",
+
+
+  "memoryViewIsDownloading": "Downloading memory",
+
+
+  "memorySheetSavedToGallery": "Saved to Gallery!",
+  "memorySheetMemoryUpdatedToPublic": "Your Memory is public now!",
+  "memorySheetMemoryUpdatedToPrivate": "Your Memory is private now.",
+  "memorySheetTitle": "Edit Memory",
+  "memorySheetDownloadMemory": "Download to Gallery",
+  "memorySheetUpdateMemoryMakePublic": "Make Public",
+  "memorySheetUpdateMemoryMakePrivate": "Make Private",
+  "memorySheetDeleteMemory": "Delete Memory"
 }

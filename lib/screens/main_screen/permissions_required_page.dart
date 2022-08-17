@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 
@@ -52,28 +53,26 @@ class _PermissionsRequiredPageState extends State<PermissionsRequiredPage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Text(
-          'Permissions Required',
+          localizations.permissionsRequiredPageTitle,
           style: Theme.of(context).textTheme.headline1,
         ),
         const SizedBox(height: MEDIUM_SPACE),
-        const Text(
-          'Please grant the following permissions to use this app',
-        ),
+        Text(localizations.permissionsRequiredPageDescription),
         const SizedBox(height: LARGE_SPACE),
         if (hasDeniedForever) ...[
-          const Text(
-            'You have permanently denied permissions required to use this app. Please enable them in the settings.',
-          ),
+          Text(localizations.permissionsRequiredPagePermanentlyDenied),
           const SizedBox(height: LARGE_SPACE),
           TextButton.icon(
             onPressed: () => openAppSettings(),
             icon: const Icon(Icons.settings),
-            label: const Text('Open Settings'),
+            label: Text(localizations.permissionsRequiredPageOpenSettings),
           ),
         ] else ...[
           TextButton.icon(
@@ -84,8 +83,15 @@ class _PermissionsRequiredPageState extends State<PermissionsRequiredPage> {
                     await checkPermissions();
                   },
             icon: const Icon(Icons.camera_alt),
-            label: Text(
-              'Grant camera permission${hasGrantedCameraPermission ? ' - Granted!' : ''}',
+            label: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  localizations.permissionsRequiredPageGrantCameraPermission,
+                ),
+                if (hasGrantedCameraPermission) const Icon(Icons.check),
+                if (!hasGrantedCameraPermission) const SizedBox(),
+              ],
             ),
           ),
           const SizedBox(height: MEDIUM_SPACE),
@@ -97,8 +103,16 @@ class _PermissionsRequiredPageState extends State<PermissionsRequiredPage> {
                     await checkPermissions();
                   },
             icon: const Icon(Icons.mic),
-            label: Text(
-              'Grant microphone permission ${hasGrantedMicrophonePermission ? ' - Granted!' : ''}',
+            label: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  localizations
+                      .permissionsRequiredPageGrantMicrophonePermission,
+                ),
+                if (hasGrantedMicrophonePermission) const Icon(Icons.check),
+                if (!hasGrantedMicrophonePermission) const SizedBox(),
+              ],
             ),
           ),
         ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/widgets/logo.dart';
 
@@ -11,6 +12,7 @@ class WelcomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -23,25 +25,25 @@ class WelcomeScreen extends StatelessWidget {
             const Logo(),
             const SizedBox(height: LARGE_SPACE),
             Text(
-              'Quid faciam hodie?',
+              localizations.appTitleQuestion,
               textAlign: TextAlign.center,
               style: theme.textTheme.headline1,
             ),
             const SizedBox(height: SMALL_SPACE),
             Text(
-              'What did I do today?',
+              localizations.welcomeScreenSubtitle,
               style: theme.textTheme.bodySmall,
             ),
             const SizedBox(height: LARGE_SPACE),
             Text(
-              'Find out what you did all the days and unlock moments you completely forgot!',
+              localizations.welcomeScreenDescription,
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyText2,
             ),
             const SizedBox(height: LARGE_SPACE),
             ElevatedButton.icon(
               icon: const Icon(Icons.arrow_right),
-              label: const Text('Start'),
+              label: Text(localizations.welcomeScreenStartButtonTitle),
               onPressed: () {
                 Navigator.pushReplacementNamed(
                   context,

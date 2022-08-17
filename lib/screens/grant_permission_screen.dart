@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:quid_faciam_hodie/screens/main_screen.dart';
 
 import 'main_screen/permissions_required_page.dart';
@@ -10,9 +11,11 @@ class GrantPermissionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Grant Permission'),
+        title: Text(localizations.grantPermissionScreenTitle),
       ),
       body: Center(
         child: PermissionsRequiredPage(

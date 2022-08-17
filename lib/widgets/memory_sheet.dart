@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/enums.dart';
@@ -35,12 +36,10 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
   }
 
   Future<void> downloadFile() async {
+    final localizations = AppLocalizations.of(context)!;
+
     try {
       final file = await widget.memory.downloadToFile();
-
-      if (!mounted) {
-        return;
-      }
 
       switch (widget.memory.type) {
         case MemoryType.photo:
@@ -51,15 +50,22 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
           break;
       }
 
+      if (!mounted) {
+        return;
+      }
+
       Navigator.pop(context);
 
-      context.showSuccessSnackBar(message: 'File saved to Gallery!');
+      context.showSuccessSnackBar(
+          message: localizations.memorySheetSavedToGallery);
     } catch (error) {
-      context.showErrorSnackBar(message: 'There was an error.');
+      context.showErrorSnackBar(message: localizations.generalError);
     }
   }
 
   Future<void> changeVisibility() async {
+    final localizations = AppLocalizations.of(context)!;
+
     final isNowPublic = !widget.memory.isPublic == true;
 
     try {
@@ -69,15 +75,21 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
         'id': widget.memory.id,
       }).execute();
 
+      if (!mounted) {
+        return;
+      }
+
       Navigator.pop(context);
 
       if (isNowPublic) {
-        context.showSuccessSnackBar(message: 'Your Memory is public now!');
+        context.showSuccessSnackBar(
+            message: localizations.memorySheetMemoryUpdatedToPublic);
       } else {
-        context.showSuccessSnackBar(message: 'Your Memory is private now.');
+        context.showSuccessSnackBar(
+            message: localizations.memorySheetMemoryUpdatedToPrivate);
       }
     } catch (error) {
-      context.showErrorSnackBar(message: 'There was an error.');
+      context.showErrorSnackBar(message: localizations.generalError);
     }
   }
 
@@ -96,19 +108,20 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
     return ModalSheet(
       child: Column(
         children: <Widget>[
           Text(
-            'Edit Memory',
+            localizations.memorySheetTitle,
             style: theme.textTheme.headline1,
           ),
           const SizedBox(height: MEDIUM_SPACE),
           ListTile(
             leading: const Icon(Icons.download),
-            title: const Text('Download to Gallery'),
+            title: Text(localizations.memorySheetDownloadMemory),
             enabled: !getIsLoadingSpecificID('download'),
             onTap: getIsLoadingSpecificID('download')
                 ? null
@@ -121,8 +134,11 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
             leading: Icon(widget.memory.isPublic
                 ? Icons.public_off_rounded
                 : Icons.public_rounded),
-            title:
-                Text(widget.memory.isPublic ? 'Make private' : 'Make public'),
+            title: Text(
+              widget.memory.isPublic
+                  ? localizations.memorySheetUpdateMemoryMakePrivate
+                  : localizations.memorySheetUpdateMemoryMakePublic,
+            ),
             enabled: !getIsLoadingSpecificID('public'),
             onTap: getIsLoadingSpecificID('public')
                 ? null
@@ -133,7 +149,7 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
           ),
           ListTile(
             leading: const Icon(Icons.delete_forever_sharp),
-            title: const Text('Delete Memory'),
+            title: Text(localizations.memorySheetDeleteMemory),
             enabled: !getIsLoadingSpecificID('delete'),
             onTap: getIsLoadingSpecificID('delete')
                 ? null

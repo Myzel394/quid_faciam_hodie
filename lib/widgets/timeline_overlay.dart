@@ -34,7 +34,7 @@ class TimelineOverlay extends StatelessWidget {
             curve: Curves.linearToEaseOut,
             opacity: timeline.showOverlay ? 1.0 : 0.0,
             child: Text(
-              DateFormat('dd. MMMM yyyy').format(date),
+              DateFormat.yMMMd().format(date),
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.headline1!.copyWith(
                     color: Colors.white,

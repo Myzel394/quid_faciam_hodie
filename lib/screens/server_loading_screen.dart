@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/managers/global_values_manager.dart';
@@ -54,42 +55,42 @@ class _ServerLoadingScreenState extends State<ServerLoadingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: const <Widget>[
-            Icon(Icons.cloud, size: 60),
-            SizedBox(height: SMALL_SPACE),
-            DotAnimation(
+          children: <Widget>[
+            const Icon(Icons.cloud, size: 60),
+            const SizedBox(height: SMALL_SPACE),
+            const DotAnimation(
               initialFadeInDelay: Duration.zero,
               fadeInDuration: Duration(seconds: 1),
               fadeOutDuration: Duration(seconds: 1),
               fadeInDelay: Duration(seconds: 4),
               fadeOutDelay: Duration.zero,
             ),
-            DotAnimation(
+            const DotAnimation(
               initialFadeInDelay: Duration(seconds: 2),
               fadeInDuration: Duration(seconds: 1),
               fadeOutDuration: Duration(seconds: 1),
               fadeInDelay: Duration(seconds: 4),
               fadeOutDelay: Duration.zero,
             ),
-            DotAnimation(
+            const DotAnimation(
               initialFadeInDelay: Duration(seconds: 4),
               fadeInDuration: Duration(seconds: 1),
               fadeOutDuration: Duration(seconds: 1),
               fadeInDelay: Duration(seconds: 4),
               fadeOutDelay: Duration.zero,
             ),
-            SizedBox(height: SMALL_SPACE),
-            Icon(Icons.smartphone, size: 60),
-            SizedBox(height: LARGE_SPACE),
-            Text(
-              'We are loading your data',
-            ),
+            const SizedBox(height: SMALL_SPACE),
+            const Icon(Icons.smartphone, size: 60),
+            const SizedBox(height: LARGE_SPACE),
+            Text(localizations.serverLoadingScreenDescription),
           ],
         ),
       ),

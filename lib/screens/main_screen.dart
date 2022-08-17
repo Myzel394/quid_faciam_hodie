@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:camera/camera.dart';
 import 'package:expandable_bottom_sheet/expandable_bottom_sheet.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/constants/values.dart';
 import 'package:quid_faciam_hodie/extensions/snackbar.dart';
@@ -152,6 +153,8 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
   }
 
   Future<void> takePhoto() async {
+    final localizations = AppLocalizations.of(context)!;
+
     if (controller!.value.isTakingPicture) {
       return;
     }
@@ -162,7 +165,7 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
 
     try {
       context.showPendingSnackBar(
-        message: 'Taking photo, please hold still...',
+        message: localizations.mainScreenTakePhotoActionTakingPhoto,
       );
 
       controller!.setFlashMode(FlashMode.off);
@@ -172,7 +175,9 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
         uploadingPhotoAnimation = file.readAsBytesSync();
       });
 
-      context.showPendingSnackBar(message: 'Uploading photo...');
+      context.showPendingSnackBar(
+        message: localizations.mainScreenTakePhotoActionUploadingPhoto,
+      );
 
       try {
         await FileManager.uploadFile(_user, file);
@@ -181,7 +186,9 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
         return;
       }
 
-      context.showSuccessSnackBar(message: 'Photo uploaded!');
+      context.showSuccessSnackBar(
+        message: localizations.mainScreenUploadSuccess,
+      );
     } finally {
       setState(() {
         lockCamera = false;
@@ -191,6 +198,8 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
   }
 
   Future<void> takeVideo() async {
+    final localizations = AppLocalizations.of(context)!;
+
     setState(() {
       isRecording = false;
     });
@@ -205,11 +214,15 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
     });
 
     try {
-      context.showPendingSnackBar(message: 'Saving video...');
+      context.showPendingSnackBar(
+        message: localizations.mainScreenTakeVideoActionSaveVideo,
+      );
 
       final file = File((await controller!.stopVideoRecording()).path);
 
-      context.showPendingSnackBar(message: 'Uploading video...');
+      context.showPendingSnackBar(
+        message: localizations.mainScreenTakeVideoActionUploadingVideo,
+      );
 
       try {
         await FileManager.uploadFile(_user, file);
@@ -220,7 +233,9 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
         return;
       }
 
-      context.showSuccessSnackBar(message: 'Video uploaded!');
+      context.showSuccessSnackBar(
+        message: localizations.mainScreenUploadSuccess,
+      );
     } finally {
       setState(() {
         lockCamera = false;
@@ -230,6 +245,8 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: Colors.black,
       bottomSheet: () {
@@ -238,10 +255,10 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: const <Widget>[
-                CircularProgressIndicator(),
-                SizedBox(height: MEDIUM_SPACE),
-                Text('Loading camera'),
+              children: <Widget>[
+                const CircularProgressIndicator(),
+                const SizedBox(height: MEDIUM_SPACE),
+                Text(localizations.mainScreenLoadingCamera),
               ],
             ),
           );
@@ -371,7 +388,8 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
                 children: <Widget>[
                   ElevatedButton.icon(
                     icon: const Icon(Icons.flashlight_on_rounded),
-                    label: const Text('Torch'),
+                    label: Text(AppLocalizations.of(context)!
+                        .mainScreenActionsTorchButton),
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.resolveWith<Color>(
                         (_) => isTorchEnabled ? Colors.white : Colors.black,

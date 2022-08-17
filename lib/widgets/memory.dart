@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/enums.dart';
 import 'package:quid_faciam_hodie/foreign_types/memory.dart';
@@ -79,6 +80,7 @@ class _MemoryViewState extends State<MemoryView> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
     if (status == MemoryFetchStatus.error) {
@@ -130,7 +132,7 @@ class _MemoryViewState extends State<MemoryView> {
           switch (status) {
             case MemoryFetchStatus.downloading:
               return Text(
-                'Downloading memory',
+                localizations.memoryViewIsDownloading,
                 style: theme.textTheme.bodyText2!.copyWith(
                   color: Colors.white,
                 ),

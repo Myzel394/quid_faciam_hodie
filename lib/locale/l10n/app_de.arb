@@ -1,3 +1,54 @@
 {
-  "helloWorld": "Hallo Welt"
+  "appTitleQuestion": "Quid faciam hodie?",
+
+  "generalError": "Ein Fehler ist aufgetreten",
+
+  "welcomeScreenDescription": "Finde heraus was du den ganzen Tag gemacht hast und erlebe Erinnerungen wieder, die du komplett vergessen hast!",
+  "welcomeScreenSubtitle": "Was hab ich heute gemacht?",
+  "welcomeScreenStartButtonTitle": "Loslegen",
+
+
+  "serverLoadingScreenDescription": "Wir laden deine Daten",
+
+
+  "mainScreenLoadingCamera": "Kamera wird geladen",
+
+  "mainScreenActionsTorchButton": "Taschenlampe",
+  "mainScreenUploadSuccess": "Erfolgreich hochgeladen",
+
+  "mainScreenTakePhotoActionTakingPhoto": "Foto wird aufgenommen, halte still...",
+  "mainScreenTakePhotoActionUploadingPhoto": "Foto wird hochgeladen...",
+  "mainScreenTakeVideoActionSaveVideo": "Video wird aufgenommen, halte still...",
+  "mainScreenTakeVideoActionUploadingVideo": "Video wird hochgeladen...",
+
+
+  "loginScreenTitle": "Anmelden",
+  "loginScreenLoginError": "E-Mail oder Passwort inkorrekt",
+  "loginScreenHelpText": "Melde dich an. Wenn du noch keinen Account besitzt, erstellen wir automatisch einen für dich.",
+  "loginScreenFormEmailLabel": "E-Mail",
+  "loginScreenFormPasswordLabel": "Passwort",
+  "loginScreenFormSubmitButton": "Anmelden",
+
+
+  "grantPermissionScreenTitle": "Berechtigungen erteilen",
+
+  "permissionsRequiredPageTitle": "Berechtigungen benötigt",
+  "permissionsRequiredPageDescription": "Bitte erteile die folgenden Berechtigungen, um die App zu verwenden.",
+  "permissionsRequiredPagePermanentlyDenied": "Du hast Berechtigungen permanent abgelehnt, welche für die App benötigt werden. Bitte erteile sie in den Einstellungen.",
+  "permissionsRequiredPageOpenSettings": "Einstellungen öffnen",
+  "permissionsRequiredPageGrantCameraPermission": "Kamera-Berechtigung erteilen",
+  "permissionsRequiredPageGrantMicrophonePermission": "Mikrofon-Berechtigung erteilen",
+
+
+  "memoryViewIsDownloading": "Erinnerung wird heruntergeladen",
+
+
+  "memorySheetSavedToGallery": "In Gallerie gespeichert!",
+  "memorySheetMemoryUpdatedToPublic": "Deine Erinnerung wurde veröffentlicht!",
+  "memorySheetMemoryUpdatedToPrivate": "Deine Erinnerung wurde auf privat gestellt.",
+  "memorySheetTitle": "Erinnerung bearbeiten",
+  "memorySheetDownloadMemory": "In Gallerie speichern",
+  "memorySheetUpdateMemoryMakePublic": "Veröffentlichen",
+  "memorySheetUpdateMemoryMakePrivate": "Privat machen",
+  "memorySheetDeleteMemory": "Erinnerung löschen"
 }

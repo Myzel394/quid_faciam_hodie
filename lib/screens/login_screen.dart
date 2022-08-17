@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/extensions/snackbar.dart';
 import 'package:quid_faciam_hodie/managers/authentication_manager.dart';
@@ -56,6 +57,8 @@ class _LoginScreenState extends AuthState<LoginScreen> with Loadable {
   }
 
   Future<void> signIn() async {
+    final localizations = AppLocalizations.of(context)!;
+
     try {
       await _signUp();
     } catch (error) {
@@ -63,7 +66,9 @@ class _LoginScreenState extends AuthState<LoginScreen> with Loadable {
         await _signIn();
       } catch (error) {
         if (mounted) {
-          context.showLongErrorSnackBar(message: 'Invalid password or email');
+          context.showLongErrorSnackBar(
+            message: localizations.loginScreenLoginError,
+          );
 
           emailController.clear();
           passwordController.clear();
@@ -79,11 +84,12 @@ class _LoginScreenState extends AuthState<LoginScreen> with Loadable {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login'),
+        title: Text(localizations.loginScreenTitle),
       ),
       body: Padding(
         padding: const EdgeInsets.all(MEDIUM_SPACE),
@@ -96,9 +102,7 @@ class _LoginScreenState extends AuthState<LoginScreen> with Loadable {
               style: theme.textTheme.headline1,
             ),
             const SizedBox(height: LARGE_SPACE),
-            const Text(
-              'Sign in to your account. If you do not have one already, we will automatically set up one for you.',
-            ),
+            Text(localizations.loginScreenHelpText),
             const SizedBox(height: MEDIUM_SPACE),
             TextField(
               controller: emailController,
@@ -106,25 +110,25 @@ class _LoginScreenState extends AuthState<LoginScreen> with Loadable {
               autofillHints: const [AutofillHints.email],
               keyboardType: TextInputType.emailAddress,
               textInputAction: TextInputAction.next,
-              decoration: const InputDecoration(
-                labelText: 'Email',
-                prefixIcon: Icon(Icons.email),
+              decoration: InputDecoration(
+                labelText: localizations.loginScreenFormEmailLabel,
+                prefixIcon: const Icon(Icons.email),
               ),
             ),
             const SizedBox(height: SMALL_SPACE),
             TextField(
               obscureText: true,
               controller: passwordController,
-              decoration: const InputDecoration(
-                labelText: 'Password',
-                prefixIcon: Icon(Icons.lock),
+              decoration: InputDecoration(
+                labelText: localizations.loginScreenFormPasswordLabel,
+                prefixIcon: const Icon(Icons.lock),
               ),
               onSubmitted: (value) => callWithLoading(signIn),
             ),
             const SizedBox(height: MEDIUM_SPACE),
             ElevatedButton.icon(
               icon: const Icon(Icons.arrow_right),
-              label: const Text('Login'),
+              label: Text(localizations.loginScreenFormSubmitButton),
               onPressed: isLoading ? null : () => callWithLoading(signIn),
             )
           ],
