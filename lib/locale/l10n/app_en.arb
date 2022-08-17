@@ -25,7 +25,6 @@
 
 
   "loginScreenTitle": "Login",
-  "loginScreenLoginError": "Invalid password or email",
   "loginScreenHelpText": "Sign in to your account. If you do not have one already, we will automatically set up one for you.",
   "loginScreenFormEmailLabel": "Email",
   "loginScreenFormPasswordLabel": "Password",

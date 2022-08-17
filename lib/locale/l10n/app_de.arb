@@ -25,7 +25,6 @@
 
 
   "loginScreenTitle": "Anmelden",
-  "loginScreenLoginError": "E-Mail oder Passwort inkorrekt",
   "loginScreenHelpText": "Melde dich an. Wenn du noch keinen Account besitzt, erstellen wir automatisch einen für dich.",
   "loginScreenFormEmailLabel": "E-Mail",
   "loginScreenFormPasswordLabel": "Passwort",

@@ -70,7 +70,7 @@ class _LoginScreenState extends AuthState<LoginScreen> with Loadable {
       } catch (error) {
         if (mounted) {
           context.showLongErrorSnackBar(
-            message: localizations.loginScreenLoginError,
+            message: localizations.generalError,
           );
 
           emailController.clear();
