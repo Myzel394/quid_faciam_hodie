@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:quid_faciam_hodie/constants/themes.dart';
 import 'package:quid_faciam_hodie/screens/calendar_screen.dart';
@@ -50,6 +51,8 @@ class _MyAppState extends State<MyApp> {
         theme: LIGHT_THEME,
         darkTheme: DARK_THEME,
         themeMode: ThemeMode.system,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         routes: {
           WelcomeScreen.ID: (context) => const WelcomeScreen(),
           MainScreen.ID: (context) => const MainScreen(),
