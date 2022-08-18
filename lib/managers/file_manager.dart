@@ -1,20 +1,20 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:quid_faciam_hodie/enums.dart';
 import 'package:quid_faciam_hodie/foreign_types/memory.dart';
+import 'package:quid_faciam_hodie/managers/cache_manager.dart';
 import 'package:quid_faciam_hodie/managers/global_values_manager.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 const uuid = Uuid();
+const storage = FlutterSecureStorage();
 
 final supabase = Supabase.instance.client;
 
 class FileManager {
-  static Map<String, Uint8List> fileCache = {};
-
   static Future<Memory> getMemoryMetadata(final String id) async {
     await GlobalValuesManager.waitForServerInitialization();
 
@@ -56,51 +56,31 @@ class FileManager {
     }
   }
 
-  static Future<List?> getLastFile(final User user) async {
-    final response = await supabase
-        .from('memories')
-        .select()
-        .eq('user_id', user.id)
-        .order('created_at', ascending: false)
-        .limit(1)
-        .single()
-        .execute();
-
-    if (response.data == null) {
-      return null;
-    }
-
-    final memory = response.data;
-    final location = memory['location'];
-    final memoryType =
-        location.split('.').last == 'jpg' ? MemoryType.photo : MemoryType.video;
-
-    try {
-      final file = await _getFileData('memories', location);
-
-      return [file, memoryType];
-    } catch (error) {
-      return null;
-    }
-  }
-
-  static Future<Uint8List> _getFileData(final String table, final String path,
-      {final bool disableCache = false}) async {
-    final key = '$table:$path';
-
-    if (!disableCache && fileCache.containsKey(key)) {
-      return fileCache[key]!;
-    }
-
+  static Future<Uint8List> _downloadFileData(
+      final String table, final String path) async {
     final response = await supabase.storage.from(table).download(path);
 
     if (response.error != null) {
       throw Exception('Error downloading file: ${response.error!.message}');
     }
 
-    final data = response.data!;
+    return response.data!;
+  }
 
-    fileCache[key] = data;
+  static Future<Uint8List> _getFileData(final String table, final String path,
+      {final bool disableCache = false}) async {
+    final key = '$table:$path';
+
+    // Check cache
+    if (!disableCache && await CacheManager.isCacheValid(key)) {
+      final data = (await CacheManager.get(key))!;
+      return Uint8List.fromList(data.codeUnits);
+    }
+
+    final data = await _downloadFileData(table, path);
+
+    final cacheData = String.fromCharCodes(data);
+    await CacheManager.set(key, cacheData);
 
     return data;
   }

@@ -68,6 +68,13 @@ class Memories extends PropertyChangeNotifier<String> {
         .subscribe();
   }
 
+  Future<void> refresh() async {
+    memories.clear();
+    _serverSubscription?.unsubscribe();
+
+    setIsInitialized(false);
+  }
+
   Future<void> _onServerUpdate(
     final SupabaseRealtimePayload response,
   ) async {

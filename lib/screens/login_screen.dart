@@ -73,7 +73,6 @@ class _LoginScreenState extends AuthState<LoginScreen> with Loadable {
             message: localizations.loginScreenLoginFailed,
           );
 
-          emailController.clear();
           passwordController.clear();
         }
         return;

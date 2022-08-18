@@ -1,1 +1,1 @@
-const STARTUP_PAGE_KEY = 'startup_page';
+const CACHE_KEY = '_cache';

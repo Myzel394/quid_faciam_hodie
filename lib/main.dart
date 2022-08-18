@@ -13,6 +13,7 @@ import 'package:quid_faciam_hodie/screens/server_loading_screen.dart';
 import 'package:quid_faciam_hodie/screens/settings_screen.dart';
 import 'package:quid_faciam_hodie/screens/timeline_screen.dart';
 import 'package:quid_faciam_hodie/screens/welcome_screen.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'managers/global_values_manager.dart';
 import 'models/memories.dart';
@@ -42,6 +43,27 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final memories = Memories();
+
+  @override
+  void initState() {
+    super.initState();
+
+    watchAuthenticationStatus();
+  }
+
+  Future<void> watchAuthenticationStatus() async {
+    await GlobalValuesManager.waitForServerInitialization();
+
+    Supabase.instance.client.auth.onAuthStateChange((event, session) {
+      switch (event) {
+        case AuthChangeEvent.signedIn:
+          memories.refresh();
+          break;
+        default:
+          break;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

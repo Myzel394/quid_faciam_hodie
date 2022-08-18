@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quid_faciam_hodie/extensions/snackbar.dart';
-import 'package:quid_faciam_hodie/screens/login_screen.dart';
 import 'package:quid_faciam_hodie/screens/main_screen.dart';
+import 'package:quid_faciam_hodie/screens/welcome_screen.dart';
 import 'package:supabase/supabase.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -10,7 +10,7 @@ class AuthState<T extends StatefulWidget> extends SupabaseAuthState<T> {
   void onUnauthenticated() {
     if (mounted) {
       Navigator.of(context)
-          .pushNamedAndRemoveUntil(LoginScreen.ID, (route) => false);
+          .pushNamedAndRemoveUntil(WelcomeScreen.ID, (route) => false);
     }
   }
 
