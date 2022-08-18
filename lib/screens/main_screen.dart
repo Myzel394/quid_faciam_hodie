@@ -12,6 +12,7 @@ import 'package:quid_faciam_hodie/constants/values.dart';
 import 'package:quid_faciam_hodie/extensions/snackbar.dart';
 import 'package:quid_faciam_hodie/managers/file_manager.dart';
 import 'package:quid_faciam_hodie/managers/global_values_manager.dart';
+import 'package:quid_faciam_hodie/screens/main_screen/settings_button_overlay.dart';
 import 'package:quid_faciam_hodie/utils/auth_required.dart';
 import 'package:quid_faciam_hodie/utils/loadable.dart';
 import 'package:quid_faciam_hodie/widgets/animate_in_builder.dart';
@@ -317,11 +318,13 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
                         child: AspectRatio(
                           aspectRatio: 1 / controller!.value.aspectRatio,
                           child: Stack(
+                            alignment: Alignment.center,
                             fit: StackFit.expand,
                             children: <Widget>[
                               controller!.buildPreview(),
                               if (isRecording)
                                 RecordingOverlay(controller: controller!),
+                              if (!isRecording) SettingsButtonOverlay(),
                               if (uploadingPhotoAnimation != null)
                                 UploadingPhoto(
                                   data: uploadingPhotoAnimation!,

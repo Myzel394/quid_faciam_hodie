@@ -55,6 +55,7 @@ dependencies:
   flutter_calendar_widget: ^0.0.2
   flutter_platform_widgets: ^2.0.0
   lottie: ^1.4.1
+  settings_ui: ^2.0.2
 
 dev_dependencies:
   flutter_test:

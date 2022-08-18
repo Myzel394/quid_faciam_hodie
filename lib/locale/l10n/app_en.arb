@@ -2,6 +2,7 @@
   "appTitleQuestion": "Quid faciam hodie?",
 
   "generalError": "There was an error",
+  "generalCancelButtonLabel": "Cancel",
 
   "welcomeScreenDescription": "Find out what you did all the days and unlock moments you completely forgot!",
   "welcomeScreenSubtitle": "What did I do today?",
@@ -68,5 +69,17 @@
   "emptyScreenTitle": "Houston, we have a problem",
   "emptyScreenSubtitle": "The user hasn't created any memories yet!",
   "emptyScreenDescription": "To view your timeline you need to create some memories first! :)",
-  "emptyScreenCreateMemory": "Create a Memory"
+  "emptyScreenCreateMemory": "Create a Memory",
+
+
+  "settingsScreenLoading": "Loading Settings...",
+  "settingsScreenTitle": "Settings",
+  "settingsScreenAccountSectionTitle": "Your Account",
+  "settingsScreenAccountSectionCreationDateLabel": "Created at",
+  "settingsScreenAccountSectionLogoutLabel": "Log out",
+  "settingsScreenDangerSectionTitle": "Danger Zone",
+  "settingsScreenDangerSectionDeleteAccountLabel": "Delete Account",
+  "settingsScreenDeleteAccountTitle": "Delete Account",
+  "settingsScreenDeleteAccountDescription": "Are you sure you want to delete your account? This action cannot be undone! All your memories will be deleted as well.",
+  "settingsScreenDeleteAccountConfirmLabel": "Delete Account now"
 }

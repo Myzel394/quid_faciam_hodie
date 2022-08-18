@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:quid_faciam_hodie/foreign_types/memory.dart';
 import 'package:quid_faciam_hodie/models/timeline.dart';
@@ -67,10 +68,12 @@ class _TimelinePageState extends State<TimelinePage> {
       onDoubleTap: () async {
         timeline.pause();
 
-        await showModalBottomSheet(
+        await showPlatformModalSheet(
           context: context,
-          backgroundColor: Colors.transparent,
-          isScrollControlled: true,
+          material: MaterialModalSheetData(
+            backgroundColor: Colors.transparent,
+            isScrollControlled: true,
+          ),
           builder: (sheetContext) => MemorySheet(
             memory: timeline.currentMemory,
             sheetContext: sheetContext,

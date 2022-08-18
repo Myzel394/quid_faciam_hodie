@@ -10,6 +10,7 @@ import 'package:quid_faciam_hodie/screens/grant_permission_screen.dart';
 import 'package:quid_faciam_hodie/screens/login_screen.dart';
 import 'package:quid_faciam_hodie/screens/main_screen.dart';
 import 'package:quid_faciam_hodie/screens/server_loading_screen.dart';
+import 'package:quid_faciam_hodie/screens/settings_screen.dart';
 import 'package:quid_faciam_hodie/screens/timeline_screen.dart';
 import 'package:quid_faciam_hodie/screens/welcome_screen.dart';
 
@@ -64,6 +65,7 @@ class _MyAppState extends State<MyApp> {
           CalendarScreen.ID: (context) => const CalendarScreen(),
           ServerLoadingScreen.ID: (context) => const ServerLoadingScreen(),
           EmptyScreen.ID: (context) => const EmptyScreen(),
+          SettingsScreen.ID: (context) => const SettingsScreen(),
         },
         initialRoute: ServerLoadingScreen.ID,
       ),
