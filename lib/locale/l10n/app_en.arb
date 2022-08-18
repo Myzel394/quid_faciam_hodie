@@ -30,6 +30,7 @@
   "loginScreenFormEmailLabel": "Email",
   "loginScreenFormPasswordLabel": "Password",
   "loginScreenFormSubmitButton": "Login",
+  "loginScreenLoginFailed": "Email or password incorrect",
 
 
   "grantPermissionScreenTitle": "Grant Permissions",
@@ -75,11 +76,10 @@
   "settingsScreenLoading": "Loading Settings...",
   "settingsScreenTitle": "Settings",
   "settingsScreenAccountSectionTitle": "Your Account",
-  "settingsScreenAccountSectionCreationDateLabel": "Created at",
+  "settingsScreenAccountSectionCreationDateLabel": "Account creation",
   "settingsScreenAccountSectionLogoutLabel": "Log out",
   "settingsScreenDangerSectionTitle": "Danger Zone",
   "settingsScreenDangerSectionDeleteAccountLabel": "Delete Account",
-  "settingsScreenDeleteAccountTitle": "Delete Account",
   "settingsScreenDeleteAccountDescription": "Are you sure you want to delete your account? This action cannot be undone! All your memories will be deleted as well.",
   "settingsScreenDeleteAccountConfirmLabel": "Delete Account now"
 }

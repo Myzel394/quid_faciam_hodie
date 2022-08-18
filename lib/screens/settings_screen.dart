@@ -92,11 +92,25 @@ class _SettingsScreenState extends AuthRequiredState<SettingsScreen>
                       title: Text(user!.email!),
                     ),
                     SettingsTile(
-                      leading: Text(localizations
-                          .settingsScreenAccountSectionCreationDateLabel),
-                      title: Text(
-                        DateFormat('d. MMMM y,  HH:mm:ss')
-                            .format(DateTime.parse(user!.createdAt)),
+                      leading: Icon(context.platformIcons.time),
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            DateFormat('d. MMMM y,  HH:mm:ss')
+                                .format(DateTime.parse(user!.createdAt)),
+                          ),
+                          const SizedBox(height: SMALL_SPACE),
+                          Text(
+                            localizations
+                                .settingsScreenAccountSectionCreationDateLabel,
+                            style: platformThemeData(
+                              context,
+                              material: (data) => data.textTheme.bodySmall,
+                              cupertino: (data) => data.textTheme.textStyle,
+                            ),
+                          )
+                        ],
                       ),
                     ),
                     SettingsTile(
@@ -130,7 +144,8 @@ class _SettingsScreenState extends AuthRequiredState<SettingsScreen>
                         context: context,
                         builder: (platformContext) => PlatformAlertDialog(
                           title: Text(
-                            localizations.settingsScreenDeleteAccountTitle,
+                            localizations
+                                .settingsScreenDangerSectionDeleteAccountLabel,
                           ),
                           content: Text(
                             localizations

@@ -63,14 +63,14 @@ class _LoginScreenState extends AuthState<LoginScreen> with Loadable {
     final localizations = AppLocalizations.of(context)!;
 
     try {
-      await _signUp();
+      await _signIn();
     } catch (error) {
       try {
-        await _signIn();
+        await _signUp();
       } catch (error) {
         if (mounted) {
           context.showLongErrorSnackBar(
-            message: localizations.generalError,
+            message: localizations.loginScreenLoginFailed,
           );
 
           emailController.clear();

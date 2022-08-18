@@ -29,6 +29,7 @@
   "loginScreenFormEmailLabel": "E-Mail",
   "loginScreenFormPasswordLabel": "Passwort",
   "loginScreenFormSubmitButton": "Anmelden",
+  "loginScreenLoginFailed": "E-Mail oder Passwort inkorrekt",
 
 
   "grantPermissionScreenTitle": "Berechtigungen erteilen",
@@ -59,5 +60,16 @@
   "emptyScreenSubtitle": "Der Benutzer hat noch keine Erinnerungen erstellt!",
   "emptyScreenDescription": "Um deinen Zeitstrahl sehen zu können musst du zuerst ein paar Erinnerungen erstellen! :)",
   "emptyScreenCreateMemory": "Erinnerung erstellen",
-  "memorySheetCreatedAtDataKey": "Erstellt am: {creationTimeFormatted}"
+  "memorySheetCreatedAtDataKey": "Erstellt am: {creationTimeFormatted}",
+
+
+  "settingsScreenLoading": "Einstellungen werden geladen...",
+  "settingsScreenTitle": "Einstellungen",
+  "settingsScreenAccountSectionTitle": "Dein Account",
+  "settingsScreenAccountSectionCreationDateLabel": "Account-Erstellung",
+  "settingsScreenAccountSectionLogoutLabel": "Abmelden",
+  "settingsScreenDangerSectionTitle": "Gefahrbereich",
+  "settingsScreenDangerSectionDeleteAccountLabel": "Account löschen",
+  "settingsScreenDeleteAccountDescription": "Bist du dir sicher, dass du deinen Account löschen möchtest? Diese Aktion kann nicht rückgangig gemacht werden! Deine Erfahrungen werden ebenfalls gelöscht.",
+  "settingsScreenDeleteAccountConfirmLabel": "Account jetzt löschen"
 }
