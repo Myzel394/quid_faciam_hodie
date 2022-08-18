@@ -12,6 +12,26 @@
   "welcomeScreenViewMemoriesGuideDescription": "...and relieve your best moments at the end of the day!",
   "welcomeScreenGetStartedLabel": "Get started",
 
+  "welcomeScreenMemoriesDataMemoriesAmount": "You have created {memoriesAmount} memories",
+  "@welcomeScreenMemoriesDataMemoriesAmount": {
+    "placeholders": {
+      "memoriesAmount": {
+        "type": "int"
+      }
+    }
+  },
+  "welcomeScreenMemoriesDataMemoriesSpanning": "Spanning from {startDateFormatted} to {endDateFormatted}",
+  "@welcomeScreenMemoriesDataMemoriesSpanning": {
+    "placeholders": {
+      "startDateFormatted": {
+        "type": "String"
+      },
+      "endDateFormatted": {
+        "type": "String"
+      }
+    }
+  },
+
 
   "serverLoadingScreenDescription": "We are loading your data",
 

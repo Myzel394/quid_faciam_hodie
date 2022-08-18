@@ -7,7 +7,12 @@
 
   "welcomeScreenDescription": "Finde heraus was du den ganzen Tag gemacht hast und erlebe Erinnerungen wieder, die du komplett vergessen hast!",
   "welcomeScreenSubtitle": "Was hab ich heute gemacht?",
-  "welcomeScreenStartButtonTitle": "Loslegen",
+  "welcomeScreenStartButtonTitle": "Start",
+  "welcomeScreenCreateMemoriesGuideDescription": "Erstelle Fotos und Videos während des Tages auf...",
+  "welcomeScreenViewMemoriesGuideDescription": "...und lebe deine Liebelingsmomente des Tages wieder!",
+  "welcomeScreenGetStartedLabel": "Loslegen",
+  "welcomeScreenMemoriesDataMemoriesAmount": "Du hast {memoriesAmount} Erinnerungen erstellt",
+  "welcomeScreenMemoriesDataMemoriesSpanning": "Welche vom {startDateFormatted} bis zum {endDateFormatted} reichen",
 
 
   "serverLoadingScreenDescription": "Wir laden deine Daten",

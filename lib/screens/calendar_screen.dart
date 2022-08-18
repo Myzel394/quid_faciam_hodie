@@ -8,6 +8,7 @@ import 'package:quid_faciam_hodie/models/memories.dart';
 
 import 'calendar_screen/calendar_month.dart';
 import 'calendar_screen/days_of_week_strip.dart';
+import 'calendar_screen/memories_data.dart';
 
 class CalendarScreen extends StatelessWidget {
   static const ID = '/calendar';
@@ -27,7 +28,7 @@ class CalendarScreen extends StatelessWidget {
       builder: (context, memories, _) => PlatformScaffold(
         appBar: isCupertino(context)
             ? PlatformAppBar(
-                title: Text('Calendar'),
+                title: const Text('Calendar'),
               )
             : null,
         body: Padding(
@@ -50,6 +51,10 @@ class CalendarScreen extends StatelessWidget {
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
+                      if (index == monthMapping.length) {
+                        return MemoriesData();
+                      }
+
                       final date = monthMapping.keys.elementAt(index);
                       final dayMapping = monthMapping.values.elementAt(index);
 
@@ -59,7 +64,7 @@ class CalendarScreen extends StatelessWidget {
                         dayAmountMap: dayMapping,
                       );
                     },
-                    childCount: monthMapping.length,
+                    childCount: monthMapping.length + 1,
                   ),
                 ),
               ),
