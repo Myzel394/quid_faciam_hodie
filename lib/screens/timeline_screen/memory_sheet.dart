@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:gallery_saver/gallery_saver.dart';
+import 'package:intl/intl.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/enums.dart';
 import 'package:quid_faciam_hodie/extensions/snackbar.dart';
@@ -185,6 +186,19 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
                 ? buildLoadingIndicator()
                 : null,
           ),
+          const SizedBox(height: MEDIUM_SPACE),
+          Text(
+            localizations.memorySheetCreatedAtDataKey(DateFormat.jms().format(
+              widget.memory.creationDate,
+            )),
+            style: getBodyTextTextStyle(context),
+          ),
+          const SizedBox(height: SMALL_SPACE),
+          Text(
+            widget.memory.id,
+            textAlign: TextAlign.center,
+            style: getBodyTextTextStyle(context),
+          )
         ],
       ),
     );

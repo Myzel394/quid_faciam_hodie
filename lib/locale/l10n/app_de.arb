@@ -58,5 +58,6 @@
   "emptyScreenTitle": "Houston, wir haben ein Problem",
   "emptyScreenSubtitle": "Der Benutzer hat noch keine Erinnerungen erstellt!",
   "emptyScreenDescription": "Um deinen Zeitstrahl sehen zu können musst du zuerst ein paar Erinnerungen erstellen! :)",
-  "emptyScreenCreateMemory": "Erinnerung erstellen"
+  "emptyScreenCreateMemory": "Erinnerung erstellen",
+  "memorySheetCreatedAtDataKey": "Erstellt am: {creationTimeFormatted}"
 }

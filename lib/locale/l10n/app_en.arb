@@ -53,6 +53,16 @@
   "memorySheetUpdateMemoryMakePublic": "Make Public",
   "memorySheetUpdateMemoryMakePrivate": "Make Private",
   "memorySheetDeleteMemory": "Delete Memory",
+  "memorySheetCreatedAtDataKey": "Created at: {creationTimeFormatted}",
+  "@memorySheetCreatedAtDataKey": {
+    "description": "Formatted date when the memory was created",
+    "placeholders": {
+      "creationTimeFormatted": {
+        "type": "String",
+        "example": "8am"
+      }
+    }
+  },
 
 
   "emptyScreenTitle": "Houston, we have a problem",
