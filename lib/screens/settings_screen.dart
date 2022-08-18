@@ -85,97 +85,103 @@ class _SettingsScreenState extends AuthRequiredState<SettingsScreen>
                 ],
               ),
             )
-          : SettingsList(
-              sections: [
-                SettingsSection(
-                  title: Text(localizations.settingsScreenAccountSectionTitle),
-                  tiles: <SettingsTile>[
-                    SettingsTile(
-                      leading: Icon(context.platformIcons.mail),
-                      title: Text(user!.email!),
-                    ),
-                    SettingsTile(
-                      leading: Icon(context.platformIcons.time),
-                      title: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            DateFormat('d. MMMM y,  HH:mm:ss')
-                                .format(DateTime.parse(user!.createdAt)),
-                          ),
-                          const SizedBox(height: SMALL_SPACE),
-                          Text(
-                            localizations
-                                .settingsScreenAccountSectionCreationDateLabel,
-                            style: platformThemeData(
-                              context,
-                              material: (data) => data.textTheme.bodySmall,
-                              cupertino: (data) => data.textTheme.textStyle,
-                            ),
-                          )
-                        ],
+          : Padding(
+              padding:
+                  EdgeInsets.only(top: isCupertino(context) ? LARGE_SPACE : 0),
+              child: SettingsList(
+                sections: [
+                  SettingsSection(
+                    title:
+                        Text(localizations.settingsScreenAccountSectionTitle),
+                    tiles: <SettingsTile>[
+                      SettingsTile(
+                        leading: Icon(context.platformIcons.mail),
+                        title: Text(user!.email!),
                       ),
-                    ),
-                    SettingsTile(
-                      leading: const Icon(Icons.logout_rounded),
-                      title: Text(localizations
-                          .settingsScreenAccountSectionLogoutLabel),
-                      onPressed: (_) async {
-                        await callWithLoading(supabase.auth.signOut);
-
-                        if (!mounted) {
-                          return;
-                        }
-
-                        Navigator.pushNamedAndRemoveUntil(
-                          context,
-                          WelcomeScreen.ID,
-                          (route) => false,
-                        );
-                      },
-                    )
-                  ],
-                ),
-                SettingsSection(
-                  title: Text(localizations.settingsScreenDangerSectionTitle),
-                  tiles: <SettingsTile>[
-                    SettingsTile(
-                      leading: Icon(context.platformIcons.delete),
-                      title: Text(localizations
-                          .settingsScreenDangerSectionDeleteAccountLabel),
-                      onPressed: (_) => showPlatformDialog(
-                        context: context,
-                        builder: (platformContext) => PlatformAlertDialog(
-                          title: Text(
-                            localizations
-                                .settingsScreenDangerSectionDeleteAccountLabel,
-                          ),
-                          content: Text(
-                            localizations
-                                .settingsScreenDeleteAccountDescription,
-                            style: getBodyTextTextStyle(platformContext),
-                          ),
-                          actions: [
-                            PlatformDialogAction(
-                              child: Text(
-                                localizations.generalCancelButtonLabel,
-                              ),
-                              onPressed: () => Navigator.pop(context),
+                      SettingsTile(
+                        leading: Icon(context.platformIcons.time),
+                        title: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              DateFormat('d. MMMM y,  HH:mm:ss')
+                                  .format(DateTime.parse(user!.createdAt)),
                             ),
-                            PlatformDialogAction(
-                              child: Text(
-                                localizations
-                                    .settingsScreenDeleteAccountConfirmLabel,
+                            const SizedBox(height: SMALL_SPACE),
+                            Text(
+                              localizations
+                                  .settingsScreenAccountSectionCreationDateLabel,
+                              style: platformThemeData(
+                                context,
+                                material: (data) => data.textTheme.bodySmall,
+                                cupertino: (data) =>
+                                    data.textTheme.tabLabelTextStyle,
                               ),
-                              onPressed: () => callWithLoading(deleteUser),
                             )
                           ],
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      SettingsTile(
+                        leading: const Icon(Icons.logout_rounded),
+                        title: Text(localizations
+                            .settingsScreenAccountSectionLogoutLabel),
+                        onPressed: (_) async {
+                          await callWithLoading(supabase.auth.signOut);
+
+                          if (!mounted) {
+                            return;
+                          }
+
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            WelcomeScreen.ID,
+                            (route) => false,
+                          );
+                        },
+                      )
+                    ],
+                  ),
+                  SettingsSection(
+                    title: Text(localizations.settingsScreenDangerSectionTitle),
+                    tiles: <SettingsTile>[
+                      SettingsTile(
+                        leading: Icon(context.platformIcons.delete),
+                        title: Text(localizations
+                            .settingsScreenDangerSectionDeleteAccountLabel),
+                        onPressed: (_) => showPlatformDialog(
+                          context: context,
+                          builder: (platformContext) => PlatformAlertDialog(
+                            title: Text(
+                              localizations
+                                  .settingsScreenDangerSectionDeleteAccountLabel,
+                            ),
+                            content: Text(
+                              localizations
+                                  .settingsScreenDeleteAccountDescription,
+                              style: getBodyTextTextStyle(platformContext),
+                            ),
+                            actions: [
+                              PlatformDialogAction(
+                                child: Text(
+                                  localizations.generalCancelButtonLabel,
+                                ),
+                                onPressed: () => Navigator.pop(context),
+                              ),
+                              PlatformDialogAction(
+                                child: Text(
+                                  localizations
+                                      .settingsScreenDeleteAccountConfirmLabel,
+                                ),
+                                onPressed: () => callWithLoading(deleteUser),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
     );
   }

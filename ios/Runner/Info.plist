@@ -70,6 +70,7 @@
         <true/>
     </dict>
 
-
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Accessing your gallery allows you to save your memories</string>
 </dict>
 </plist>

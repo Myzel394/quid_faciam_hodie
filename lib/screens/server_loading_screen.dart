@@ -120,8 +120,12 @@ class _ServerLoadingScreenState extends State<ServerLoadingScreen> {
               localizations.serverLoadingScreenDescription,
               style: platformThemeData(
                 context,
-                material: (data) => data.textTheme.bodyText1,
-                cupertino: (data) => data.textTheme.textStyle,
+                material: (data) => data.textTheme.bodyText1!.copyWith(
+                  color: Colors.white,
+                ),
+                cupertino: (data) => data.textTheme.textStyle.copyWith(
+                  color: Colors.white,
+                ),
               ),
             ),
           ],

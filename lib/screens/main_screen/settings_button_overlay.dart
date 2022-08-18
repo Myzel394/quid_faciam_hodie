@@ -11,8 +11,11 @@ class SettingsButtonOverlay extends StatelessWidget {
     return Positioned(
       left: SMALL_SPACE,
       top: SMALL_SPACE,
-      child: IconButton(
-        icon: Icon(context.platformIcons.settings),
+      child: PlatformTextButton(
+        child: Icon(
+          context.platformIcons.settings,
+          color: Colors.white,
+        ),
         onPressed: () {
           Navigator.pushNamed(context, SettingsScreen.ID);
         },

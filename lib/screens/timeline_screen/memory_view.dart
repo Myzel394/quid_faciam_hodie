@@ -132,7 +132,11 @@ class _MemoryViewState extends State<MemoryView> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        PlatformCircularProgressIndicator(),
+        PlatformCircularProgressIndicator(
+          cupertino: (_, __) => CupertinoProgressIndicatorData(
+            color: Colors.white,
+          ),
+        ),
         const SizedBox(height: SMALL_SPACE),
         () {
           switch (status) {

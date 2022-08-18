@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:quid_faciam_hodie/extensions/snackbar.dart';
 import 'package:quid_faciam_hodie/screens/main_screen.dart';
 import 'package:quid_faciam_hodie/screens/welcome_screen.dart';
@@ -27,6 +28,6 @@ class AuthState<T extends StatefulWidget> extends SupabaseAuthState<T> {
 
   @override
   void onErrorAuthenticating(String message) {
-    context.showErrorSnackBar(message: message);
+    if (isMaterial(context)) context.showErrorSnackBar(message: message);
   }
 }
