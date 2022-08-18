@@ -56,6 +56,8 @@ dependencies:
   flutter_platform_widgets: ^2.0.0
   lottie: ^1.4.1
   settings_ui: ^2.0.2
+  coast: ^2.0.2
+  http: ^0.13.5
 
 dev_dependencies:
   flutter_test:
@@ -83,6 +85,7 @@ flutter:
   assets:
     - assets/
     - assets/lottie/flying-astronaut.json
+    - assets/images/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

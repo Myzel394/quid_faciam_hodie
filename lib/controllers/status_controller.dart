@@ -26,4 +26,10 @@ class StatusController extends PropertyChangeNotifier<String> {
     _done = true;
     notifyListeners('done');
   }
+
+  void reset() {
+    _done = false;
+    _isForwarding = false;
+    notifyListeners('done');
+  }
 }

@@ -3,6 +3,7 @@
 
   "generalError": "Ein Fehler ist aufgetreten",
   "generalCancelButtonLabel": "Abbrechen",
+  "generalContinueButtonLabel": "Weiter",
 
   "welcomeScreenDescription": "Finde heraus was du den ganzen Tag gemacht hast und erlebe Erinnerungen wieder, die du komplett vergessen hast!",
   "welcomeScreenSubtitle": "Was hab ich heute gemacht?",

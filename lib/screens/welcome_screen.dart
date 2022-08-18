@@ -2,15 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
-import 'package:quid_faciam_hodie/widgets/icon_button_child.dart';
-import 'package:quid_faciam_hodie/widgets/logo.dart';
 
-import 'grant_permission_screen.dart';
+import 'welcome_screen/pages/get_started_page.dart';
+import 'welcome_screen/pages/guide_page.dart';
+import 'welcome_screen/pages/initial_page.dart';
 
-class WelcomeScreen extends StatelessWidget {
+class WelcomeScreen extends StatefulWidget {
   static const ID = '/welcome';
 
   const WelcomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<WelcomeScreen> createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends State<WelcomeScreen> {
+  final controller = PageController();
+
+  @override
+  void dispose() {
+    controller.dispose();
+
+    super.dispose();
+  }
+
+  void nextPage() {
+    controller.animateToPage(
+      (controller.page! + 1).toInt(),
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.ease,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,55 +40,36 @@ class WelcomeScreen extends StatelessWidget {
 
     return PlatformScaffold(
       body: Padding(
-        padding: const EdgeInsets.all(MEDIUM_SPACE),
+        padding: const EdgeInsets.symmetric(vertical: MEDIUM_SPACE),
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const Logo(),
-              const SizedBox(height: LARGE_SPACE),
-              Text(
-                localizations.appTitleQuestion,
-                textAlign: TextAlign.center,
-                style: platformThemeData(
-                  context,
-                  material: (data) => data.textTheme.headline1,
-                  cupertino: (data) => data.textTheme.navLargeTitleTextStyle,
-                ),
-              ),
-              const SizedBox(height: SMALL_SPACE),
-              Text(
-                localizations.welcomeScreenSubtitle,
-                style: platformThemeData(
-                  context,
-                  material: (data) => data.textTheme.bodySmall,
-                  cupertino: (data) => data.textTheme.navTitleTextStyle,
-                ),
-              ),
-              const SizedBox(height: LARGE_SPACE),
-              Text(
-                localizations.welcomeScreenDescription,
-                textAlign: TextAlign.center,
-                style: platformThemeData(
-                  context,
-                  material: (data) => data.textTheme.bodyText1,
-                  cupertino: (data) => data.textTheme.textStyle,
-                ),
-              ),
-              const SizedBox(height: LARGE_SPACE),
-              PlatformElevatedButton(
-                child: IconButtonChild(
-                  icon: Icon(context.platformIcons.forward),
-                  label: Text(localizations.welcomeScreenStartButtonTitle),
-                ),
-                onPressed: () {
-                  Navigator.pushNamed(
-                    context,
-                    GrantPermissionScreen.ID,
+          child: PageView.builder(
+            itemBuilder: (context, index) {
+              switch (index) {
+                case 0:
+                  return InitialPage(
+                    onNextPage: nextPage,
                   );
-                },
-              )
-            ],
+                case 1:
+                  return GuidePage(
+                    onNextPage: nextPage,
+                    description: localizations
+                        .welcomeScreenCreateMemoriesGuideDescription,
+                    picture: 'assets/images/live_photo.svg',
+                  );
+                case 2:
+                  return GuidePage(
+                    onNextPage: nextPage,
+                    description:
+                        localizations.welcomeScreenViewMemoriesGuideDescription,
+                  );
+                case 3:
+                  return const GetStartedPage();
+                default:
+                  return const SizedBox();
+              }
+            },
+            controller: controller,
+            itemCount: 4,
           ),
         ),
       ),

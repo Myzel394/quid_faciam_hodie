@@ -9,12 +9,20 @@ class Status extends StatefulWidget {
   final Widget child;
   final bool paused;
   final bool hideProgressBar;
+  final bool autoStart;
+  final bool isIndeterminate;
+  final VoidCallback? onEnd;
+  final Duration duration;
 
   const Status({
     Key? key,
     required this.child,
     this.paused = false,
     this.hideProgressBar = false,
+    this.autoStart = false,
+    this.isIndeterminate = false,
+    this.duration = const Duration(seconds: 5),
+    this.onEnd,
     this.controller,
   }) : super(key: key);
 
@@ -23,7 +31,7 @@ class Status extends StatefulWidget {
 }
 
 class _StatusState extends State<Status> with TickerProviderStateMixin {
-  late final Animation<double> animation;
+  Animation<double>? animation;
   AnimationController? animationController;
 
   @override
@@ -48,28 +56,48 @@ class _StatusState extends State<Status> with TickerProviderStateMixin {
     super.dispose();
   }
 
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.autoStart) {
+      initializeAnimation();
+    }
+  }
+
   void initializeAnimation() {
     animationController = AnimationController(
-      duration: widget.controller!.duration,
+      duration: widget.controller?.duration ?? widget.duration,
       vsync: this,
-    );
+    )..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          widget.onEnd?.call();
+        }
+      });
+
     animation =
         Tween<double>(begin: 0.0, end: 1.0).animate(animationController!)
           ..addStatusListener((status) {
             if (status == AnimationStatus.completed) {
-              widget.controller!.setDone();
+              widget.controller?.setDone();
             }
           });
 
     animationController!.forward();
 
-    widget.controller!.addListener(() {
-      if (widget.controller!.isForwarding) {
-        animationController!.forward();
-      } else {
-        animationController!.stop();
-      }
-    });
+    if (widget.controller != null) {
+      widget.controller!.addListener(() {
+        if (widget.controller!.isForwarding) {
+          animationController!.forward();
+        } else {
+          animationController!.stop();
+        }
+      });
+    }
+
+    if (widget.autoStart) {
+      animationController?.forward();
+    }
   }
 
   @override
@@ -82,8 +110,8 @@ class _StatusState extends State<Status> with TickerProviderStateMixin {
           widget.child,
           Positioned(
             left: 0,
+            right: 0,
             bottom: SMALL_SPACE,
-            width: MediaQuery.of(context).size.width,
             height: BAR_HEIGHT,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: SMALL_SPACE),
@@ -91,7 +119,7 @@ class _StatusState extends State<Status> with TickerProviderStateMixin {
                 duration: const Duration(milliseconds: 500),
                 curve: Curves.linearToEaseOut,
                 opacity: widget.hideProgressBar ? 0.0 : 1.0,
-                child: (widget.controller == null)
+                child: (widget.isIndeterminate || animation == null)
                     ? ClipRRect(
                         borderRadius: BorderRadius.circular(HUGE_SPACE),
                         child: LinearProgressIndicator(
@@ -102,13 +130,13 @@ class _StatusState extends State<Status> with TickerProviderStateMixin {
                         ),
                       )
                     : AnimatedBuilder(
-                        animation: animation,
+                        animation: animation!,
                         builder: (_, __) => ClipRRect(
                           borderRadius: BorderRadius.circular(HUGE_SPACE),
                           child: LinearProgressIndicator(
-                            value: animation.value,
-                            valueColor:
-                                const AlwaysStoppedAnimation<Color>(Colors.white),
+                            value: animation!.value,
+                            valueColor: const AlwaysStoppedAnimation<Color>(
+                                Colors.white),
                             backgroundColor: Colors.white.withOpacity(0.1),
                           ),
                         ),

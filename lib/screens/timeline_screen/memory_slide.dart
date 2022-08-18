@@ -82,6 +82,7 @@ class _MemorySlideState extends State<MemorySlide>
     return Consumer<TimelineModel>(
       builder: (___, timeline, ____) => Status(
         controller: controller,
+        isIndeterminate: controller == null,
         paused: timeline.paused,
         hideProgressBar: !timeline.showOverlay,
         child: MemoryView(

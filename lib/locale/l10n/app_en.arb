@@ -3,10 +3,14 @@
 
   "generalError": "There was an error",
   "generalCancelButtonLabel": "Cancel",
+  "generalContinueButtonLabel": "Continue",
 
   "welcomeScreenDescription": "Find out what you did all the days and unlock moments you completely forgot!",
   "welcomeScreenSubtitle": "What did I do today?",
   "welcomeScreenStartButtonTitle": "Start",
+  "welcomeScreenCreateMemoriesGuideDescription": "Create photos and video thorough the day...",
+  "welcomeScreenViewMemoriesGuideDescription": "...and relieve your best moments at the end of the day!",
+  "welcomeScreenGetStartedLabel": "Get started",
 
 
   "serverLoadingScreenDescription": "We are loading your data",
