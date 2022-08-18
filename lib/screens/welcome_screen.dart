@@ -42,34 +42,25 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: MEDIUM_SPACE),
         child: Center(
-          child: PageView.builder(
-            itemBuilder: (context, index) {
-              switch (index) {
-                case 0:
-                  return InitialPage(
-                    onNextPage: nextPage,
-                  );
-                case 1:
-                  return GuidePage(
-                    onNextPage: nextPage,
-                    description: localizations
-                        .welcomeScreenCreateMemoriesGuideDescription,
-                    picture: 'assets/images/live_photo.svg',
-                  );
-                case 2:
-                  return GuidePage(
-                    onNextPage: nextPage,
-                    description:
-                        localizations.welcomeScreenViewMemoriesGuideDescription,
-                  );
-                case 3:
-                  return const GetStartedPage();
-                default:
-                  return const SizedBox();
-              }
-            },
+          child: PageView(
             controller: controller,
-            itemCount: 4,
+            children: <Widget>[
+              InitialPage(
+                onNextPage: nextPage,
+              ),
+              GuidePage(
+                onNextPage: nextPage,
+                description:
+                    localizations.welcomeScreenCreateMemoriesGuideDescription,
+                picture: 'assets/images/live_photo.svg',
+              ),
+              GuidePage(
+                onNextPage: nextPage,
+                description:
+                    localizations.welcomeScreenViewMemoriesGuideDescription,
+              ),
+              const GetStartedPage(),
+            ],
           ),
         ),
       ),
