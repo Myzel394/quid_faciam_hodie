@@ -43,7 +43,7 @@ class _ServerLoadingScreenState extends State<ServerLoadingScreen> {
       );
     }
 
-    await GlobalValuesManager.waitForServerInitialization();
+    await GlobalValuesManager.watchForInitialization();
 
     final memories = context.read<Memories>();
     final session = Supabase.instance.client.auth.session();

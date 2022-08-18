@@ -71,6 +71,7 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
   void initState() {
     super.initState();
 
+    loadSettings();
     loadCameras();
   }
 
@@ -83,6 +84,18 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     _updateCamera(state);
+  }
+
+  Future<void> loadSettings() async {
+    final settings = GlobalValuesManager.settings!;
+
+    settings.addListener(() {
+      if (!mounted || controller == null) {
+        return;
+      }
+
+      onNewCameraSelected(controller!.description);
+    });
   }
 
   Future<void> loadCameras() async {
@@ -116,11 +129,13 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
   }
 
   void onNewCameraSelected(final CameraDescription cameraDescription) async {
+    final settings = GlobalValuesManager.settings!;
     final previousCameraController = controller;
+
     // Instantiating the camera controller
     final CameraController cameraController = CameraController(
       cameraDescription,
-      ResolutionPreset.high,
+      settings.resolution,
       imageFormatGroup: ImageFormatGroup.jpeg,
     );
     cameraController.setFlashMode(FlashMode.off);
@@ -192,13 +207,6 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
       }
 
       final file = File((await controller!.takePicture()).path);
-      LocationData? locationData;
-
-      if (Platform.isAndroid && (await Permission.location.isGranted)) {
-        locationData = await Location().getLocation();
-
-        await tagLocationToImage(file, locationData);
-      }
 
       setState(() {
         uploadingPhotoAnimation = file.readAsBytesSync();
@@ -208,6 +216,14 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
         context.showPendingSnackBar(
           message: localizations.mainScreenTakePhotoActionUploadingPhoto,
         );
+
+      LocationData? locationData;
+
+      if (Platform.isAndroid && (await Permission.location.isGranted)) {
+        locationData = await Location().getLocation();
+
+        await tagLocationToImage(file, locationData);
+      }
 
       try {
         await FileManager.uploadFile(_user, file, locationData: locationData);

@@ -79,5 +79,15 @@
   "settingsScreenDangerSectionTitle": "Gefahrbereich",
   "settingsScreenDangerSectionDeleteAccountLabel": "Account löschen",
   "settingsScreenDeleteAccountDescription": "Bist du dir sicher, dass du deinen Account löschen möchtest? Diese Aktion kann nicht rückgangig gemacht werden! Deine Erfahrungen werden ebenfalls gelöscht.",
-  "settingsScreenDeleteAccountConfirmLabel": "Account jetzt löschen"
+  "settingsScreenDeleteAccountConfirmLabel": "Account jetzt löschen",
+  "settingsScreenGeneralSectionTitle": "General",
+  "settingsScreenGeneralSectionQualityLabel": "Quality",
+
+
+  "enumMapping_ResolutionPreset_low": "Niedrig",
+  "enumMapping_ResolutionPreset_medium": "Medium",
+  "enumMapping_ResolutionPreset_high": "Hoch",
+  "enumMapping_ResolutionPreset_veryHigh": "Sehr Hoch",
+  "enumMapping_ResolutionPreset_ultraHigh": "Ultra Hoch",
+  "enumMapping_ResolutionPreset_max": "Max"
 }

@@ -27,7 +27,7 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
-  GlobalValuesManager.initializeServer();
+  GlobalValuesManager.initialize();
 
   runApp(const MyApp());
 }
@@ -52,7 +52,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> watchAuthenticationStatus() async {
-    await GlobalValuesManager.waitForServerInitialization();
+    await GlobalValuesManager.watchForInitialization();
 
     Supabase.instance.client.auth.onAuthStateChange((event, session) {
       switch (event) {

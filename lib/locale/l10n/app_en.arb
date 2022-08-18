@@ -108,5 +108,15 @@
   "settingsScreenDangerSectionTitle": "Danger Zone",
   "settingsScreenDangerSectionDeleteAccountLabel": "Delete Account",
   "settingsScreenDeleteAccountDescription": "Are you sure you want to delete your account? This action cannot be undone! All your memories will be deleted as well.",
-  "settingsScreenDeleteAccountConfirmLabel": "Delete Account now"
+  "settingsScreenDeleteAccountConfirmLabel": "Delete Account now",
+  "settingsScreenGeneralSectionTitle": "General",
+  "settingsScreenGeneralSectionQualityLabel": "Quality",
+
+
+  "enumMapping_ResolutionPreset_low": "Low",
+  "enumMapping_ResolutionPreset_medium": "Medium",
+  "enumMapping_ResolutionPreset_high": "High",
+  "enumMapping_ResolutionPreset_veryHigh": "Very High",
+  "enumMapping_ResolutionPreset_ultraHigh": "Ultra High",
+  "enumMapping_ResolutionPreset_max": "Max"
 }

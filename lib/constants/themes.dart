@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:quid_faciam_hodie/constants/spacing.dart';
 
 final LIGHT_THEME_MATERIAL = ThemeData(
   textTheme: ThemeData().textTheme.copyWith(
@@ -13,7 +14,7 @@ final LIGHT_THEME_MATERIAL = ThemeData(
     helperMaxLines: 10,
     errorMaxLines: 10,
     border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(MEDIUM_SPACE),
     ),
   ),
 );
@@ -30,7 +31,7 @@ final DARK_THEME_MATERIAL = ThemeData.dark().copyWith(
     helperMaxLines: 10,
     errorMaxLines: 10,
     border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(MEDIUM_SPACE),
     ),
   ),
 );

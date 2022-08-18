@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -5,7 +6,9 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
+import 'package:quid_faciam_hodie/enum_mapping/resolution_preset/texts.dart';
 import 'package:quid_faciam_hodie/extensions/snackbar.dart';
+import 'package:quid_faciam_hodie/managers/global_values_manager.dart';
 import 'package:quid_faciam_hodie/screens/welcome_screen.dart';
 import 'package:quid_faciam_hodie/utils/auth_required.dart';
 import 'package:quid_faciam_hodie/utils/loadable.dart';
@@ -29,6 +32,18 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends AuthRequiredState<SettingsScreen>
     with Loadable {
   User? user;
+
+  @override
+  void initState() {
+    super.initState();
+
+    final settings = GlobalValuesManager.settings!;
+
+    // Update UI when settings change
+    settings.addListener(() {
+      setState(() {});
+    });
+  }
 
   @override
   void onAuthenticated(Session session) {
@@ -68,7 +83,9 @@ class _SettingsScreenState extends AuthRequiredState<SettingsScreen>
 
   @override
   Widget build(BuildContext context) {
+    final settings = GlobalValuesManager.settings!;
     final localizations = AppLocalizations.of(context)!;
+    final resolutionTextMapping = getResolutionTextMapping(context);
 
     return PlatformScaffold(
       appBar: PlatformAppBar(
@@ -138,6 +155,36 @@ class _SettingsScreenState extends AuthRequiredState<SettingsScreen>
                             (route) => false,
                           );
                         },
+                      )
+                    ],
+                  ),
+                  SettingsSection(
+                    title: Text(
+                      localizations.settingsScreenGeneralSectionTitle,
+                    ),
+                    tiles: <SettingsTile>[
+                      SettingsTile(
+                        leading: Text(
+                          localizations
+                              .settingsScreenGeneralSectionQualityLabel,
+                        ),
+                        title: DropdownButtonFormField<ResolutionPreset>(
+                          value: settings.resolution,
+                          onChanged: (value) async {
+                            if (value == null) {
+                              return;
+                            }
+
+                            settings.setResolution(value);
+                          },
+                          items: ResolutionPreset.values
+                              .map((value) =>
+                                  DropdownMenuItem<ResolutionPreset>(
+                                    value: value,
+                                    child: Text(resolutionTextMapping[value]!),
+                                  ))
+                              .toList(),
+                        ),
                       )
                     ],
                   ),
