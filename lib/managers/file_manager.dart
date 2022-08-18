@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:location/location.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:quid_faciam_hodie/foreign_types/memory.dart';
 import 'package:quid_faciam_hodie/managers/cache_manager.dart';
@@ -32,7 +33,11 @@ class FileManager {
     return Memory.parse(response.data);
   }
 
-  static uploadFile(final User user, final File file) async {
+  static uploadFile(
+    final User user,
+    final File file, {
+    LocationData? locationData,
+  }) async {
     await GlobalValuesManager.waitForServerInitialization();
 
     final basename = uuid.v4();
@@ -46,10 +51,22 @@ class FileManager {
       throw Exception('Error uploading file: ${response.error!.message}');
     }
 
-    final memoryResponse = await supabase.from('memories').insert({
+    final Map<String, dynamic> data = {
       'user_id': user.id,
       'location': path,
-    }).execute();
+    };
+
+    if (locationData != null) {
+      data['location_latitude'] = locationData.latitude!;
+      data['location_longitude'] = locationData.longitude!;
+      data['location_speed'] = locationData.speed!;
+      data['location_accuracy'] = locationData.accuracy!;
+      data['location_altitude'] = locationData.altitude!;
+      data['location_heading'] = locationData.heading!;
+    }
+
+    final memoryResponse =
+        await supabase.from('memories').insert(data).execute();
 
     if (memoryResponse.error != null) {
       throw Exception('Error creating memory: ${response.error!.message}');

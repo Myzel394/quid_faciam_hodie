@@ -65,6 +65,7 @@
   "permissionsRequiredPageOpenSettings": "Open Settings",
   "permissionsRequiredPageGrantCameraPermission": "Grant camera permission",
   "permissionsRequiredPageGrantMicrophonePermission": "Grant microphone permission",
+  "permissionsRequiredPageGrantLocationPermission": "Grant location permission",
 
 
   "memoryViewIsDownloading": "Downloading memory",
@@ -89,6 +90,8 @@
       }
     }
   },
+  "memorySheetMapEstimatedAddressLabel": "Estimated Address",
+  "memorySheetMapOpenNavigation": "Open Navigation",
 
 
   "emptyScreenTitle": "Houston, we have a problem",

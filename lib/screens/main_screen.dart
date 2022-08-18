@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:location/location.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/constants/values.dart';
 import 'package:quid_faciam_hodie/extensions/snackbar.dart';
@@ -15,6 +17,7 @@ import 'package:quid_faciam_hodie/managers/global_values_manager.dart';
 import 'package:quid_faciam_hodie/screens/main_screen/settings_button_overlay.dart';
 import 'package:quid_faciam_hodie/utils/auth_required.dart';
 import 'package:quid_faciam_hodie/utils/loadable.dart';
+import 'package:quid_faciam_hodie/utils/tag_location_to_image.dart';
 import 'package:quid_faciam_hodie/widgets/animate_in_builder.dart';
 import 'package:quid_faciam_hodie/widgets/fade_and_move_in_animation.dart';
 import 'package:quid_faciam_hodie/widgets/icon_button_child.dart';
@@ -189,6 +192,13 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
       }
 
       final file = File((await controller!.takePicture()).path);
+      LocationData? locationData;
+
+      if (Platform.isAndroid && (await Permission.location.isGranted)) {
+        locationData = await Location().getLocation();
+
+        await tagLocationToImage(file, locationData);
+      }
 
       setState(() {
         uploadingPhotoAnimation = file.readAsBytesSync();
@@ -200,7 +210,7 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
         );
 
       try {
-        await FileManager.uploadFile(_user, file);
+        await FileManager.uploadFile(_user, file, locationData: locationData);
       } catch (error) {
         if (isMaterial(context))
           context.showErrorSnackBar(message: error.toString());

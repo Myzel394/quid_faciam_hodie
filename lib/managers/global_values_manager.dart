@@ -1,5 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:quid_faciam_hodie/constants/apis.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -45,4 +46,9 @@ class GlobalValuesManager {
 
     await _serverInitializationFuture;
   }
+
+  static Future<bool> hasGrantedPermissions() async =>
+      (await Permission.camera.isGranted) &&
+      (await Permission.microphone.isGranted) &&
+      (await Permission.location.isGranted);
 }

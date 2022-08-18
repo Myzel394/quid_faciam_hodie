@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/managers/global_values_manager.dart';
 import 'package:quid_faciam_hodie/models/memories.dart';
+import 'package:quid_faciam_hodie/screens/grant_permission_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'empty_screen.dart';
@@ -35,6 +36,13 @@ class _ServerLoadingScreenState extends State<ServerLoadingScreen> {
   }
 
   Future<void> load() async {
+    if (!(await GlobalValuesManager.hasGrantedPermissions())) {
+      Navigator.pushReplacementNamed(
+        context,
+        GrantPermissionScreen.ID,
+      );
+    }
+
     await GlobalValuesManager.waitForServerInitialization();
 
     final memories = context.read<Memories>();
@@ -43,6 +51,10 @@ class _ServerLoadingScreenState extends State<ServerLoadingScreen> {
     if (session != null) {
       if (!memories.isInitialized) {
         await memories.initialize();
+      }
+
+      if (!mounted) {
+        return;
       }
 
       if (widget.nextScreen == null) {

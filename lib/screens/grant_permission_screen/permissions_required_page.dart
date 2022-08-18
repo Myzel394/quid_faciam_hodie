@@ -22,6 +22,7 @@ class _PermissionsRequiredPageState extends State<PermissionsRequiredPage> {
   bool hasDeniedForever = false;
   bool hasGrantedCameraPermission = false;
   bool hasGrantedMicrophonePermission = false;
+  bool hasGrantedLocationPermission = false;
 
   @override
   void initState() {
@@ -33,12 +34,15 @@ class _PermissionsRequiredPageState extends State<PermissionsRequiredPage> {
   Future<void> checkPermissions() async {
     final cameraStatus = await Permission.camera.status;
     final microphoneStatus = await Permission.microphone.status;
+    final locationStatus = await Permission.location.status;
 
     setState(() {
       hasGrantedCameraPermission = cameraStatus.isGranted;
       hasGrantedMicrophonePermission = microphoneStatus.isGranted;
+      hasGrantedLocationPermission = locationStatus.isGranted;
     });
 
+    // These permissions are crucially required for the app to work
     if (cameraStatus.isPermanentlyDenied ||
         microphoneStatus.isPermanentlyDenied) {
       setState(() {
@@ -48,7 +52,9 @@ class _PermissionsRequiredPageState extends State<PermissionsRequiredPage> {
       return;
     }
 
-    if (cameraStatus.isGranted && microphoneStatus.isGranted) {
+    if (cameraStatus.isGranted &&
+        microphoneStatus.isGranted &&
+        locationStatus.isGranted) {
       widget.onPermissionsGranted();
     }
   }
@@ -132,6 +138,29 @@ class _PermissionsRequiredPageState extends State<PermissionsRequiredPage> {
                   if (hasGrantedMicrophonePermission)
                     Icon(context.platformIcons.checkMark),
                   if (!hasGrantedMicrophonePermission) const SizedBox(),
+                ],
+              ),
+            ),
+          ),
+          PlatformTextButton(
+            onPressed: hasGrantedLocationPermission
+                ? null
+                : () async {
+                    await Permission.location.request();
+                    await checkPermissions();
+                  },
+            child: IconButtonChild(
+              icon: Icon(context.platformIcons.location),
+              label: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    localizations
+                        .permissionsRequiredPageGrantMicrophonePermission,
+                  ),
+                  if (hasGrantedLocationPermission)
+                    Icon(context.platformIcons.checkMark),
+                  if (!hasGrantedLocationPermission) const SizedBox(),
                 ],
               ),
             ),

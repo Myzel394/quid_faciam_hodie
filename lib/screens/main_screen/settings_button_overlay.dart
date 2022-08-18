@@ -11,8 +11,8 @@ class SettingsButtonOverlay extends StatelessWidget {
     return Positioned(
       left: SMALL_SPACE,
       top: SMALL_SPACE,
-      child: PlatformTextButton(
-        child: Icon(
+      child: PlatformIconButton(
+        icon: Icon(
           context.platformIcons.settings,
           color: Colors.white,
         ),

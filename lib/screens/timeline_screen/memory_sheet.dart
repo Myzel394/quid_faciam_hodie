@@ -1,3 +1,4 @@
+import 'package:expandable_bottom_sheet/expandable_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -11,8 +12,10 @@ import 'package:quid_faciam_hodie/foreign_types/memory.dart';
 import 'package:quid_faciam_hodie/managers/file_manager.dart';
 import 'package:quid_faciam_hodie/utils/loadable.dart';
 import 'package:quid_faciam_hodie/utils/theme.dart';
-import 'package:quid_faciam_hodie/widgets/modal_sheet.dart';
+import 'package:quid_faciam_hodie/widgets/sheet_indicator.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import 'memory_location_view.dart';
 
 class MemorySheet extends StatefulWidget {
   final Memory memory;
@@ -32,7 +35,7 @@ final supabase = Supabase.instance.client;
 
 class _MemorySheetState extends State<MemorySheet> with Loadable {
   Future<void> deleteFile() async {
-    await FileManager.deleteFile(widget.memory.location);
+    await FileManager.deleteFile(widget.memory.filePath);
 
     if (mounted) {
       Navigator.pop(context);
@@ -62,7 +65,8 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
 
       if (isMaterial(context))
         context.showSuccessSnackBar(
-            message: localizations.memorySheetSavedToGallery);
+          message: localizations.memorySheetSavedToGallery,
+        );
     } catch (error) {
       if (isMaterial(context))
         context.showErrorSnackBar(message: localizations.generalError);
@@ -90,11 +94,13 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
       if (isNowPublic) {
         if (isMaterial(context))
           context.showSuccessSnackBar(
-              message: localizations.memorySheetMemoryUpdatedToPublic);
+            message: localizations.memorySheetMemoryUpdatedToPublic,
+          );
       } else {
         if (isMaterial(context))
           context.showSuccessSnackBar(
-              message: localizations.memorySheetMemoryUpdatedToPrivate);
+            message: localizations.memorySheetMemoryUpdatedToPrivate,
+          );
       }
     } catch (error) {
       if (isMaterial(context))
@@ -123,88 +129,137 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final backgroundColor = platformThemeData(
+      context,
+      material: (data) =>
+          data.bottomSheetTheme.modalBackgroundColor ?? data.bottomAppBarColor,
+      cupertino: (data) => data.barBackgroundColor,
+    );
 
-    return ModalSheet(
-      child: Column(
-        children: <Widget>[
-          Text(
-            localizations.memorySheetTitle,
-            style: getTitleTextStyle(context),
+    return ExpandableBottomSheet(
+      background: GestureDetector(
+        onTap: () => Navigator.pop(context),
+      ),
+      persistentHeader: Container(
+        padding: const EdgeInsets.all(MEDIUM_SPACE),
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(LARGE_SPACE),
+            topRight: Radius.circular(LARGE_SPACE),
           ),
-          const SizedBox(height: MEDIUM_SPACE),
-          ListTile(
-            leading: PlatformWidget(
-              cupertino: (_, __) => Icon(
-                CupertinoIcons.down_arrow,
+        ),
+        child: Column(
+          children: <Widget>[
+            const Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: MEDIUM_SPACE,
+                horizontal: MEDIUM_SPACE,
+              ),
+              child: SheetIndicator(),
+            ),
+            Text(
+              localizations.memorySheetTitle,
+              style: getTitleTextStyle(context),
+            ),
+            const SizedBox(height: MEDIUM_SPACE),
+            ListTile(
+              leading: PlatformWidget(
+                cupertino: (_, __) => Icon(
+                  CupertinoIcons.down_arrow,
+                  color: getBodyTextColor(context),
+                ),
+                material: (_, __) => Icon(
+                  Icons.download,
+                  color: getBodyTextColor(context),
+                ),
+              ),
+              title: Text(
+                localizations.memorySheetDownloadMemory,
+                style: getBodyTextTextStyle(context),
+              ),
+              enabled: !getIsLoadingSpecificID('download'),
+              onTap: getIsLoadingSpecificID('download')
+                  ? null
+                  : () => callWithLoading(downloadFile, 'download'),
+              trailing: getIsLoadingSpecificID('download')
+                  ? buildLoadingIndicator()
+                  : null,
+            ),
+            ListTile(
+              leading: Icon(
+                widget.memory.isPublic
+                    ? Icons.public_off_rounded
+                    : Icons.public,
                 color: getBodyTextColor(context),
               ),
-              material: (_, __) => Icon(
-                Icons.download,
+              title: Text(
+                widget.memory.isPublic
+                    ? localizations.memorySheetUpdateMemoryMakePrivate
+                    : localizations.memorySheetUpdateMemoryMakePublic,
+                style: getBodyTextTextStyle(context),
+              ),
+              enabled: !getIsLoadingSpecificID('public'),
+              onTap: getIsLoadingSpecificID('public')
+                  ? null
+                  : () => callWithLoading(changeVisibility, 'public'),
+              trailing: getIsLoadingSpecificID('public')
+                  ? buildLoadingIndicator()
+                  : null,
+            ),
+            ListTile(
+              leading: Icon(
+                context.platformIcons.delete,
                 color: getBodyTextColor(context),
               ),
+              title: Text(
+                localizations.memorySheetDeleteMemory,
+                style: getBodyTextTextStyle(context),
+              ),
+              enabled: !getIsLoadingSpecificID('delete'),
+              onTap: getIsLoadingSpecificID('delete')
+                  ? null
+                  : () => callWithLoading(deleteFile, 'delete'),
+              trailing: getIsLoadingSpecificID('delete')
+                  ? buildLoadingIndicator()
+                  : null,
             ),
-            title: Text(
-              localizations.memorySheetDownloadMemory,
-              style: getBodyTextTextStyle(context),
+          ],
+        ),
+      ),
+      expandableContent: Container(
+        width: double.infinity,
+        color: backgroundColor,
+        child: Column(
+          children: <Widget>[
+            widget.memory.location == null
+                ? const SizedBox.shrink()
+                : MemoryLocationView(
+                    location: widget.memory.location!,
+                  ),
+            Padding(
+              padding: const EdgeInsets.all(MEDIUM_SPACE),
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    localizations.memorySheetCreatedAtDataKey(
+                      DateFormat.jms().format(
+                        widget.memory.creationDate,
+                      ),
+                    ),
+                    style: getBodyTextTextStyle(context),
+                  ),
+                  const SizedBox(height: SMALL_SPACE),
+                  Text(
+                    widget.memory.id,
+                    textAlign: TextAlign.center,
+                    style: getBodyTextTextStyle(context),
+                  ),
+                ],
+              ),
             ),
-            enabled: !getIsLoadingSpecificID('download'),
-            onTap: getIsLoadingSpecificID('download')
-                ? null
-                : () => callWithLoading(downloadFile, 'download'),
-            trailing: getIsLoadingSpecificID('download')
-                ? buildLoadingIndicator()
-                : null,
-          ),
-          ListTile(
-            leading: Icon(
-              widget.memory.isPublic ? Icons.public_off_rounded : Icons.public,
-              color: getBodyTextColor(context),
-            ),
-            title: Text(
-              widget.memory.isPublic
-                  ? localizations.memorySheetUpdateMemoryMakePrivate
-                  : localizations.memorySheetUpdateMemoryMakePublic,
-              style: getBodyTextTextStyle(context),
-            ),
-            enabled: !getIsLoadingSpecificID('public'),
-            onTap: getIsLoadingSpecificID('public')
-                ? null
-                : () => callWithLoading(changeVisibility, 'public'),
-            trailing: getIsLoadingSpecificID('public')
-                ? buildLoadingIndicator()
-                : null,
-          ),
-          ListTile(
-            leading: Icon(
-              context.platformIcons.delete,
-              color: getBodyTextColor(context),
-            ),
-            title: Text(
-              localizations.memorySheetDeleteMemory,
-              style: getBodyTextTextStyle(context),
-            ),
-            enabled: !getIsLoadingSpecificID('delete'),
-            onTap: getIsLoadingSpecificID('delete')
-                ? null
-                : () => callWithLoading(deleteFile, 'delete'),
-            trailing: getIsLoadingSpecificID('delete')
-                ? buildLoadingIndicator()
-                : null,
-          ),
-          const SizedBox(height: MEDIUM_SPACE),
-          Text(
-            localizations.memorySheetCreatedAtDataKey(DateFormat.jms().format(
-              widget.memory.creationDate,
-            )),
-            style: getBodyTextTextStyle(context),
-          ),
-          const SizedBox(height: SMALL_SPACE),
-          Text(
-            widget.memory.id,
-            textAlign: TextAlign.center,
-            style: getBodyTextTextStyle(context),
-          )
-        ],
+          ],
+        ),
       ),
     );
   }

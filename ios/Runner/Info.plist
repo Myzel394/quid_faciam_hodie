@@ -72,5 +72,8 @@
 
     <key>NSPhotoLibraryUsageDescription</key>
     <string>Accessing your gallery allows you to save your memories</string>
+
+    <key>NSLocationUsageDescription</key>
+    <string>Accessing your location allows you to tag your memories</string>
 </dict>
 </plist>

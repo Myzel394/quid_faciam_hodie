@@ -10,6 +10,8 @@ import 'package:quid_faciam_hodie/utils/loadable.dart';
 import 'package:quid_faciam_hodie/widgets/icon_button_child.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'main_screen.dart';
+
 final supabase = Supabase.instance.client;
 
 class LoginScreen extends StatefulWidget {
@@ -24,6 +26,17 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends AuthState<LoginScreen> with Loadable {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+
+  @override
+  void onAuthenticated(Session session) {
+    if (session.user != null) {
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        MainScreen.ID,
+        (_) => false,
+      );
+    }
+  }
 
   @override
   void dispose() {

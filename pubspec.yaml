@@ -58,6 +58,10 @@ dependencies:
   settings_ui: ^2.0.2
   coast: ^2.0.2
   http: ^0.13.5
+  location: ^4.4.0
+  flutter_exif_plugin: ^1.1.0
+  flutter_osm_plugin: ^0.39.0
+  url_launcher: ^6.1.5
 
 dev_dependencies:
   flutter_test:

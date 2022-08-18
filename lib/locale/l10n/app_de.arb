@@ -47,6 +47,7 @@
   "permissionsRequiredPageOpenSettings": "Einstellungen öffnen",
   "permissionsRequiredPageGrantCameraPermission": "Kamera-Berechtigung erteilen",
   "permissionsRequiredPageGrantMicrophonePermission": "Mikrofon-Berechtigung erteilen",
+  "permissionsRequiredPageGrantLocationPermission": "Standort-Berechtigung erteilen",
 
 
   "memoryViewIsDownloading": "Erinnerung wird heruntergeladen",

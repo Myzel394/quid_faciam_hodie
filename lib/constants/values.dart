@@ -17,3 +17,4 @@ const WELCOME_SCREEN_PHOTOS_QUERIES = [
   'friends',
   'romantic',
 ];
+const ACCURACY_IN_METERS_FOR_PINPOINT = 20;
