@@ -24,3 +24,16 @@ TextStyle getSubTitleTextStyle(final BuildContext context) => platformThemeData(
       material: (data) => data.textTheme.subtitle1!,
       cupertino: (data) => data.textTheme.navTitleTextStyle,
     );
+
+TextStyle getCaptionTextStyle(final BuildContext context) => platformThemeData(
+      context,
+      material: (data) => data.textTheme.caption!,
+      cupertino: (data) => data.textTheme.tabLabelTextStyle,
+    );
+
+Color getSheetColor(final BuildContext context) => platformThemeData(
+      context,
+      material: (data) =>
+          data.bottomSheetTheme.modalBackgroundColor ?? data.bottomAppBarColor,
+      cupertino: (data) => data.barBackgroundColor,
+    );

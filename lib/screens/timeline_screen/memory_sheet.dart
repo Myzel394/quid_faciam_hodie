@@ -129,12 +129,7 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    final backgroundColor = platformThemeData(
-      context,
-      material: (data) =>
-          data.bottomSheetTheme.modalBackgroundColor ?? data.bottomAppBarColor,
-      cupertino: (data) => data.barBackgroundColor,
-    );
+    final backgroundColor = getSheetColor(context);
 
     return ExpandableBottomSheet(
       background: GestureDetector(
@@ -151,13 +146,13 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
         ),
         child: Column(
           children: <Widget>[
-            const Padding(
-              padding: EdgeInsets.symmetric(
-                vertical: MEDIUM_SPACE,
-                horizontal: MEDIUM_SPACE,
+            if (widget.memory.location != null) ...[
+              const Padding(
+                padding: EdgeInsets.all(SMALL_SPACE),
+                child: SheetIndicator(),
               ),
-              child: SheetIndicator(),
-            ),
+              const SizedBox(height: MEDIUM_SPACE),
+            ],
             Text(
               localizations.memorySheetTitle,
               style: getTitleTextStyle(context),
@@ -224,43 +219,41 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
                   ? buildLoadingIndicator()
                   : null,
             ),
-          ],
-        ),
-      ),
-      expandableContent: Container(
-        width: double.infinity,
-        color: backgroundColor,
-        child: Column(
-          children: <Widget>[
-            widget.memory.location == null
-                ? const SizedBox.shrink()
-                : MemoryLocationView(
-                    location: widget.memory.location!,
+            const SizedBox(height: MEDIUM_SPACE),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  context.platformIcons.time,
+                  size: platformThemeData(
+                    context,
+                    material: (data) => data.textTheme.bodyLarge!.fontSize,
+                    cupertino: (data) => data.textTheme.textStyle.fontSize,
                   ),
-            Padding(
-              padding: const EdgeInsets.all(MEDIUM_SPACE),
-              child: Column(
-                children: <Widget>[
-                  Text(
-                    localizations.memorySheetCreatedAtDataKey(
-                      DateFormat.jms().format(
-                        widget.memory.creationDate,
-                      ),
+                ),
+                const SizedBox(width: TINY_SPACE),
+                Text(
+                  localizations.memorySheetCreatedAtDataKey(
+                    DateFormat.jms().format(
+                      widget.memory.creationDate,
                     ),
-                    style: getBodyTextTextStyle(context),
                   ),
-                  const SizedBox(height: SMALL_SPACE),
-                  Text(
-                    widget.memory.id,
-                    textAlign: TextAlign.center,
-                    style: getBodyTextTextStyle(context),
-                  ),
-                ],
-              ),
+                  style: getBodyTextTextStyle(context),
+                ),
+              ],
             ),
           ],
         ),
       ),
+      expandableContent: widget.memory.location == null
+          ? const SizedBox.shrink()
+          : Container(
+              width: double.infinity,
+              color: backgroundColor,
+              child: MemoryLocationView(
+                location: widget.memory.location!,
+              ),
+            ),
     );
   }
 }

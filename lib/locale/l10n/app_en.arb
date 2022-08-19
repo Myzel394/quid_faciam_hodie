@@ -91,7 +91,44 @@
     }
   },
   "memorySheetMapEstimatedAddressLabel": "Estimated Address",
-  "memorySheetMapOpenNavigation": "Open Navigation",
+  "memorySheetViewMoreDetails": "View More Details",
+
+
+  "memoryMapScreenTitle": "Location",
+  "memoryMapScreenExpandForMoreDescription": "Expand for more details",
+  "memoryMapScreenOpenNavigation": "Open Navigation",
+  "memoryMapScreenValuesAddressLabel": "Estimated Address",
+  "memoryMapScreenValuesAddressIsLoading": "Loading address...",
+  "memoryMapScreenValuesAddressIsUnavailable": "Address not available",
+  "memoryMapScreenValuesLatitudeLabel": "Latitude",
+  "memoryMapScreenValuesLongitudeLabel": "Longitude",
+  "memoryMapScreenValuesAltitudeLabel": "Altitude",
+  "memoryMapScreenValuesAltitudeValue": "{valueInMeter}m",
+  "@memoryMapScreenValuesAltitudeValue": {
+    "placeholders": {
+      "valueInMeter": {
+        "type": "String"
+      }
+    }
+  },
+  "memoryMapScreenValuesAccuracyLabel": "Accuracy",
+  "memoryMapScreenValuesAccuracyValue": "{valueInMeter}m",
+  "@memoryMapScreenValuesAccuracyValue": {
+    "placeholders": {
+      "valueInMeter": {
+        "type": "String"
+      }
+    }
+  },
+  "memoryMapScreenValuesSpeedLabel": "Speed",
+  "memoryMapScreenValuesSpeedValue": "{valueInKmh} km/h",
+  "@memoryMapScreenValuesSpeedValue": {
+    "placeholders": {
+      "valueInKmh": {
+        "type": "String"
+      }
+    }
+  },
 
 
   "emptyScreenTitle": "Houston, we have a problem",

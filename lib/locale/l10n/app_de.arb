@@ -62,6 +62,20 @@
   "memorySheetUpdateMemoryMakePublic": "Veröffentlichen",
   "memorySheetUpdateMemoryMakePrivate": "Privat machen",
   "memorySheetDeleteMemory": "Erinnerung löschen",
+  "memorySheetViewMoreDetails": "Mehr Details",
+
+
+  "memoryMapScreenTitle": "Standort",
+  "memoryMapScreenExpandForMoreDescription": "Erweitere für mehr Details",
+  "memoryMapScreenOpenNavigation": "Navigation öffnen",
+  "memoryMapScreenValuesAddressLabel": "Geschätzte Adresse",
+  "memoryMapScreenValuesAddressIsLoading": "Adresse wird geladen...",
+  "memoryMapScreenValuesAddressIsUnavailable": "Address nicht verfügbar",
+  "memoryMapScreenValuesLatitudeLabel": "Latitude",
+  "memoryMapScreenValuesLongitudeLabel": "Longitude",
+  "memoryMapScreenValuesAltitudeLabel": "Höhe",
+  "memoryMapScreenValuesAccuracyLabel": "Genauigkeit",
+  "memoryMapScreenValuesSpeedLabel": "Geschwindigkeit",
 
 
   "emptyScreenTitle": "Houston, wir haben ein Problem",

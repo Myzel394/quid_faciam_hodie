@@ -1,17 +1,12 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:http/http.dart' as http;
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/constants/values.dart';
 import 'package:quid_faciam_hodie/foreign_types/memory_location.dart';
-import 'package:quid_faciam_hodie/widgets/fade_and_move_in_animation.dart';
+import 'package:quid_faciam_hodie/screens/memory_map_screen.dart';
 import 'package:quid_faciam_hodie/widgets/icon_button_child.dart';
-import 'package:quid_faciam_hodie/widgets/key_value_info.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class MemoryLocationView extends StatefulWidget {
   final MemoryLocation location;
@@ -27,13 +22,10 @@ class MemoryLocationView extends StatefulWidget {
 
 class _MemoryLocationViewState extends State<MemoryLocationView> {
   late final MapController controller;
-  String address = '';
 
   @override
   void initState() {
     super.initState();
-
-    lookupAddress();
 
     controller = MapController(
       initPosition: GeoPoint(
@@ -43,22 +35,11 @@ class _MemoryLocationViewState extends State<MemoryLocationView> {
     );
   }
 
-  void lookupAddress() async {
-    final url =
-        'https://geocode.maps.co/reverse?lat=${widget.location.latitude}&lon=${widget.location.longitude}';
-    final uri = Uri.parse(url);
+  @override
+  void dispose() {
+    controller.dispose();
 
-    final response = await http.get(uri);
-
-    if (response.statusCode != 200) {
-      setState(() {
-        address = '';
-      });
-    } else {
-      setState(() {
-        address = jsonDecode(response.body)['display_name'];
-      });
-    }
+    super.dispose();
   }
 
   void drawCircle() => controller.drawCircle(
@@ -104,45 +85,45 @@ class _MemoryLocationViewState extends State<MemoryLocationView> {
         SizedBox(
           width: double.infinity,
           height: 400,
-          child: OSMFlutter(
-            controller: controller,
-            initZoom: 14,
-            stepZoom: 1.0,
-            staticPoints: staticPoints,
-            onMapIsReady: (_) {
-              drawCircle();
-            },
+          child: GestureDetector(
+            // Avoid panning, map is view-only
+            onDoubleTap: () {},
+            child: OSMFlutter(
+              controller: controller,
+              initZoom: 14,
+              minZoomLevel: 14,
+              maxZoomLevel: 14,
+              staticPoints: staticPoints,
+              onMapIsReady: (_) {
+                drawCircle();
+              },
+            ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: MEDIUM_SPACE),
-          child: Column(
-            children: <Widget>[
-              const SizedBox(height: MEDIUM_SPACE),
-              if (address.isNotEmpty) ...[
-                FadeAndMoveInAnimation(
-                  child: KeyValueInfo(
-                    title: localizations.memorySheetMapEstimatedAddressLabel,
-                    value: address,
-                    icon: context.platformIcons.location,
-                  ),
-                ),
-                const SizedBox(height: MEDIUM_SPACE),
-              ],
-              PlatformTextButton(
-                onPressed: () {
-                  final url =
-                      'geo:0,0?q=${widget.location.latitude},${widget.location.longitude} ($address)';
-                  launchUrl(Uri.parse(url));
-                },
-                child: IconButtonChild(
-                  icon: Icon(context.platformIcons.location),
-                  label: Text(localizations.memorySheetMapOpenNavigation),
+        const SizedBox(height: MEDIUM_SPACE),
+        PlatformTextButton(
+          child: IconButtonChild(
+            icon: Icon(context.platformIcons.fullscreen),
+            label: Text(localizations.memorySheetViewMoreDetails),
+          ),
+          onPressed: () async {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => MemoryMapScreen(
+                  location: widget.location,
                 ),
               ),
-            ],
-          ),
+            );
+
+            if (!mounted) {
+              return;
+            }
+
+            Navigator.pop(context);
+          },
         ),
+        const SizedBox(height: MEDIUM_SPACE),
       ],
     );
   }

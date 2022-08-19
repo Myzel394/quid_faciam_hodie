@@ -128,12 +128,7 @@ class _SettingsScreenState extends AuthRequiredState<SettingsScreen>
                             Text(
                               localizations
                                   .settingsScreenAccountSectionCreationDateLabel,
-                              style: platformThemeData(
-                                context,
-                                material: (data) => data.textTheme.bodySmall,
-                                cupertino: (data) =>
-                                    data.textTheme.tabLabelTextStyle,
-                              ),
+                              style: getCaptionTextStyle(context),
                             )
                           ],
                         ),
