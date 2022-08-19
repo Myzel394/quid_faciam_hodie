@@ -106,7 +106,7 @@ class _MemoryMapScreenState extends State<MemoryMapScreen> with Loadable {
                 title: localizations.memoryMapScreenValuesAddressLabel,
                 value: () {
                   if (isLoading) {
-                    return localizations.memoryMapScreenValuesAddressIsLoading;
+                    return localizations.generalLoadingLabel;
                   }
 
                   if (address == null) {

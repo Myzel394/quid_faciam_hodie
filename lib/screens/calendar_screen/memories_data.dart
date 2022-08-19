@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/models/memories.dart';
@@ -28,8 +27,8 @@ class MemoriesData extends StatelessWidget {
             const SizedBox(height: SMALL_SPACE),
             Text(
               localizations.welcomeScreenMemoriesDataMemoriesSpanning(
-                DateFormat.yMMMd().format(memories.memories.last.creationDate),
-                DateFormat.yMMMd().format(memories.memories.first.creationDate),
+                memories.memories.last.creationDate,
+                memories.memories.first.creationDate,
               ),
               style: getBodyTextTextStyle(context),
             ),

@@ -138,7 +138,7 @@ class _SettingsScreenState extends AuthRequiredState<SettingsScreen>
                 children: <Widget>[
                   PlatformCircularProgressIndicator(),
                   const SizedBox(height: MEDIUM_SPACE),
-                  Text(localizations.settingsScreenLoading),
+                  Text(localizations.generalLoadingLabel),
                 ],
               ),
             )

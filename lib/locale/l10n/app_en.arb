@@ -5,6 +5,7 @@
   "generalCancelButtonLabel": "Cancel",
   "generalContinueButtonLabel": "Continue",
   "generalUnderstoodButtonLabel": "OK",
+  "generalLoadingLabel": "Loading...",
 
   "welcomeScreenDescription": "Find out what you did all the days and unlock moments you completely forgot!",
   "welcomeScreenSubtitle": "What did I do today?",
@@ -13,22 +14,24 @@
   "welcomeScreenViewMemoriesGuideDescription": "...and relieve your best moments at the end of the day!",
   "welcomeScreenGetStartedLabel": "Get started",
 
-  "welcomeScreenMemoriesDataMemoriesAmount": "You have created {memoriesAmount} memories",
+  "welcomeScreenMemoriesDataMemoriesAmount": "You have created {count,plural, =0{no memories yet}} =1{one memory} other{{count} memories}}",
   "@welcomeScreenMemoriesDataMemoriesAmount": {
     "placeholders": {
-      "memoriesAmount": {
+      "count": {
         "type": "int"
       }
     }
   },
-  "welcomeScreenMemoriesDataMemoriesSpanning": "Spanning from {startDateFormatted} to {endDateFormatted}",
+  "welcomeScreenMemoriesDataMemoriesSpanning": "Spanning from {startDate} to {endDate}",
   "@welcomeScreenMemoriesDataMemoriesSpanning": {
     "placeholders": {
-      "startDateFormatted": {
-        "type": "String"
+      "startDate": {
+        "type": "DateTime",
+        "format": "yMMMd"
       },
-      "endDateFormatted": {
-        "type": "String"
+      "endDate": {
+        "type": "DateTime",
+        "format": "yMMMd"
       }
     }
   },
@@ -36,8 +39,6 @@
 
   "serverLoadingScreenDescription": "We are loading your data",
 
-
-  "mainScreenLoadingCamera": "Loading camera",
 
   "mainScreenActionsTorchButton": "Torch",
   "mainScreenUploadSuccess": "Uploaded successfully!",
@@ -85,13 +86,13 @@
   "memorySheetUpdateMemoryMakePublic": "Make Public",
   "memorySheetUpdateMemoryMakePrivate": "Make Private",
   "memorySheetDeleteMemory": "Delete Memory",
-  "memorySheetCreatedAtDataKey": "Created at: {creationTimeFormatted}",
+  "memorySheetCreatedAtDataKey": "Created at: {creationTime}",
   "@memorySheetCreatedAtDataKey": {
     "description": "Formatted date when the memory was created",
     "placeholders": {
-      "creationTimeFormatted": {
-        "type": "String",
-        "example": "8am"
+      "creationTime": {
+        "type": "DateTime",
+        "format": "jms"
       }
     }
   },
@@ -102,7 +103,6 @@
   "memoryMapScreenExpandForMoreDescription": "Expand for more details",
   "memoryMapScreenOpenNavigation": "Open Navigation",
   "memoryMapScreenValuesAddressLabel": "Estimated Address",
-  "memoryMapScreenValuesAddressIsLoading": "Loading address...",
   "memoryMapScreenValuesAddressIsUnavailable": "Address not available",
   "memoryMapScreenValuesLatitudeLabel": "Latitude",
   "memoryMapScreenValuesLongitudeLabel": "Longitude",
@@ -141,7 +141,6 @@
   "emptyScreenCreateMemory": "Create a Memory",
 
 
-  "settingsScreenLoading": "Loading Settings...",
   "settingsScreenTitle": "Settings",
   "settingsScreenAccountSectionTitle": "Your Account",
   "settingsScreenAccountSectionCreationDateLabel": "Account creation",
@@ -161,8 +160,8 @@
 
   "timelineScreenTitle": "Timeline",
   "timelineScreenHelpSheetTitle": "Welcome to your timeline",
-  "timelineHelpContentDescription": "Your memories are displayed in chronological order. You can swipe left or right to navigate through the memories of the given day. You can also swipe up or down to navigate through the days of your memories. The timeline automatically progresses through your memories.",
-  "timelineHelpContentHoldDownExplanation": "Hold down to pause the timeline from progressing to your next memory.",
+  "timelineHelpContentDescription": "Your memories are presented in chronological order. You can swipe left or right to navigate through the memories of the current day. You can also swipe up or down to navigate through the days of your memories. Your timeline automatically jumps to your next memory after some time.",
+  "timelineHelpContentHoldDownExplanation": "Hold down to pause your timeline.",
   "timelineHelpContentTapTwiceExplanation": "Tap twice to see more details about your memory.",
 
 

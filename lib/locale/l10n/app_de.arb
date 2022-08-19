@@ -4,6 +4,8 @@
   "generalError": "Ein Fehler ist aufgetreten",
   "generalCancelButtonLabel": "Abbrechen",
   "generalContinueButtonLabel": "Weiter",
+  "generalUnderstoodButtonLabel": "OK",
+  "generalLoadingLabel": "Wird geladen...",
 
   "welcomeScreenDescription": "Finde heraus was du den ganzen Tag gemacht hast und erlebe Erinnerungen wieder, die du komplett vergessen hast!",
   "welcomeScreenSubtitle": "Was hab ich heute gemacht?",
@@ -11,14 +13,12 @@
   "welcomeScreenCreateMemoriesGuideDescription": "Erstelle Fotos und Videos während des Tages auf...",
   "welcomeScreenViewMemoriesGuideDescription": "...und lebe deine Liebelingsmomente des Tages wieder!",
   "welcomeScreenGetStartedLabel": "Loslegen",
-  "welcomeScreenMemoriesDataMemoriesAmount": "Du hast {memoriesAmount} Erinnerungen erstellt",
-  "welcomeScreenMemoriesDataMemoriesSpanning": "Welche vom {startDateFormatted} bis zum {endDateFormatted} reichen",
+  "welcomeScreenMemoriesDataMemoriesAmount": "Du hast {count,plural, =0{noch keine Erinnerungen}} =1{eine Erinnerung} other{{count} Erinnerungen}} erstellt",
+  "welcomeScreenMemoriesDataMemoriesSpanning": "Welche vom {startDate} bis zum {endDate} reichen",
 
 
   "serverLoadingScreenDescription": "Wir laden deine Daten",
 
-
-  "mainScreenLoadingCamera": "Kamera wird geladen",
 
   "mainScreenActionsTorchButton": "Taschenlampe",
   "mainScreenUploadSuccess": "Erfolgreich hochgeladen",
@@ -27,6 +27,10 @@
   "mainScreenTakePhotoActionUploadingPhoto": "Foto wird hochgeladen...",
   "mainScreenTakeVideoActionSaveVideo": "Video wird aufgenommen, halte still...",
   "mainScreenTakeVideoActionUploadingVideo": "Video wird hochgeladen...",
+
+  "mainScreenHelpSheetTitle": "Nimm deine besten Momente im Leben auf",
+  "mainScreenHelpSheetTakePhotoExplanation": "Tippe einmal auf den Auslöser um ein Foto zu erstellen.",
+  "mainScreenHelpSheetTakeVideoExplanation": "Halt den Auslöser gedrückt um ein Video aufzunehmen. Lasse los, wenn du fertig bist.",
 
   "recordingOverlayIsRecording": "Aufnahme",
 
@@ -62,7 +66,7 @@
   "memorySheetUpdateMemoryMakePublic": "Veröffentlichen",
   "memorySheetUpdateMemoryMakePrivate": "Privat machen",
   "memorySheetDeleteMemory": "Erinnerung löschen",
-  "memorySheetCreatedAtDataKey": "Erstellt am: {creationTimeFormatted}",
+  "memorySheetCreatedAtDataKey": "Erstellt am: {creationTime}",
   "memorySheetViewMoreDetails": "Mehr Details",
 
 
@@ -70,7 +74,6 @@
   "memoryMapScreenExpandForMoreDescription": "Erweitere für mehr Details",
   "memoryMapScreenOpenNavigation": "Navigation öffnen",
   "memoryMapScreenValuesAddressLabel": "Geschätzte Adresse",
-  "memoryMapScreenValuesAddressIsLoading": "Adresse wird geladen...",
   "memoryMapScreenValuesAddressIsUnavailable": "Address nicht verfügbar",
   "memoryMapScreenValuesLatitudeLabel": "Latitude",
   "memoryMapScreenValuesLongitudeLabel": "Longitude",
@@ -88,7 +91,6 @@
   "emptyScreenCreateMemory": "Erinnerung erstellen",
 
 
-  "settingsScreenLoading": "Einstellungen werden geladen...",
   "settingsScreenTitle": "Einstellungen",
   "settingsScreenAccountSectionTitle": "Dein Account",
   "settingsScreenAccountSectionCreationDateLabel": "Account-Erstellung",
@@ -99,12 +101,21 @@
   "settingsScreenDeleteAccountConfirmLabel": "Account jetzt löschen",
   "settingsScreenGeneralSectionTitle": "General",
   "settingsScreenGeneralSectionQualityLabel": "Qualität",
+  "settingsScreenResetHelpSheetsLabel": "Hilf-Sheets zurücksetzen",
+  "settingsScreenResetHelpSheetsResetSuccessfully": "Hilf-Sheets wurden zurückgesetzt.",
 
 
   "calendarScreenTitle": "Kalendar",
 
 
   "timelineScreenTitle": "Timeline",
+  "timelineScreenHelpSheetTitle": "Willkommen zu deiner Timeline",
+  "timelineHelpContentDescription": "Deine Erfahrungen werden in chronologischer Reihenfolge präsentiert. Du kannst nach links oder rechts wischen um durch deine Erinnerungen von deinem aktuellen Tag zu gehen. Du kannst auch nach oben und unten wischen um durch die verschiedenen Tage deiner Erinnerungen zu gehen. Deine Timeline springt automatisch zur nächsten Erinnerung nach einiger Zeit.",
+  "timelineHelpContentHoldDownExplanation": "Halte gedrückt um deine Timeline zu pausieren.",
+  "timelineHelpContentTapTwiceExplanation": "Tippe zweimal um mehr Details über deine Erinnerung zu erfahren,",
+
+
+  "helpSheetDontShowAgain": "Nicht mehr anzeigen",
 
 
   "enumMapping_ResolutionPreset_low": "Niedrig",

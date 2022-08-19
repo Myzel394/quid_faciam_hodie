@@ -323,7 +323,7 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
                   PlatformCircularProgressIndicator(),
                   const SizedBox(height: MEDIUM_SPACE),
                   Text(
-                    localizations.mainScreenLoadingCamera,
+                    localizations.generalLoadingLabel,
                     style: platformThemeData(
                       context,
                       material: (data) => data.textTheme.bodyText1,
