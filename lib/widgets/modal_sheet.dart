@@ -31,7 +31,7 @@ class ModalSheet extends StatelessWidget {
               ),
               color: getSheetColor(context),
             ),
-            padding: const EdgeInsets.symmetric(vertical: MEDIUM_SPACE),
+            padding: const EdgeInsets.symmetric(vertical: LARGE_SPACE),
             child: innerChild,
           ),
           cupertino: (_, __) => CupertinoPopupSurface(

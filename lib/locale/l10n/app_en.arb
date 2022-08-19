@@ -152,6 +152,8 @@
   "settingsScreenDeleteAccountConfirmLabel": "Delete Account now",
   "settingsScreenGeneralSectionTitle": "General",
   "settingsScreenGeneralSectionQualityLabel": "Quality",
+  "settingsScreenResetHelpSheetsLabel": "Reset Help Sheets",
+  "settingsScreenResetHelpSheetsResetSuccessfully": "Help Sheets reset successfully.",
 
 
   "calendarScreenTitle": "Calendar",

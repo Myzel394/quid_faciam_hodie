@@ -14,6 +14,7 @@ class HelpSheet extends StatefulWidget {
   final Widget helpContent;
   final HelpSheetID helpID;
   final bool forceShow;
+  final bool checkOnStateChange;
   final VoidCallback? onSheetShown;
   final VoidCallback? onSheetHidden;
 
@@ -24,6 +25,7 @@ class HelpSheet extends StatefulWidget {
     required this.helpContent,
     required this.helpID,
     this.forceShow = false,
+    this.checkOnStateChange = false,
     this.onSheetShown,
     this.onSheetHidden,
   }) : super(key: key);
@@ -46,12 +48,21 @@ class _HelpSheetState extends State<HelpSheet> {
     }
   }
 
+  @override
+  void didUpdateWidget(covariant HelpSheet oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.checkOnStateChange) {
+      checkIfSheetShouldBeShown();
+    }
+  }
+
   void showSheet() {
     if (isShowingSheet) {
       return;
     }
 
-    Timer(Duration(milliseconds: 300), () async {
+    Timer(const Duration(milliseconds: 300), () async {
       if (!mounted) {
         return;
       }
@@ -111,6 +122,7 @@ class _HelpSheetState extends State<HelpSheet> {
   @override
   Widget build(BuildContext context) {
     return AnimatedScale(
+      alignment: Alignment.bottomCenter,
       scale: isShowingSheet ? .95 : 1,
       curve: Curves.easeOutSine,
       duration: const Duration(milliseconds: 500),

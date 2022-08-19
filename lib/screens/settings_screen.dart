@@ -9,6 +9,7 @@ import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/enum_mapping/resolution_preset/texts.dart';
 import 'package:quid_faciam_hodie/extensions/snackbar.dart';
 import 'package:quid_faciam_hodie/managers/global_values_manager.dart';
+import 'package:quid_faciam_hodie/managers/user_help_sheets_manager.dart';
 import 'package:quid_faciam_hodie/screens/welcome_screen.dart';
 import 'package:quid_faciam_hodie/utils/auth_required.dart';
 import 'package:quid_faciam_hodie/utils/loadable.dart';
@@ -88,10 +89,10 @@ class _SettingsScreenState extends AuthRequiredState<SettingsScreen>
     final items = ResolutionPreset.values
         .map(
           (value) => DropdownMenuItem<ResolutionPreset>(
-        value: value,
-        child: Text(resolutionTextMapping[value]!),
-      ),
-    )
+            value: value,
+            child: Text(resolutionTextMapping[value]!),
+          ),
+        )
         .toList();
 
     if (isMaterial(context)) {
@@ -203,6 +204,22 @@ class _SettingsScreenState extends AuthRequiredState<SettingsScreen>
                               .settingsScreenGeneralSectionQualityLabel,
                         ),
                         title: getPicker(),
+                      ),
+                      SettingsTile(
+                        leading: Icon(context.platformIcons.help),
+                        title: Text(
+                          localizations.settingsScreenResetHelpSheetsLabel,
+                        ),
+                        onPressed: (_) async {
+                          await UserHelpSheetsManager.deleteAll();
+
+                          if (isMaterial(context)) {
+                            context.showSuccessSnackBar(
+                              message: localizations
+                                  .settingsScreenResetHelpSheetsResetSuccessfully,
+                            );
+                          }
+                        },
                       )
                     ],
                   ),
