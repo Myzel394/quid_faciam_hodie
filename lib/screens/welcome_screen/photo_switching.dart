@@ -5,43 +5,114 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/constants/values.dart';
 import 'package:quid_faciam_hodie/managers/photo_manager.dart';
-import 'package:quid_faciam_hodie/utils/loadable.dart';
 import 'package:quid_faciam_hodie/widgets/status.dart';
 
 class PhotoSwitching extends StatefulWidget {
-  const PhotoSwitching({Key? key}) : super(key: key);
+  final NetworkImage? initialImage;
+
+  const PhotoSwitching({
+    Key? key,
+    this.initialImage,
+  }) : super(key: key);
 
   @override
   State<PhotoSwitching> createState() => _PhotoSwitchingState();
 }
 
-class _PhotoSwitchingState extends State<PhotoSwitching> with Loadable {
-  String photoURL = '';
+class _PhotoSwitchingState extends State<PhotoSwitching> {
+  // Contains two photos, the first one is the current photo, the second one is the next photo.
+  // The second one will be precached for faster image switching
+  late final List<NetworkImage> images;
 
   @override
   void initState() {
     super.initState();
 
-    callWithLoading(getNextPhoto);
+    if (widget.initialImage != null) {
+      images = [widget.initialImage!];
+      getInitialPhoto();
+    }
   }
 
-  Future<void> getNextPhoto() async {
+  @override
+  void didUpdateWidget(PhotoSwitching oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.initialImage != null) {
+      images = [widget.initialImage!];
+      getInitialPhoto();
+    }
+  }
+
+  Future<void> getInitialPhoto() async {
     final query = WELCOME_SCREEN_PHOTOS_QUERIES[
         Random().nextInt(WELCOME_SCREEN_PHOTOS_QUERIES.length)];
     final url = await PhotoManager.getRandomPhoto(query);
+    final nextPhotoFuture = PhotoManager.getRandomPhoto(query);
 
     if (!mounted) {
       return;
     }
 
     setState(() {
-      photoURL = url;
+      images.add(NetworkImage(url));
     });
+
+    final nextPhotoURL = await nextPhotoFuture;
+
+    if (!mounted) {
+      return;
+    }
+
+    final nextImage = NetworkImage(nextPhotoURL);
+    precacheImage(nextImage, context);
+
+    setState(() {
+      images.add(nextImage);
+    });
+  }
+
+  Future<void> getNextPhoto() async {
+    final query = WELCOME_SCREEN_PHOTOS_QUERIES[
+        Random().nextInt(WELCOME_SCREEN_PHOTOS_QUERIES.length)];
+    final nextPhotoFuture = PhotoManager.getRandomPhoto(query);
+
+    if (images.length == 1) {
+      // We need to wait for the next photo to load first
+      final nextPhotoURL = await nextPhotoFuture;
+
+      if (!mounted) {
+        return;
+      }
+
+      final nextImage = NetworkImage(nextPhotoURL);
+      precacheImage(nextImage, context);
+
+      setState(() {
+        images[0] = images[1];
+        images[1] = nextImage;
+      });
+    } else {
+      setState(() {
+        images[0] = images[1];
+      });
+
+      final nextPhotoURL = await nextPhotoFuture;
+
+      if (!mounted) {
+        return;
+      }
+
+      final nextImage = NetworkImage(nextPhotoURL);
+      precacheImage(nextImage, context);
+
+      images[1] = nextImage;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
+    if (widget.initialImage == null) {
       return Center(
         child: PlatformCircularProgressIndicator(),
       );
@@ -49,22 +120,17 @@ class _PhotoSwitchingState extends State<PhotoSwitching> with Loadable {
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(MEDIUM_SPACE),
-      child: Image.network(
-        photoURL,
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) {
-            return Status(
-              autoStart: true,
-              onEnd: () async {
-                getNextPhoto();
-              },
-              duration: const Duration(seconds: 3),
-              child: child,
-            );
-          }
-          return const SizedBox.expand();
+      child: Status(
+        key: Key(images.toString()),
+        autoStart: true,
+        onEnd: () async {
+          getNextPhoto();
         },
-        fit: BoxFit.cover,
+        duration: const Duration(seconds: 3),
+        child: Image(
+          image: images[0],
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }
