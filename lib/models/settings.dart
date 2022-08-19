@@ -8,9 +8,9 @@ import 'package:quid_faciam_hodie/constants/storage_keys.dart';
 const secure = FlutterSecureStorage();
 
 class Settings extends ChangeNotifier {
-  ResolutionPreset _resolution = ResolutionPreset.high;
+  ResolutionPreset _resolution = ResolutionPreset.max;
 
-  Settings({final ResolutionPreset resolution = ResolutionPreset.high})
+  Settings({final ResolutionPreset resolution = ResolutionPreset.max})
       : _resolution = resolution;
 
   ResolutionPreset get resolution => _resolution;
