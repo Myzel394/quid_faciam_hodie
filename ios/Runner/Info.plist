@@ -75,5 +75,8 @@
 
     <key>NSLocationUsageDescription</key>
     <string>Accessing your location allows you to tag your memories</string>
+
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Accessing your location allows you to tag your memories</string>
 </dict>
 </plist>

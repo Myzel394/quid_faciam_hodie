@@ -13,6 +13,7 @@ import 'package:quid_faciam_hodie/screens/welcome_screen.dart';
 import 'package:quid_faciam_hodie/utils/auth_required.dart';
 import 'package:quid_faciam_hodie/utils/loadable.dart';
 import 'package:quid_faciam_hodie/utils/theme.dart';
+import 'package:quid_faciam_hodie/widgets/cupertino_dropdown.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -81,11 +82,49 @@ class _SettingsScreenState extends AuthRequiredState<SettingsScreen>
     );
   }
 
+  Widget getPicker() {
+    final settings = GlobalValuesManager.settings!;
+    final resolutionTextMapping = getResolutionTextMapping(context);
+    final items = ResolutionPreset.values
+        .map(
+          (value) => DropdownMenuItem<ResolutionPreset>(
+        value: value,
+        child: Text(resolutionTextMapping[value]!),
+      ),
+    )
+        .toList();
+
+    if (isMaterial(context)) {
+      return DropdownButtonFormField<ResolutionPreset>(
+        value: settings.resolution,
+        onChanged: (value) {
+          if (value == null) {
+            return;
+          }
+
+          settings.setResolution(value);
+        },
+        items: items,
+      );
+    } else {
+      return CupertinoDropdownButton<ResolutionPreset>(
+        itemExtent: 30,
+        onChanged: (value) {
+          if (value == null) {
+            return;
+          }
+
+          settings.setResolution(value);
+        },
+        value: settings.resolution,
+        items: items,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final settings = GlobalValuesManager.settings!;
     final localizations = AppLocalizations.of(context)!;
-    final resolutionTextMapping = getResolutionTextMapping(context);
 
     return PlatformScaffold(
       appBar: PlatformAppBar(
@@ -163,23 +202,7 @@ class _SettingsScreenState extends AuthRequiredState<SettingsScreen>
                           localizations
                               .settingsScreenGeneralSectionQualityLabel,
                         ),
-                        title: DropdownButtonFormField<ResolutionPreset>(
-                          value: settings.resolution,
-                          onChanged: (value) async {
-                            if (value == null) {
-                              return;
-                            }
-
-                            settings.setResolution(value);
-                          },
-                          items: ResolutionPreset.values
-                              .map((value) =>
-                                  DropdownMenuItem<ResolutionPreset>(
-                                    value: value,
-                                    child: Text(resolutionTextMapping[value]!),
-                                  ))
-                              .toList(),
-                        ),
+                        title: getPicker(),
                       )
                     ],
                   ),

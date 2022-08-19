@@ -219,10 +219,12 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
 
       LocationData? locationData;
 
-      if (Platform.isAndroid && (await Permission.location.isGranted)) {
+      if (await Permission.location.isGranted) {
         locationData = await Location().getLocation();
 
-        await tagLocationToImage(file, locationData);
+        if (Platform.isAndroid) {
+          await tagLocationToImage(file, locationData);
+        }
       }
 
       try {

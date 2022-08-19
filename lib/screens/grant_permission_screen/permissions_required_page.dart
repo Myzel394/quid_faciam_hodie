@@ -156,7 +156,7 @@ class _PermissionsRequiredPageState extends State<PermissionsRequiredPage> {
                 children: <Widget>[
                   Text(
                     localizations
-                        .permissionsRequiredPageGrantMicrophonePermission,
+                        .permissionsRequiredPageGrantLocationPermission,
                   ),
                   if (hasGrantedLocationPermission)
                     Icon(context.platformIcons.checkMark),

@@ -48,7 +48,12 @@ class _ServerLoadingScreenState extends State<ServerLoadingScreen> {
     final memories = context.read<Memories>();
     final session = Supabase.instance.client.auth.session();
 
-    if (session != null) {
+    if (session == null) {
+      Navigator.pushReplacementNamed(
+        context,
+        WelcomeScreen.ID,
+      );
+    } else {
       if (!memories.isInitialized) {
         await memories.initialize();
       }
@@ -58,7 +63,7 @@ class _ServerLoadingScreenState extends State<ServerLoadingScreen> {
       }
 
       if (widget.nextScreen == null) {
-        Navigator.pushNamed(
+        Navigator.pushReplacementNamed(
           context,
           MainScreen.ID,
         );
@@ -75,11 +80,6 @@ class _ServerLoadingScreenState extends State<ServerLoadingScreen> {
           );
         }
       }
-    } else {
-      Navigator.pushReplacementNamed(
-        context,
-        WelcomeScreen.ID,
-      );
     }
   }
 

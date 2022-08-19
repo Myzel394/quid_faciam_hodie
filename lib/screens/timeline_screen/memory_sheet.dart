@@ -135,114 +135,114 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
       background: GestureDetector(
         onTap: () => Navigator.pop(context),
       ),
-      persistentHeader: Container(
-        padding: const EdgeInsets.all(MEDIUM_SPACE),
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(LARGE_SPACE),
-            topRight: Radius.circular(LARGE_SPACE),
-          ),
+      persistentHeader: Material(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(LARGE_SPACE),
+          topRight: Radius.circular(LARGE_SPACE),
         ),
-        child: Column(
-          children: <Widget>[
-            if (widget.memory.location != null) ...[
-              const Padding(
-                padding: EdgeInsets.all(SMALL_SPACE),
-                child: SheetIndicator(),
+        color: backgroundColor,
+        child: Padding(
+          padding: const EdgeInsets.all(MEDIUM_SPACE),
+          child: Column(
+            children: <Widget>[
+              if (widget.memory.location != null) ...[
+                const Padding(
+                  padding: EdgeInsets.all(SMALL_SPACE),
+                  child: SheetIndicator(),
+                ),
+                const SizedBox(height: MEDIUM_SPACE),
+              ],
+              Text(
+                localizations.memorySheetTitle,
+                style: getTitleTextStyle(context),
               ),
               const SizedBox(height: MEDIUM_SPACE),
-            ],
-            Text(
-              localizations.memorySheetTitle,
-              style: getTitleTextStyle(context),
-            ),
-            const SizedBox(height: MEDIUM_SPACE),
-            ListTile(
-              leading: PlatformWidget(
-                cupertino: (_, __) => Icon(
-                  CupertinoIcons.down_arrow,
-                  color: getBodyTextColor(context),
-                ),
-                material: (_, __) => Icon(
-                  Icons.download,
-                  color: getBodyTextColor(context),
-                ),
-              ),
-              title: Text(
-                localizations.memorySheetDownloadMemory,
-                style: getBodyTextTextStyle(context),
-              ),
-              enabled: !getIsLoadingSpecificID('download'),
-              onTap: getIsLoadingSpecificID('download')
-                  ? null
-                  : () => callWithLoading(downloadFile, 'download'),
-              trailing: getIsLoadingSpecificID('download')
-                  ? buildLoadingIndicator()
-                  : null,
-            ),
-            ListTile(
-              leading: Icon(
-                widget.memory.isPublic
-                    ? Icons.public_off_rounded
-                    : Icons.public,
-                color: getBodyTextColor(context),
-              ),
-              title: Text(
-                widget.memory.isPublic
-                    ? localizations.memorySheetUpdateMemoryMakePrivate
-                    : localizations.memorySheetUpdateMemoryMakePublic,
-                style: getBodyTextTextStyle(context),
-              ),
-              enabled: !getIsLoadingSpecificID('public'),
-              onTap: getIsLoadingSpecificID('public')
-                  ? null
-                  : () => callWithLoading(changeVisibility, 'public'),
-              trailing: getIsLoadingSpecificID('public')
-                  ? buildLoadingIndicator()
-                  : null,
-            ),
-            ListTile(
-              leading: Icon(
-                context.platformIcons.delete,
-                color: getBodyTextColor(context),
-              ),
-              title: Text(
-                localizations.memorySheetDeleteMemory,
-                style: getBodyTextTextStyle(context),
-              ),
-              enabled: !getIsLoadingSpecificID('delete'),
-              onTap: getIsLoadingSpecificID('delete')
-                  ? null
-                  : () => callWithLoading(deleteFile, 'delete'),
-              trailing: getIsLoadingSpecificID('delete')
-                  ? buildLoadingIndicator()
-                  : null,
-            ),
-            const SizedBox(height: MEDIUM_SPACE),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  context.platformIcons.time,
-                  size: platformThemeData(
-                    context,
-                    material: (data) => data.textTheme.bodyLarge!.fontSize,
-                    cupertino: (data) => data.textTheme.textStyle.fontSize,
+              ListTile(
+                leading: PlatformWidget(
+                  cupertino: (_, __) => Icon(
+                    CupertinoIcons.down_arrow,
+                    color: getBodyTextColor(context),
+                  ),
+                  material: (_, __) => Icon(
+                    Icons.download,
+                    color: getBodyTextColor(context),
                   ),
                 ),
-                const SizedBox(width: TINY_SPACE),
-                Text(
-                  localizations.memorySheetCreatedAtDataKey(
-                    DateFormat.jms().format(
-                      widget.memory.creationDate,
-                    ),
-                  ),
+                title: Text(
+                  localizations.memorySheetDownloadMemory,
                   style: getBodyTextTextStyle(context),
                 ),
-              ],
-            ),
-          ],
+                enabled: !getIsLoadingSpecificID('download'),
+                onTap: getIsLoadingSpecificID('download')
+                    ? null
+                    : () => callWithLoading(downloadFile, 'download'),
+                trailing: getIsLoadingSpecificID('download')
+                    ? buildLoadingIndicator()
+                    : null,
+              ),
+              ListTile(
+                leading: Icon(
+                  widget.memory.isPublic
+                      ? Icons.public_off_rounded
+                      : Icons.public,
+                  color: getBodyTextColor(context),
+                ),
+                title: Text(
+                  widget.memory.isPublic
+                      ? localizations.memorySheetUpdateMemoryMakePrivate
+                      : localizations.memorySheetUpdateMemoryMakePublic,
+                  style: getBodyTextTextStyle(context),
+                ),
+                enabled: !getIsLoadingSpecificID('public'),
+                onTap: getIsLoadingSpecificID('public')
+                    ? null
+                    : () => callWithLoading(changeVisibility, 'public'),
+                trailing: getIsLoadingSpecificID('public')
+                    ? buildLoadingIndicator()
+                    : null,
+              ),
+              ListTile(
+                leading: Icon(
+                  context.platformIcons.delete,
+                  color: getBodyTextColor(context),
+                ),
+                title: Text(
+                  localizations.memorySheetDeleteMemory,
+                  style: getBodyTextTextStyle(context),
+                ),
+                enabled: !getIsLoadingSpecificID('delete'),
+                onTap: getIsLoadingSpecificID('delete')
+                    ? null
+                    : () => callWithLoading(deleteFile, 'delete'),
+                trailing: getIsLoadingSpecificID('delete')
+                    ? buildLoadingIndicator()
+                    : null,
+              ),
+              const SizedBox(height: MEDIUM_SPACE),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    context.platformIcons.time,
+                    size: platformThemeData(
+                      context,
+                      material: (data) => data.textTheme.bodyLarge!.fontSize,
+                      cupertino: (data) => data.textTheme.textStyle.fontSize,
+                    ),
+                  ),
+                  const SizedBox(width: TINY_SPACE),
+                  Text(
+                    localizations.memorySheetCreatedAtDataKey(
+                      DateFormat.jms().format(
+                        widget.memory.creationDate,
+                      ),
+                    ),
+                    style: getBodyTextTextStyle(context),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
       expandableContent: widget.memory.location == null
