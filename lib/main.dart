@@ -52,7 +52,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> watchAuthenticationStatus() async {
-    await GlobalValuesManager.watchForInitialization();
+    await GlobalValuesManager.waitForInitialization();
 
     Supabase.instance.client.auth.onAuthStateChange((event, session) {
       switch (event) {

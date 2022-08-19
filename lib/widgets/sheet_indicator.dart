@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quid_faciam_hodie/utils/theme.dart';
 
 class SheetIndicator extends StatelessWidget {
   const SheetIndicator({Key? key}) : super(key: key);
@@ -9,7 +10,7 @@ class SheetIndicator extends StatelessWidget {
       width: 100,
       height: 5,
       decoration: BoxDecoration(
-        color: Colors.white24,
+        color: getBodyTextColor(context).withOpacity(.2),
         borderRadius: BorderRadius.circular(10),
       ),
     );

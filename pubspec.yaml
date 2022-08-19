@@ -62,6 +62,7 @@ dependencies:
   flutter_exif_plugin: ^1.1.0
   flutter_osm_plugin: ^0.39.0
   url_launcher: ^6.1.5
+  apple_maps_flutter: ^1.2.0
 
 dev_dependencies:
   flutter_test:

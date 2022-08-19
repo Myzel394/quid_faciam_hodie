@@ -52,7 +52,7 @@ class GlobalValuesManager {
     _initializeSettings();
   }
 
-  static Future<void> watchForInitialization() async {
+  static Future<void> waitForInitialization() async {
     // Server initialization
     if (_serverInitializationFuture == null) {
       if (_isServerInitialized) {

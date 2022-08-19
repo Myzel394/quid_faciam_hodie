@@ -1,7 +1,6 @@
 import 'package:expandable_bottom_sheet/expandable_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/foreign_types/memory_location.dart';
@@ -10,6 +9,8 @@ import 'package:quid_faciam_hodie/utils/lookup_address.dart';
 import 'package:quid_faciam_hodie/utils/theme.dart';
 import 'package:quid_faciam_hodie/widgets/icon_button_child.dart';
 import 'package:quid_faciam_hodie/widgets/key_value_info.dart';
+import 'package:quid_faciam_hodie/widgets/platform_widgets/memory_cupertino_maps.dart';
+import 'package:quid_faciam_hodie/widgets/platform_widgets/memory_material_maps.dart';
 import 'package:quid_faciam_hodie/widgets/sheet_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -26,7 +27,6 @@ class MemoryMapScreen extends StatefulWidget {
 }
 
 class _MemoryMapScreenState extends State<MemoryMapScreen> with Loadable {
-  late final MapController controller;
   String? address;
 
   @override
@@ -34,13 +34,6 @@ class _MemoryMapScreenState extends State<MemoryMapScreen> with Loadable {
     super.initState();
 
     callWithLoading(fetchAddress);
-
-    controller = MapController(
-      initPosition: GeoPoint(
-        latitude: widget.location.latitude,
-        longitude: widget.location.longitude,
-      ),
-    );
   }
 
   Future<void> fetchAddress() async {
@@ -60,34 +53,6 @@ class _MemoryMapScreenState extends State<MemoryMapScreen> with Loadable {
     }
   }
 
-  void drawCircle() => controller.drawCircle(
-        CircleOSM(
-          key: 'accuracy',
-          color: Colors.blue,
-          centerPoint: GeoPoint(
-            latitude: widget.location.latitude,
-            longitude: widget.location.longitude,
-          ),
-          radius: widget.location.accuracy,
-          strokeWidth: 4,
-        ),
-      );
-
-  List<StaticPositionGeoPoint> get staticPoints => [
-        StaticPositionGeoPoint(
-          'position',
-          const MarkerIcon(
-            icon: Icon(Icons.location_on, size: 150, color: Colors.blue),
-          ),
-          [
-            GeoPoint(
-              latitude: widget.location.latitude,
-              longitude: widget.location.longitude,
-            )
-          ],
-        )
-      ];
-
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
@@ -99,16 +64,15 @@ class _MemoryMapScreenState extends State<MemoryMapScreen> with Loadable {
       ),
       body: ExpandableBottomSheet(
         enableToggle: true,
-        background: OSMFlutter(
-          controller: controller,
-          initZoom: 13,
-          stepZoom: 1.0,
-          trackMyPosition: true,
-          staticPoints: staticPoints,
-          onMapIsReady: (_) {
-            drawCircle();
-          },
-        ),
+        background: isMaterial(context)
+            ? MemoryMaterialMaps(
+                location: widget.location,
+                initialZoom: 13,
+              )
+            : MemoryCupertinoMaps(
+                location: widget.location,
+                initialZoom: 13,
+              ),
         persistentHeader: Container(
           width: double.infinity,
           padding: const EdgeInsets.all(SMALL_SPACE),

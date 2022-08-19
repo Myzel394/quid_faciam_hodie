@@ -6,6 +6,7 @@ import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/managers/global_values_manager.dart';
 import 'package:quid_faciam_hodie/models/memories.dart';
 import 'package:quid_faciam_hodie/screens/grant_permission_screen.dart';
+import 'package:quid_faciam_hodie/screens/login_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'empty_screen.dart';
@@ -36,23 +37,32 @@ class _ServerLoadingScreenState extends State<ServerLoadingScreen> {
   }
 
   Future<void> load() async {
-    if (!(await GlobalValuesManager.hasGrantedPermissions())) {
-      Navigator.pushReplacementNamed(
+    while (!(await GlobalValuesManager.hasGrantedPermissions())) {
+      await Navigator.pushNamed(
         context,
         GrantPermissionScreen.ID,
       );
     }
 
-    await GlobalValuesManager.watchForInitialization();
+    await GlobalValuesManager.waitForInitialization();
 
     final memories = context.read<Memories>();
     final session = Supabase.instance.client.auth.session();
+
+    if (session == null && widget.nextScreen == LoginScreen.ID) {
+      Navigator.pushReplacementNamed(
+        context,
+        LoginScreen.ID,
+      );
+      return;
+    }
 
     if (session == null) {
       Navigator.pushReplacementNamed(
         context,
         WelcomeScreen.ID,
       );
+      return;
     } else {
       if (!memories.isInitialized) {
         await memories.initialize();
@@ -67,17 +77,20 @@ class _ServerLoadingScreenState extends State<ServerLoadingScreen> {
           context,
           MainScreen.ID,
         );
+        return;
       } else {
         if (memories.memories.isEmpty) {
           Navigator.pushReplacementNamed(
             context,
             EmptyScreen.ID,
           );
+          return;
         } else {
           Navigator.pushReplacementNamed(
             context,
             widget.nextScreen!,
           );
+          return;
         }
       }
     }

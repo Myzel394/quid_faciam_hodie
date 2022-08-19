@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
-import 'package:quid_faciam_hodie/screens/grant_permission_screen.dart';
+import 'package:quid_faciam_hodie/screens/login_screen.dart';
+import 'package:quid_faciam_hodie/screens/server_loading_screen.dart';
 import 'package:quid_faciam_hodie/screens/welcome_screen/crabs/logo.dart';
 import 'package:quid_faciam_hodie/utils/theme.dart';
 import 'package:quid_faciam_hodie/widgets/icon_button_child.dart';
@@ -38,9 +39,13 @@ class GetStartedPage extends StatelessWidget {
                 label: Text(localizations.welcomeScreenStartButtonTitle),
               ),
               onPressed: () {
-                Navigator.pushNamed(
+                Navigator.push(
                   context,
-                  GrantPermissionScreen.ID,
+                  MaterialPageRoute(
+                    builder: (_) => const ServerLoadingScreen(
+                      nextScreen: LoginScreen.ID,
+                    ),
+                  ),
                 );
               },
             ),

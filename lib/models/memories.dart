@@ -109,7 +109,7 @@ class Memories extends PropertyChangeNotifier<String> {
   }
 
   Future<void> _loadInitialData() async {
-    await GlobalValuesManager.watchForInitialization();
+    await GlobalValuesManager.waitForInitialization();
 
     final response = await supabase
         .from('memories')

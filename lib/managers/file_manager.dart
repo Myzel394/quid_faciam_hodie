@@ -17,7 +17,7 @@ final supabase = Supabase.instance.client;
 
 class FileManager {
   static Future<Memory> getMemoryMetadata(final String id) async {
-    await GlobalValuesManager.watchForInitialization();
+    await GlobalValuesManager.waitForInitialization();
 
     final response = await supabase
         .from('memories')
@@ -38,7 +38,7 @@ class FileManager {
     final File file, {
     LocationData? locationData,
   }) async {
-    await GlobalValuesManager.watchForInitialization();
+    await GlobalValuesManager.waitForInitialization();
 
     final basename = uuid.v4();
     final extension = file.path.split('.').last;
@@ -108,7 +108,7 @@ class FileManager {
     final bool disableDownloadCache = false,
     final bool disableFileCache = false,
   }) async {
-    await GlobalValuesManager.watchForInitialization();
+    await GlobalValuesManager.waitForInitialization();
 
     final tempDirectory = await getTemporaryDirectory();
     final filename = '${tempDirectory.path}/$path';
@@ -129,7 +129,7 @@ class FileManager {
   }
 
   static Future<void> deleteFile(final String path) async {
-    await GlobalValuesManager.watchForInitialization();
+    await GlobalValuesManager.waitForInitialization();
 
     final response =
         await supabase.from('memories').delete().eq('location', path).execute();

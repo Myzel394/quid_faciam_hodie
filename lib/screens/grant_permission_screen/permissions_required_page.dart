@@ -118,7 +118,7 @@ class _PermissionsRequiredPageState extends State<PermissionsRequiredPage> {
               ),
             ),
           ),
-          const SizedBox(height: MEDIUM_SPACE),
+          const SizedBox(height: SMALL_SPACE),
           PlatformTextButton(
             onPressed: hasGrantedMicrophonePermission
                 ? null
@@ -142,6 +142,7 @@ class _PermissionsRequiredPageState extends State<PermissionsRequiredPage> {
               ),
             ),
           ),
+          const SizedBox(height: SMALL_SPACE),
           PlatformTextButton(
             onPressed: hasGrantedLocationPermission
                 ? null

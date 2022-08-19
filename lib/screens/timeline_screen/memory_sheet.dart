@@ -10,12 +10,15 @@ import 'package:quid_faciam_hodie/enums.dart';
 import 'package:quid_faciam_hodie/extensions/snackbar.dart';
 import 'package:quid_faciam_hodie/foreign_types/memory.dart';
 import 'package:quid_faciam_hodie/managers/file_manager.dart';
+import 'package:quid_faciam_hodie/screens/memory_map_screen.dart';
 import 'package:quid_faciam_hodie/utils/loadable.dart';
 import 'package:quid_faciam_hodie/utils/theme.dart';
+import 'package:quid_faciam_hodie/widgets/icon_button_child.dart';
+import 'package:quid_faciam_hodie/widgets/platform_widgets/memory_cupertino_maps.dart';
 import 'package:quid_faciam_hodie/widgets/sheet_indicator.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'memory_location_view.dart';
+import '../../widgets/platform_widgets/memory_material_maps.dart';
 
 class MemorySheet extends StatefulWidget {
   final Memory memory;
@@ -250,8 +253,51 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
           : Container(
               width: double.infinity,
               color: backgroundColor,
-              child: MemoryLocationView(
-                location: widget.memory.location!,
+              child: Column(
+                children: <Widget>[
+                  SizedBox(
+                    width: double.infinity,
+                    height: 400,
+                    child: GestureDetector(
+                      // Avoid panning, map is view-only
+                      onDoubleTap: () {},
+                      child: PlatformWidget(
+                        material: (_, __) => MemoryMaterialMaps(
+                          location: widget.memory.location!,
+                          initialZoom: 14,
+                        ),
+                        cupertino: (_, __) => MemoryCupertinoMaps(
+                          location: widget.memory.location!,
+                          initialZoom: 14,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: MEDIUM_SPACE),
+                  PlatformTextButton(
+                    child: IconButtonChild(
+                      icon: Icon(context.platformIcons.fullscreen),
+                      label: Text(localizations.memorySheetViewMoreDetails),
+                    ),
+                    onPressed: () async {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => MemoryMapScreen(
+                            location: widget.memory.location!,
+                          ),
+                        ),
+                      );
+
+                      if (!mounted) {
+                        return;
+                      }
+
+                      Navigator.pop(context);
+                    },
+                  ),
+                  const SizedBox(height: MEDIUM_SPACE),
+                ],
               ),
             ),
     );

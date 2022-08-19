@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/constants/values.dart';
 import 'package:quid_faciam_hodie/managers/photo_manager.dart';
@@ -15,7 +16,7 @@ class PhotoSwitching extends StatefulWidget {
 }
 
 class _PhotoSwitchingState extends State<PhotoSwitching> with Loadable {
-  late String photoURL;
+  String photoURL = '';
 
   @override
   void initState() {
@@ -41,7 +42,9 @@ class _PhotoSwitchingState extends State<PhotoSwitching> with Loadable {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return Center(
+        child: PlatformCircularProgressIndicator(),
+      );
     }
 
     return ClipRRect(
