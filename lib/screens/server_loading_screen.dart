@@ -5,11 +5,11 @@ import 'package:provider/provider.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/managers/global_values_manager.dart';
 import 'package:quid_faciam_hodie/models/memories.dart';
-import 'package:quid_faciam_hodie/screens/grant_permission_screen.dart';
 import 'package:quid_faciam_hodie/screens/login_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'empty_screen.dart';
+import 'grant_permission_screen.dart';
 import 'main_screen.dart';
 import 'server_loading_screen/dot_animation.dart';
 import 'welcome_screen.dart';
@@ -18,10 +18,12 @@ class ServerLoadingScreen extends StatefulWidget {
   static const ID = '/';
 
   final String? nextScreen;
+  final bool isInitialLoading;
 
   const ServerLoadingScreen({
     Key? key,
     this.nextScreen,
+    this.isInitialLoading = false,
   }) : super(key: key);
 
   @override
@@ -33,15 +35,27 @@ class _ServerLoadingScreenState extends State<ServerLoadingScreen> {
   void initState() {
     super.initState();
 
-    load();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      load();
+    });
   }
 
   Future<void> load() async {
-    while (!(await GlobalValuesManager.hasGrantedPermissions())) {
+    if (widget.isInitialLoading) {
       await Navigator.pushNamed(
         context,
-        GrantPermissionScreen.ID,
+        WelcomeScreen.ID,
       );
+      return;
+    }
+
+    if (widget.nextScreen != WelcomeScreen.ID) {
+      while (!(await GlobalValuesManager.hasGrantedPermissions())) {
+        await Navigator.pushNamed(
+          context,
+          GrantPermissionScreen.ID,
+        );
+      }
     }
 
     await GlobalValuesManager.waitForInitialization();

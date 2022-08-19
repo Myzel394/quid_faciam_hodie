@@ -85,7 +85,9 @@ class _MyAppState extends State<MyApp> {
           TimelineScreen.ID: (context) => const TimelineScreen(),
           GrantPermissionScreen.ID: (context) => const GrantPermissionScreen(),
           CalendarScreen.ID: (context) => const CalendarScreen(),
-          ServerLoadingScreen.ID: (context) => const ServerLoadingScreen(),
+          ServerLoadingScreen.ID: (context) => const ServerLoadingScreen(
+                isInitialLoading: true,
+              ),
           EmptyScreen.ID: (context) => const EmptyScreen(),
           SettingsScreen.ID: (context) => const SettingsScreen(),
         },

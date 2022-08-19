@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:quid_faciam_hodie/constants/help_sheet_id.dart';
 import 'package:quid_faciam_hodie/extensions/date.dart';
 import 'package:quid_faciam_hodie/models/memories.dart';
 import 'package:quid_faciam_hodie/models/timeline.dart';
+import 'package:quid_faciam_hodie/screens/timeline_screen/timeline_help_content.dart';
 import 'package:quid_faciam_hodie/utils/loadable.dart';
+import 'package:quid_faciam_hodie/widgets/help_sheet.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'calendar_screen.dart';
 import 'empty_screen.dart';
@@ -111,29 +114,39 @@ class _TimelineScreenState extends State<TimelineScreen> with Loadable {
 
         return true;
       },
-      child: PlatformScaffold(
-        appBar: isCupertino(context)
-            ? PlatformAppBar(
-                title: Text(localizations.timelineScreenTitle),
-              )
-            : null,
-        body: ChangeNotifierProvider.value(
-          value: timeline,
-          child: PageView.builder(
-            controller: pageController,
-            scrollDirection: Axis.vertical,
-            itemCount: timeline.values.length,
-            onPageChanged: (newPage) {
-              if (timeline.currentIndex != newPage) {
-                // User manually changed page
-                timeline.setCurrentIndex(newPage);
+      child: HelpSheet(
+        title: localizations.timelineScreenHelpSheetTitle,
+        helpContent: const TimelineHelpContent(),
+        helpID: HelpSheetID.timelineScreen,
+        onSheetShown: timeline.pause,
+        onSheetHidden: () {
+          timeline.resume();
+          print("dfsjnifksdf");
+        },
+        child: PlatformScaffold(
+          appBar: isCupertino(context)
+              ? PlatformAppBar(
+                  title: Text(localizations.timelineScreenTitle),
+                )
+              : null,
+          body: ChangeNotifierProvider.value(
+            value: timeline,
+            child: PageView.builder(
+              controller: pageController,
+              scrollDirection: Axis.vertical,
+              itemCount: timeline.values.length,
+              onPageChanged: (newPage) {
+                if (timeline.currentIndex != newPage) {
+                  // User manually changed page
+                  timeline.setCurrentIndex(newPage);
 
-                timeline.setMemoryIndex(0);
-              }
-            },
-            itemBuilder: (_, index) => TimelinePage(
-              date: timeline.dateAtIndex(index),
-              memories: timeline.atIndex(index),
+                  timeline.setMemoryIndex(0);
+                }
+              },
+              itemBuilder: (_, index) => TimelinePage(
+                date: timeline.dateAtIndex(index),
+                memories: timeline.atIndex(index),
+              ),
             ),
           ),
         ),

@@ -14,12 +14,16 @@ class CacheManager {
     final existingEntry = await storage.read(key: cacheKey);
 
     if (existingEntry != null) {
-      final entry = jsonDecode(existingEntry);
-      final DateTime creationDate = DateTime.parse(entry['creationDate']);
+      try {
+        final entry = jsonDecode(existingEntry);
+        final DateTime creationDate = DateTime.parse(entry['creationDate']);
 
-      // Check if the entry is still valid using CACHE_INVALIDATION_DURATION as the validity duration.
-      return DateTime.now().difference(creationDate) <
-          CACHE_INVALIDATION_DURATION;
+        // Check if the entry is still valid using CACHE_INVALIDATION_DURATION as the validity duration.
+        return DateTime.now().difference(creationDate) <
+            CACHE_INVALIDATION_DURATION;
+      } catch (_) {
+        return false;
+      }
     }
 
     return false;

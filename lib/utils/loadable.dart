@@ -24,9 +24,11 @@ mixin Loadable {
     try {
       await callback();
     } finally {
-      setState(() {
-        _IDs.remove(id ?? _generalLoadingID);
-      });
+      try {
+        setState(() {
+          _IDs.remove(id ?? _generalLoadingID);
+        });
+      } catch (error) {}
     }
   }
 }

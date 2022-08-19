@@ -4,6 +4,7 @@
   "generalError": "There was an error",
   "generalCancelButtonLabel": "Cancel",
   "generalContinueButtonLabel": "Continue",
+  "generalUnderstoodButtonLabel": "OK",
 
   "welcomeScreenDescription": "Find out what you did all the days and unlock moments you completely forgot!",
   "welcomeScreenSubtitle": "What did I do today?",
@@ -45,6 +46,10 @@
   "mainScreenTakePhotoActionUploadingPhoto": "Uploading photo...",
   "mainScreenTakeVideoActionSaveVideo": "Taking video, please hold still...",
   "mainScreenTakeVideoActionUploadingVideo": "Uploading video...",
+
+  "mainScreenHelpSheetTitle": "Record your best moments in life",
+  "mainScreenHelpSheetTakePhotoExplanation": "Tap on the shutter button once to take a photo.",
+  "mainScreenHelpSheetTakeVideoExplanation": "Hold down the shutter button to start recording a video. Leave the button to stop recording.",
 
   "recordingOverlayIsRecording": "Recording",
 
@@ -153,6 +158,13 @@
 
 
   "timelineScreenTitle": "Timeline",
+  "timelineScreenHelpSheetTitle": "Welcome to your timeline",
+  "timelineHelpContentDescription": "Your memories are displayed in chronological order. You can swipe left or right to navigate through the memories of the given day. You can also swipe up or down to navigate through the days of your memories. The timeline automatically progresses through your memories.",
+  "timelineHelpContentHoldDownExplanation": "Hold down to pause the timeline from progressing to your next memory.",
+  "timelineHelpContentTapTwiceExplanation": "Tap twice to see more details about your memory.",
+
+
+  "helpSheetDontShowAgain": "Don't show this help sheet again",
 
 
   "enumMapping_ResolutionPreset_low": "Low",
