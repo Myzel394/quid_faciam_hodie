@@ -525,7 +525,7 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
                                 });
                               },
                         child: zoomLevels == null
-                            ? const Text('1x')
+                            ? Text(formatZoomLevel(1.0))
                             : Text(
                                 formatZoomLevel(currentZoomLevel),
                               ),

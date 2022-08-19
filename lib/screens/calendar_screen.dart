@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +20,7 @@ class CalendarScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final memoriesManager = context.read<Memories>();
 
     final calendarManager = CalendarManager(memories: memoriesManager.memories);
@@ -28,7 +30,7 @@ class CalendarScreen extends StatelessWidget {
       builder: (context, memories, _) => PlatformScaffold(
         appBar: isCupertino(context)
             ? PlatformAppBar(
-                title: const Text('Calendar'),
+                title: Text(localizations.calendarScreenTitle),
               )
             : null,
         body: Padding(

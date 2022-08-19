@@ -6,6 +6,7 @@ import 'package:quid_faciam_hodie/models/memories.dart';
 import 'package:quid_faciam_hodie/models/timeline.dart';
 import 'package:quid_faciam_hodie/utils/loadable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'calendar_screen.dart';
 import 'empty_screen.dart';
@@ -98,6 +99,8 @@ class _TimelineScreenState extends State<TimelineScreen> with Loadable {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return WillPopScope(
       onWillPop: () async {
         if (widget.popToCalendarScreen) {
@@ -111,7 +114,7 @@ class _TimelineScreenState extends State<TimelineScreen> with Loadable {
       child: PlatformScaffold(
         appBar: isCupertino(context)
             ? PlatformAppBar(
-                title: Text('Timeline'),
+                title: Text(localizations.timelineScreenTitle),
               )
             : null,
         body: ChangeNotifierProvider.value(

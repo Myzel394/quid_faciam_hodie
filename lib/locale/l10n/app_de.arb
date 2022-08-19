@@ -62,6 +62,7 @@
   "memorySheetUpdateMemoryMakePublic": "Veröffentlichen",
   "memorySheetUpdateMemoryMakePrivate": "Privat machen",
   "memorySheetDeleteMemory": "Erinnerung löschen",
+  "memorySheetCreatedAtDataKey": "Erstellt am: {creationTimeFormatted}",
   "memorySheetViewMoreDetails": "Mehr Details",
 
 
@@ -74,15 +75,17 @@
   "memoryMapScreenValuesLatitudeLabel": "Latitude",
   "memoryMapScreenValuesLongitudeLabel": "Longitude",
   "memoryMapScreenValuesAltitudeLabel": "Höhe",
+  "memoryMapScreenValuesAltitudeValue": "{valueInMeter} m",
   "memoryMapScreenValuesAccuracyLabel": "Genauigkeit",
+  "memoryMapScreenValuesAccuracyValue": "{valueInMeter}m",
   "memoryMapScreenValuesSpeedLabel": "Geschwindigkeit",
+  "memoryMapScreenValuesSpeedValue": "{valueInKmh} km/h",
 
 
   "emptyScreenTitle": "Houston, wir haben ein Problem",
   "emptyScreenSubtitle": "Der Benutzer hat noch keine Erinnerungen erstellt!",
-  "emptyScreenDescription": "Um deinen Zeitstrahl sehen zu können musst du zuerst ein paar Erinnerungen erstellen! :)",
+  "emptyScreenDescription": "Um deine Timeline sehen zu können musst du zuerst ein paar Erinnerungen erstellen! :)",
   "emptyScreenCreateMemory": "Erinnerung erstellen",
-  "memorySheetCreatedAtDataKey": "Erstellt am: {creationTimeFormatted}",
 
 
   "settingsScreenLoading": "Einstellungen werden geladen...",
@@ -95,7 +98,13 @@
   "settingsScreenDeleteAccountDescription": "Bist du dir sicher, dass du deinen Account löschen möchtest? Diese Aktion kann nicht rückgangig gemacht werden! Deine Erfahrungen werden ebenfalls gelöscht.",
   "settingsScreenDeleteAccountConfirmLabel": "Account jetzt löschen",
   "settingsScreenGeneralSectionTitle": "General",
-  "settingsScreenGeneralSectionQualityLabel": "Quality",
+  "settingsScreenGeneralSectionQualityLabel": "Qualität",
+
+
+  "calendarScreenTitle": "Kalendar",
+
+
+  "timelineScreenTitle": "Timeline",
 
 
   "enumMapping_ResolutionPreset_low": "Niedrig",

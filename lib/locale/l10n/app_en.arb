@@ -90,7 +90,6 @@
       }
     }
   },
-  "memorySheetMapEstimatedAddressLabel": "Estimated Address",
   "memorySheetViewMoreDetails": "View More Details",
 
 
@@ -148,6 +147,12 @@
   "settingsScreenDeleteAccountConfirmLabel": "Delete Account now",
   "settingsScreenGeneralSectionTitle": "General",
   "settingsScreenGeneralSectionQualityLabel": "Quality",
+
+
+  "calendarScreenTitle": "Calendar",
+
+
+  "timelineScreenTitle": "Timeline",
 
 
   "enumMapping_ResolutionPreset_low": "Low",
