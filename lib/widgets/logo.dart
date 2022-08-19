@@ -21,12 +21,9 @@ class Logo extends StatelessWidget {
           ),
         ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(SPACE_MULTIPLIER * 15),
-        child: SvgPicture.asset(
-          'assets/logo_blank.svg',
-          width: 100,
-        ),
+      child: SvgPicture.asset(
+        'assets/logo.svg',
+        width: 150,
       ),
     );
   }

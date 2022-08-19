@@ -41,7 +41,10 @@ class _ServerLoadingScreenState extends State<ServerLoadingScreen> {
   }
 
   Future<void> load() async {
-    if (widget.isInitialLoading) {
+    await GlobalValuesManager.waitForInitialization();
+    final session = Supabase.instance.client.auth.session();
+
+    if (widget.isInitialLoading && session == null) {
       await Navigator.pushNamed(
         context,
         WelcomeScreen.ID,
@@ -58,10 +61,7 @@ class _ServerLoadingScreenState extends State<ServerLoadingScreen> {
       }
     }
 
-    await GlobalValuesManager.waitForInitialization();
-
     final memories = context.read<Memories>();
-    final session = Supabase.instance.client.auth.session();
 
     if (session == null && widget.nextScreen == LoginScreen.ID) {
       Navigator.pushReplacementNamed(

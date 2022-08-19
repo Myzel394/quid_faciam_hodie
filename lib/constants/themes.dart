@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 
 final LIGHT_THEME_MATERIAL = ThemeData(
+  colorScheme: ThemeData.light().colorScheme.copyWith(
+        primary: const Color(0xffd77422),
+        secondary: const Color(0xffcb4a1c),
+      ),
   textTheme: ThemeData().textTheme.copyWith(
         headline1: const TextStyle(
           fontSize: 32,
@@ -20,6 +24,10 @@ final LIGHT_THEME_MATERIAL = ThemeData(
 );
 
 final DARK_THEME_MATERIAL = ThemeData.dark().copyWith(
+  colorScheme: ThemeData.dark().colorScheme.copyWith(
+        primary: const Color(0xffd77422),
+        secondary: const Color(0xffcb4a1c),
+      ),
   textTheme: ThemeData.dark().textTheme.copyWith(
         headline1: const TextStyle(
           fontSize: 32,
@@ -37,6 +45,7 @@ final DARK_THEME_MATERIAL = ThemeData.dark().copyWith(
 );
 
 final LIGHT_THEME_CUPERTINO = CupertinoThemeData().copyWith(
+  primaryColor: const Color(0xffcb4a1c),
   textTheme: CupertinoThemeData().textTheme.copyWith(
         navLargeTitleTextStyle: const TextStyle(
           fontSize: 32,

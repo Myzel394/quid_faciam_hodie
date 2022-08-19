@@ -41,12 +41,17 @@ class _HelpSheetFormState extends State<HelpSheetForm> {
             child: Text(localizations.generalUnderstoodButtonLabel),
             onPressed: () => Navigator.pop(context, dontShowSheetAgain),
           ),
-          const SizedBox(height: MEDIUM_SPACE),
+          const SizedBox(height: SMALL_SPACE),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               PlatformSwitch(
                 value: dontShowSheetAgain,
+                activeColor: platformThemeData(
+                  context,
+                  material: (data) => data.colorScheme.primary,
+                  cupertino: (data) => data.primaryColor,
+                ),
                 onChanged: (value) {
                   setState(() {
                     dontShowSheetAgain = value;

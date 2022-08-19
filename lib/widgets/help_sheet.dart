@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -49,7 +51,7 @@ class _HelpSheetState extends State<HelpSheet> {
       return;
     }
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
+    Timer(Duration(milliseconds: 300), () async {
       if (!mounted) {
         return;
       }
@@ -109,8 +111,9 @@ class _HelpSheetState extends State<HelpSheet> {
   @override
   Widget build(BuildContext context) {
     return AnimatedScale(
-      scale: isShowingSheet ? .99 : 1,
-      duration: const Duration(milliseconds: 200),
+      scale: isShowingSheet ? .95 : 1,
+      curve: Curves.easeOutSine,
+      duration: const Duration(milliseconds: 500),
       child: widget.child,
     );
   }
