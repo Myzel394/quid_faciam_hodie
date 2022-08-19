@@ -22,7 +22,7 @@ class HelpContentText extends StatelessWidget {
         ),
         const Spacer(flex: 1),
         Expanded(
-          flex: 8,
+          flex: 14,
           child: Text(
             text,
             style: getBodyTextTextStyle(context),

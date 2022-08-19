@@ -110,7 +110,10 @@
 
   "timelineScreenTitle": "Timeline",
   "timelineScreenHelpSheetTitle": "Willkommen zu deiner Timeline",
-  "timelineHelpContentDescription": "Deine Erfahrungen werden in chronologischer Reihenfolge präsentiert. Du kannst nach links oder rechts wischen um durch deine Erinnerungen von deinem aktuellen Tag zu gehen. Du kannst auch nach oben und unten wischen um durch die verschiedenen Tage deiner Erinnerungen zu gehen. Deine Timeline springt automatisch zur nächsten Erinnerung nach einiger Zeit.",
+  "timelineHelpContentChronologicalMemoriesExplanation": "Deine Erfahrungen werden in chronologischer Reihenfolge präsentiert.",
+  "timelineHelpContentSwipeLeftRightExplanation": "Wische nach links oder rechts um durch deine Erinnerungen von deinem aktuellen Tag zu gehen.",
+  "timelineHelpContentSwipeUpDownExplanation": "Wische nach oben oder unten um durch die verschiedenen Tage deiner Erinnerungen zu gehen.",
+  "timelineHelpContentAutomaticJumpExplanation": "Deine Timeline springt automatisch zur nächsten Erinnerung nach einiger Zeit.",
   "timelineHelpContentHoldDownExplanation": "Halte gedrückt um deine Timeline zu pausieren.",
   "timelineHelpContentTapTwiceExplanation": "Tippe zweimal um mehr Details über deine Erinnerung zu erfahren,",
 

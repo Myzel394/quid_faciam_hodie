@@ -160,8 +160,11 @@
 
   "timelineScreenTitle": "Timeline",
   "timelineScreenHelpSheetTitle": "Welcome to your timeline",
-  "timelineHelpContentDescription": "Your memories are presented in chronological order. You can swipe left or right to navigate through the memories of the current day. You can also swipe up or down to navigate through the days of your memories. Your timeline automatically jumps to your next memory after some time.",
-  "timelineHelpContentHoldDownExplanation": "Hold down to pause your timeline.",
+  "timelineHelpContentChronologicalMemoriesExplanation": "Your memories are presented in chronological order.",
+  "timelineHelpContentSwipeLeftRightExplanation": "Swipe left or right to navigate through the memories of the current day.",
+  "timelineHelpContentSwipeUpDownExplanation": "Swipe up or down to navigate through the days of your memories.",
+  "timelineHelpContentAutomaticJumpExplanation": "Your timeline will automatically jump to your next memory after some time.",
+  "timelineHelpContentHoldDownExplanation": "Hold down to pause your timeline from jumping to your next memory.",
   "timelineHelpContentTapTwiceExplanation": "Tap twice to see more details about your memory.",
 
 
