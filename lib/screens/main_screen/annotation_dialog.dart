@@ -43,12 +43,14 @@ class _AnnotationDialogState extends State<AnnotationDialog> {
                   style: getBodyTextTextStyle(context),
                 ),
                 const SizedBox(height: MEDIUM_SPACE),
-                TextField(
+                PlatformTextField(
                   controller: controller,
                   autofocus: true,
-                  decoration: InputDecoration(
-                    labelText: localizations
-                        .mainScreenAnnotationDialogAnnotationFieldLabel,
+                  material: (_, __) => MaterialTextFieldData(
+                    decoration: InputDecoration(
+                      labelText: localizations
+                          .mainScreenAnnotationDialogAnnotationFieldLabel,
+                    ),
                   ),
                   onSubmitted: (value) {
                     Navigator.of(context).pop(value);

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
+import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/foreign_types/memory_location.dart';
+import 'package:quid_faciam_hodie/utils/theme.dart';
 
 class MemoryMaterialMaps extends StatefulWidget {
   final MemoryLocation location;
@@ -70,8 +73,31 @@ class _MemoryMaterialMapsState extends State<MemoryMaterialMaps> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return OSMFlutter(
       controller: controller,
+      mapIsLoading: Container(
+        color: getSheetColor(context),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              const SizedBox(
+                width: LARGE_SPACE,
+                height: LARGE_SPACE,
+                child: CircularProgressIndicator(),
+              ),
+              const SizedBox(height: MEDIUM_SPACE),
+              Text(
+                localizations.generalLoadingLabel,
+                style: getBodyTextTextStyle(context),
+              ),
+            ],
+          ),
+        ),
+      ),
       initZoom: widget.initialZoom,
       maxZoomLevel: widget.lockZoom ? widget.initialZoom : 19,
       minZoomLevel: widget.lockZoom ? widget.initialZoom : 2,

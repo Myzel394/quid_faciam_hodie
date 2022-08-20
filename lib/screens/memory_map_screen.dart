@@ -43,10 +43,18 @@ class _MemoryMapScreenState extends State<MemoryMapScreen> with Loadable {
         longitude: widget.location.longitude,
       );
 
+      if (!mounted) {
+        return;
+      }
+
       setState(() {
         address = foundAddress;
       });
     } catch (error) {
+      if (!mounted) {
+        return;
+      }
+
       setState(() {
         address = null;
       });
