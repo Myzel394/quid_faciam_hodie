@@ -1,11 +1,12 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter_cache/flutter_cache.dart' as cache;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:location/location.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:quid_faciam_hodie/constants/values.dart';
 import 'package:quid_faciam_hodie/foreign_types/memory.dart';
-import 'package:quid_faciam_hodie/managers/cache_manager.dart';
 import 'package:quid_faciam_hodie/managers/global_values_manager.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
@@ -99,15 +100,15 @@ class FileManager {
     final key = '$table:$path';
 
     // Check cache
-    if (!disableCache && await CacheManager.isCacheValid(key)) {
-      final data = (await CacheManager.get(key))!;
-      return Uint8List.fromList(data.codeUnits);
+    if (!disableCache) {
+      return cache.load(key) as Uint8List;
     }
 
     final data = await _downloadFileData(table, path);
 
     final cacheData = String.fromCharCodes(data);
-    await CacheManager.set(key, cacheData);
+
+    await cache.write(key, cacheData, CACHE_INVALIDATION_DURATION.inMinutes);
 
     return data;
   }

@@ -31,7 +31,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   void initState() {
     super.initState();
 
-    storage.deleteAll();
     getInitialImageForPhotoSwitching();
   }
 

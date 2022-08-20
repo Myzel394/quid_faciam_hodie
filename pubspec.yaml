@@ -64,6 +64,7 @@ dependencies:
   url_launcher: ^6.1.5
   apple_maps_flutter: ^1.2.0
   morphing_text: ^1.0.1
+  flutter_cache: ^0.1.0
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache/flutter_cache.dart' as cache;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -179,6 +180,9 @@ class _SettingsScreenState extends AuthRequiredState<SettingsScreen>
                         title: Text(localizations
                             .settingsScreenAccountSectionLogoutLabel),
                         onPressed: (_) async {
+                          cache.clear();
+                          storage.deleteAll();
+
                           await callWithLoading(supabase.auth.signOut);
 
                           if (!mounted) {
