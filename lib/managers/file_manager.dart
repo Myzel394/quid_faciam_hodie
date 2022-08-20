@@ -36,7 +36,8 @@ class FileManager {
   static uploadFile(
     final User user,
     final File file, {
-    LocationData? locationData,
+    final LocationData? locationData,
+    final Future<String?>? annotationGetterFuture,
   }) async {
     await GlobalValuesManager.waitForInitialization();
 
@@ -63,6 +64,15 @@ class FileManager {
       data['location_accuracy'] = locationData.accuracy!;
       data['location_altitude'] = locationData.altitude!;
       data['location_heading'] = locationData.heading!;
+    }
+
+    if (annotationGetterFuture != null) {
+      final annotation = await annotationGetterFuture;
+
+      if (annotation != null) {
+        // User has specified annotation
+        data['annotation'] = annotation;
+      }
     }
 
     final memoryResponse =

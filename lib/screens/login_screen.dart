@@ -82,10 +82,9 @@ class _LoginScreenState extends AuthState<LoginScreen> with Loadable {
         await _signUp();
       } catch (error) {
         if (mounted) {
-          if (isMaterial(context))
-            context.showLongErrorSnackBar(
-              message: localizations.loginScreenLoginFailed,
-            );
+          context.showLongErrorSnackBar(
+            message: localizations.loginScreenLoginFailed,
+          );
 
           passwordController.clear();
         }

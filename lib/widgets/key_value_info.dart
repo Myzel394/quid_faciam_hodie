@@ -60,11 +60,9 @@ class KeyValueInfo extends StatelessWidget {
                     HapticFeedback.lightImpact();
                     Clipboard.setData(ClipboardData(text: value));
 
-                    if (isMaterial(context)) {
-                      context.showSuccessSnackBar(
-                        message: 'Copied to clipboard!',
-                      );
-                    }
+                    context.showSuccessSnackBar(
+                      message: 'Copied to clipboard!',
+                    );
                   },
                 )
               : null,

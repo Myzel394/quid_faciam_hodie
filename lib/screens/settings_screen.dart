@@ -83,7 +83,7 @@ class _SettingsScreenState extends AuthRequiredState<SettingsScreen>
     );
   }
 
-  Widget getPicker() {
+  Widget getQualityPicker() {
     final settings = GlobalValuesManager.settings!;
     final resolutionTextMapping = getResolutionTextMapping(context);
     final items = ResolutionPreset.values
@@ -125,6 +125,7 @@ class _SettingsScreenState extends AuthRequiredState<SettingsScreen>
 
   @override
   Widget build(BuildContext context) {
+    final settings = GlobalValuesManager.settings!;
     final localizations = AppLocalizations.of(context)!;
 
     return PlatformScaffold(
@@ -203,7 +204,15 @@ class _SettingsScreenState extends AuthRequiredState<SettingsScreen>
                           localizations
                               .settingsScreenGeneralSectionQualityLabel,
                         ),
-                        title: getPicker(),
+                        title: getQualityPicker(),
+                      ),
+                      SettingsTile.switchTile(
+                        initialValue: settings.askForMemoryAnnotations,
+                        onToggle: settings.setAskForMemoryAnnotations,
+                        title: Text(
+                          localizations
+                              .settingsScreenGeneralSectionAskForMemoryAnnotationsLabel,
+                        ),
                       ),
                       SettingsTile(
                         leading: Icon(context.platformIcons.help),
@@ -213,12 +222,10 @@ class _SettingsScreenState extends AuthRequiredState<SettingsScreen>
                         onPressed: (_) async {
                           await UserHelpSheetsManager.deleteAll();
 
-                          if (isMaterial(context)) {
-                            context.showSuccessSnackBar(
-                              message: localizations
-                                  .settingsScreenResetHelpSheetsResetSuccessfully,
-                            );
-                          }
+                          context.showSuccessSnackBar(
+                            message: localizations
+                                .settingsScreenResetHelpSheetsResetSuccessfully,
+                          );
                         },
                       )
                     ],

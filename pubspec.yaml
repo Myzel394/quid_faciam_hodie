@@ -63,6 +63,7 @@ dependencies:
   flutter_osm_plugin: ^0.39.0
   url_launcher: ^6.1.5
   apple_maps_flutter: ^1.2.0
+  morphing_text: ^1.0.1
 
 dev_dependencies:
   flutter_test:

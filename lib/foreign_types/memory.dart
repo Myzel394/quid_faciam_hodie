@@ -12,6 +12,7 @@ class Memory {
   final String filePath;
   final bool isPublic;
   final String userID;
+  final String annotation;
   final MemoryLocation? location;
 
   const Memory({
@@ -20,6 +21,7 @@ class Memory {
     required this.filePath,
     required this.isPublic,
     required this.userID,
+    required this.annotation,
     this.location,
   });
 
@@ -29,6 +31,7 @@ class Memory {
         filePath: jsonData['location'],
         isPublic: jsonData['is_public'],
         userID: jsonData['user_id'],
+        annotation: jsonData['annotation'],
         location: MemoryLocation.parse(jsonData),
       );
 

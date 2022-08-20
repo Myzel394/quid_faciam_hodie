@@ -1,12 +1,15 @@
+import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/enums.dart';
 import 'package:quid_faciam_hodie/foreign_types/memory.dart';
+import 'package:quid_faciam_hodie/models/timeline.dart';
 import 'package:quid_faciam_hodie/widgets/raw_memory_display.dart';
 import 'package:video_player/video_player.dart';
 
@@ -37,6 +40,7 @@ class MemoryView extends StatefulWidget {
 class _MemoryViewState extends State<MemoryView> {
   MemoryFetchStatus status = MemoryFetchStatus.downloading;
   Uint8List? data;
+  Timer? _nextMemoryTimer;
 
   @override
   void initState() {
@@ -45,7 +49,16 @@ class _MemoryViewState extends State<MemoryView> {
     loadMemoryFile();
   }
 
+  @override
+  void dispose() {
+    _nextMemoryTimer?.cancel();
+
+    super.dispose();
+  }
+
   Future<void> loadMemoryFile() async {
+    final timeline = context.read<TimelineModel>();
+
     setState(() {
       status = MemoryFetchStatus.downloading;
     });
@@ -75,6 +88,12 @@ class _MemoryViewState extends State<MemoryView> {
       setState(() {
         status = MemoryFetchStatus.error;
       });
+
+      _nextMemoryTimer = Timer(
+        const Duration(seconds: 1),
+        timeline.nextMemory,
+      );
+
       return;
     }
   }

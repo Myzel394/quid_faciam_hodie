@@ -51,44 +51,70 @@ class TimelineOverlay extends StatelessWidget {
           ),
         ),
         Positioned(
-          right: SMALL_SPACE,
+          left: 0,
+          right: 0,
           bottom: SMALL_SPACE * 2,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: SMALL_SPACE),
+            padding: const EdgeInsets.symmetric(horizontal: MEDIUM_SPACE),
             child: AnimatedOpacity(
               duration: const Duration(milliseconds: 500),
               curve: Curves.linearToEaseOut,
               opacity: timeline.showOverlay ? 1.0 : 0.0,
               child: Row(
+                mainAxisAlignment:
+                    (timeline.currentMemory.annotation.isNotEmpty)
+                        ? MainAxisAlignment.spaceBetween
+                        : MainAxisAlignment.end,
                 children: <Widget>[
-                  AnimatedOpacity(
-                    opacity: timeline.currentMemory.isPublic ? 1.0 : 0.0,
-                    duration: const Duration(milliseconds: 500),
-                    curve: Curves.linearToEaseOut,
-                    child: Icon(
-                      Icons.public,
-                      size: platformThemeData(
+                  if (timeline.currentMemory.annotation.isNotEmpty)
+                    Text(
+                      timeline.currentMemory.annotation,
+                      style: platformThemeData(
                         context,
-                        material: (data) => data.textTheme.bodyLarge!.fontSize,
-                        cupertino: (data) => data.textTheme.textStyle.fontSize,
+                        material: (data) => data.textTheme.titleSmall!.copyWith(
+                          color: Colors.white,
+                        ),
+                        cupertino: (data) =>
+                            data.textTheme.navTitleTextStyle.copyWith(
+                          color: Colors.white,
+                        ),
                       ),
-                      color: Colors.white,
                     ),
+                  Row(
+                    children: <Widget>[
+                      AnimatedOpacity(
+                        opacity: timeline.currentMemory.isPublic ? 1.0 : 0.0,
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.linearToEaseOut,
+                        child: Icon(
+                          Icons.public,
+                          size: platformThemeData(
+                            context,
+                            material: (data) =>
+                                data.textTheme.bodyLarge!.fontSize,
+                            cupertino: (data) =>
+                                data.textTheme.textStyle.fontSize,
+                          ),
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(width: SMALL_SPACE),
+                      Text(
+                        '$memoryIndex/$memoriesAmount',
+                        style: platformThemeData(
+                          context,
+                          material: (data) =>
+                              data.textTheme.titleSmall!.copyWith(
+                            color: Colors.white,
+                          ),
+                          cupertino: (data) =>
+                              data.textTheme.navTitleTextStyle.copyWith(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: SMALL_SPACE),
-                  Text(
-                    '$memoryIndex/$memoriesAmount',
-                    style: platformThemeData(
-                      context,
-                      material: (data) => data.textTheme.titleSmall!.copyWith(
-                        color: Colors.white,
-                      ),
-                      cupertino: (data) =>
-                          data.textTheme.navTitleTextStyle.copyWith(
-                        color: Colors.white,
-                      ),
-                    ),
-                  )
                 ],
               ),
             ),

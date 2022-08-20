@@ -65,13 +65,11 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
 
       Navigator.pop(context);
 
-      if (isMaterial(context))
-        context.showSuccessSnackBar(
-          message: localizations.memorySheetSavedToGallery,
-        );
+      context.showSuccessSnackBar(
+        message: localizations.memorySheetSavedToGallery,
+      );
     } catch (error) {
-      if (isMaterial(context))
-        context.showErrorSnackBar(message: localizations.generalError);
+      context.showErrorSnackBar(message: localizations.generalError);
     }
   }
 
@@ -94,10 +92,9 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
       Navigator.pop(context);
 
       if (isNowPublic) {
-        if (isMaterial(context))
-          context.showSuccessSnackBar(
-            message: localizations.memorySheetMemoryUpdatedToPublic,
-          );
+        context.showSuccessSnackBar(
+          message: localizations.memorySheetMemoryUpdatedToPublic,
+        );
       } else {
         if (isMaterial(context))
           context.showSuccessSnackBar(
@@ -105,8 +102,7 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
           );
       }
     } catch (error) {
-      if (isMaterial(context))
-        context.showErrorSnackBar(message: localizations.generalError);
+      context.showErrorSnackBar(message: localizations.generalError);
     }
   }
 

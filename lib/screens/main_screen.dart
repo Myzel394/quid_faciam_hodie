@@ -17,6 +17,7 @@ import 'package:quid_faciam_hodie/constants/values.dart';
 import 'package:quid_faciam_hodie/extensions/snackbar.dart';
 import 'package:quid_faciam_hodie/managers/file_manager.dart';
 import 'package:quid_faciam_hodie/managers/global_values_manager.dart';
+import 'package:quid_faciam_hodie/screens/main_screen/annotation_dialog.dart';
 import 'package:quid_faciam_hodie/screens/main_screen/camera_help_content.dart';
 import 'package:quid_faciam_hodie/screens/main_screen/settings_button_overlay.dart';
 import 'package:quid_faciam_hodie/utils/auth_required.dart';
@@ -188,6 +189,62 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
     });
   }
 
+  Future<String?> _createAskAnnotationDialog() => showPlatformDialog(
+        barrierDismissible: true,
+        context: context,
+        builder: (dialogContext) => const AnnotationDialog(),
+      );
+
+  void _lockCamera() => setState(() {
+        lockCamera = true;
+      });
+
+  void _releaseCamera() => setState(() {
+        lockCamera = false;
+      });
+
+  void _showUploadingPhotoAnimation(final File file) => setState(() {
+        uploadingPhotoAnimation = file.readAsBytesSync();
+      });
+
+  void _releaseUploadingPhotoAnimation() => setState(() {
+        uploadingPhotoAnimation = null;
+      });
+
+  Future<String?> getAnnotation() async {
+    final settings = GlobalValuesManager.settings!;
+
+    if (settings.askForMemoryAnnotations) {
+      return _createAskAnnotationDialog();
+    } else {
+      return '';
+    }
+  }
+
+  Future<void> setFlashModeBeforeApplyingAction() async {
+    if (isTorchEnabled) {
+      await controller!.setFlashMode(FlashMode.torch);
+    } else {
+      await controller!.setFlashMode(FlashMode.off);
+    }
+  }
+
+  Future<LocationData?> getLocation([
+    final File? fileToTag,
+  ]) async {
+    if (!(await Permission.location.isGranted)) {
+      return null;
+    }
+
+    final locationData = await Location().getLocation();
+
+    if (fileToTag != null && Platform.isAndroid) {
+      await tagLocationToImage(fileToTag, locationData);
+    }
+
+    return locationData;
+  }
+
   Future<void> takePhoto() async {
     final localizations = AppLocalizations.of(context)!;
 
@@ -195,69 +252,50 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
       return;
     }
 
-    setState(() {
-      lockCamera = true;
-    });
+    _lockCamera();
 
     try {
-      if (isMaterial(context))
-        context.showPendingSnackBar(
-          message: localizations.mainScreenTakePhotoActionTakingPhoto,
-        );
+      context.showPendingSnackBar(
+        message: localizations.mainScreenTakePhotoActionTakingPhoto,
+      );
 
-      if (isTorchEnabled) {
-        await controller!.setFlashMode(FlashMode.torch);
-      } else {
-        await controller!.setFlashMode(FlashMode.off);
-      }
+      await setFlashModeBeforeApplyingAction();
 
       final file = File((await controller!.takePicture()).path);
 
-      setState(() {
-        uploadingPhotoAnimation = file.readAsBytesSync();
-      });
+      final annotationGetterFuture = getAnnotation();
+      final locationData = await getLocation(file);
 
-      if (isMaterial(context))
-        context.showPendingSnackBar(
-          message: localizations.mainScreenTakePhotoActionUploadingPhoto,
-        );
+      _showUploadingPhotoAnimation(file);
 
-      LocationData? locationData;
-
-      if (await Permission.location.isGranted) {
-        locationData = await Location().getLocation();
-
-        if (Platform.isAndroid) {
-          await tagLocationToImage(file, locationData);
-        }
-      }
+      context.showPendingSnackBar(
+        message: localizations.mainScreenTakePhotoActionUploadingPhoto,
+      );
 
       try {
-        await FileManager.uploadFile(_user, file, locationData: locationData);
+        await FileManager.uploadFile(
+          _user,
+          file,
+          locationData: locationData,
+          annotationGetterFuture: annotationGetterFuture,
+        );
       } catch (error) {
-        if (isMaterial(context))
-          context.showErrorSnackBar(message: error.toString());
+        context.showErrorSnackBar(message: error.toString());
+
         return;
       }
 
-      if (isMaterial(context))
-        context.showSuccessSnackBar(
-          message: localizations.mainScreenUploadSuccess,
-        );
+      context.showSuccessSnackBar(
+        message: localizations.mainScreenUploadSuccess,
+      );
     } finally {
-      setState(() {
-        lockCamera = false;
-        uploadingPhotoAnimation = null;
-      });
+      _releaseCamera();
+      _releaseUploadingPhotoAnimation();
     }
   }
 
   Future<void> takeVideo() async {
     final localizations = AppLocalizations.of(context)!;
-
-    setState(() {
-      isRecording = false;
-    });
 
     if (!controller!.value.isRecordingVideo) {
       // Recording has already been stopped
@@ -265,39 +303,43 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
     }
 
     setState(() {
-      lockCamera = true;
+      isRecording = false;
     });
 
+    _lockCamera();
+
     try {
-      if (isMaterial(context))
-        context.showPendingSnackBar(
-          message: localizations.mainScreenTakeVideoActionSaveVideo,
-        );
+      context.showPendingSnackBar(
+        message: localizations.mainScreenTakeVideoActionSaveVideo,
+      );
 
       final file = File((await controller!.stopVideoRecording()).path);
 
-      if (isMaterial(context))
-        context.showPendingSnackBar(
-          message: localizations.mainScreenTakeVideoActionUploadingVideo,
-        );
+      final annotationGetterFuture = getAnnotation();
+      final locationData = await getLocation();
+
+      context.showPendingSnackBar(
+        message: localizations.mainScreenTakeVideoActionUploadingVideo,
+      );
 
       try {
-        await FileManager.uploadFile(_user, file);
+        await FileManager.uploadFile(
+          _user,
+          file,
+          annotationGetterFuture: annotationGetterFuture,
+          locationData: locationData,
+        );
       } catch (error) {
-        if (isMaterial(context)) {
-          context.showErrorSnackBar(message: error.toString());
-        }
+        context.showErrorSnackBar(message: error.toString());
+
         return;
       }
 
-      if (isMaterial(context))
-        context.showSuccessSnackBar(
-          message: localizations.mainScreenUploadSuccess,
-        );
+      context.showSuccessSnackBar(
+        message: localizations.mainScreenUploadSuccess,
+      );
     } finally {
-      setState(() {
-        lockCamera = false;
-      });
+      _releaseCamera();
     }
   }
 
