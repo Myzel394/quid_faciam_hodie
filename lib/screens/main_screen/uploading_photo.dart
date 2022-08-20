@@ -15,27 +15,37 @@ class UploadingPhoto extends StatefulWidget {
   State<UploadingPhoto> createState() => _UploadingPhotoState();
 }
 
+const DURATION = Duration(milliseconds: 800);
+const CURVE = Curves.easeInBack;
+
 class _UploadingPhotoState extends State<UploadingPhoto>
     with TickerProviderStateMixin {
   late final AnimationController controller;
   late final Animation<double> animation;
+  bool animateOut = false;
 
   @override
   void initState() {
     super.initState();
 
     controller = AnimationController(
-      duration: const Duration(milliseconds: 200),
+      duration: DURATION,
       vsync: this,
     );
     animation = Tween(begin: 1.0, end: 0.8).animate(
       CurvedAnimation(
         parent: controller,
-        curve: Curves.easeOutQuad,
+        curve: CURVE,
       ),
     );
 
     controller.forward();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        animateOut = true;
+      });
+    });
   }
 
   @override
@@ -59,7 +69,20 @@ class _UploadingPhotoState extends State<UploadingPhoto>
           ),
           borderRadius: BorderRadius.circular(MEDIUM_SPACE),
         ),
-        child: Image.memory(widget.data, fit: BoxFit.cover),
+        child: Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            Image.memory(widget.data, fit: BoxFit.cover),
+            AnimatedOpacity(
+              opacity: animateOut ? 0 : 1,
+              duration: DURATION,
+              curve: CURVE,
+              child: Container(
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
