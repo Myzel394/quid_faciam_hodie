@@ -2,15 +2,17 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/constants/values.dart';
 import 'package:quid_faciam_hodie/managers/photo_manager.dart';
-import 'package:quid_faciam_hodie/managers/user_help_sheets_manager.dart';
 import 'package:quid_faciam_hodie/screens/welcome_screen/pages/view_memories_page.dart';
 
 import 'welcome_screen/pages/create_memories_page.dart';
 import 'welcome_screen/pages/get_started_page.dart';
 import 'welcome_screen/pages/initial_page.dart';
+
+const storage = FlutterSecureStorage();
 
 class WelcomeScreen extends StatefulWidget {
   static const ID = '/welcome';
@@ -29,7 +31,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   void initState() {
     super.initState();
 
-    UserHelpSheetsManager.deleteAll();
+    storage.deleteAll();
     getInitialImageForPhotoSwitching();
   }
 

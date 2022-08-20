@@ -43,18 +43,12 @@ class _RawMemoryDisplayState extends State<RawMemoryDisplay> {
   Future<File> createTempVideo() async {
     final tempDirectory = await getTemporaryDirectory();
     final path = '${tempDirectory.path}/${widget.filename ?? 'video.mp4'}';
-    print("#" * 50);
-    print(widget.filename);
-    print(path);
     final file = File(path);
-    print(await file.exists());
-    print(widget.data);
 
-    /*
     if (await file.exists()) {
       // File already exists, so just return it
       return file;
-    }*/
+    }
 
     // File needs to be created
     await file.create();

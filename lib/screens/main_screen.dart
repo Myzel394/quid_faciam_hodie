@@ -11,12 +11,14 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import 'package:quid_faciam_hodie/constants/help_sheet_id.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/constants/values.dart';
 import 'package:quid_faciam_hodie/extensions/snackbar.dart';
 import 'package:quid_faciam_hodie/managers/file_manager.dart';
 import 'package:quid_faciam_hodie/managers/global_values_manager.dart';
+import 'package:quid_faciam_hodie/models/memories.dart';
 import 'package:quid_faciam_hodie/screens/main_screen/annotation_dialog.dart';
 import 'package:quid_faciam_hodie/screens/main_screen/camera_help_content.dart';
 import 'package:quid_faciam_hodie/screens/main_screen/settings_button_overlay.dart';
@@ -77,6 +79,7 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
   void initState() {
     super.initState();
 
+    downloadLatestMemory();
     loadSettings();
     loadCameras();
   }
@@ -90,6 +93,18 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     _updateCamera(state);
+  }
+
+  Future<void> downloadLatestMemory() async {
+    final memories = context.read<Memories>();
+
+    if (memories.memories.isEmpty) {
+      return;
+    }
+
+    final latestMemory = memories.memories.first;
+
+    await latestMemory.downloadToFile();
   }
 
   Future<void> loadSettings() async {

@@ -64,7 +64,7 @@ class _AnnotationDialogState extends State<AnnotationDialog> {
       actions: <Widget>[
         PlatformDialogAction(
           child: Text(localizations.generalCancelButtonLabel),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.pop(context, ''),
         ),
         PlatformDialogAction(
           child: Text(localizations.generalSaveButtonLabel),

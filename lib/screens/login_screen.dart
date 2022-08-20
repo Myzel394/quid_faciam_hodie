@@ -96,9 +96,7 @@ class _LoginScreenState extends AuthState<LoginScreen> with Loadable {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ServerLoadingScreen(
-            nextScreen: MainScreen.ID,
-          ),
+          builder: (context) => const ServerLoadingScreen(),
         ),
       );
     }
