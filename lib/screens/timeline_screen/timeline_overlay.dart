@@ -26,7 +26,7 @@ class TimelineOverlay extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(
             // Cupertino needs more space as the top bar is shown to provide a pop button
-            top: isCupertino(context) ? HUGE_SPACE : LARGE_SPACE,
+            top: isCupertino(context) ? LARGE_SPACE * 3 : LARGE_SPACE,
             left: MEDIUM_SPACE,
             right: MEDIUM_SPACE,
           ),

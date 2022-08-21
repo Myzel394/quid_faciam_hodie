@@ -101,7 +101,11 @@ class FileManager {
 
     // Check cache
     if (!disableCache) {
-      return cache.load(key) as Uint8List;
+      final cachedData = (await cache.load(key)) as Uint8List?;
+
+      if (cachedData is Uint8List) {
+        return cachedData as Uint8List;
+      }
     }
 
     final data = await _downloadFileData(table, path);

@@ -121,7 +121,6 @@ class _TimelineScreenState extends State<TimelineScreen> with Loadable {
         onSheetShown: timeline.pause,
         onSheetHidden: () {
           timeline.resume();
-          print("dfsjnifksdf");
         },
         child: PlatformScaffold(
           appBar: isCupertino(context)

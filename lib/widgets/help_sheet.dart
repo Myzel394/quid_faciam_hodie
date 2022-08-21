@@ -87,6 +87,10 @@ class _HelpSheetState extends State<HelpSheet> {
             ),
           ),
         ),
+        cupertino: CupertinoModalSheetData(
+          barrierDismissible: false,
+          semanticsDismissible: false,
+        ),
         context: context,
         builder: (_) => HelpSheetForm(
           helpContent: widget.helpContent,
