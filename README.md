@@ -58,3 +58,21 @@ Hold it down to create a video.
 
 Tap on the bottom right image / movie to view your timeline.
 You can swipe to see all your memories from here.
+
+
+## Hint for the jury
+
+The app can run directly after building it. All API Keys are stored in code.
+To protect them from simple bots, they are converted to base64.
+Once the Hackathon is over, all API keys will be removed.
+
+By default, this app will use the Supabase project from me (Myzel394).
+I do not share your data and I do not download it.
+If you want to host your own Supabase project (which is highly recommended), you can replace your
+own API key under `lib/constants/apis.dart`;
+
+You will need to replace `SUPABASE_API_URL` to your URL and `SUPABASE_API_URL` to your API key.
+
+Aaaaaand most importantly:
+
+Have fun! :smile:
