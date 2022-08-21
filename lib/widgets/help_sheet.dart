@@ -108,7 +108,7 @@ class _HelpSheetState extends State<HelpSheet> {
         });
       }
 
-      if (dontShowSheetAgain) {
+      if (dontShowSheetAgain == true) {
         await UserHelpSheetsManager.setAsShown(widget.helpID);
       }
     });

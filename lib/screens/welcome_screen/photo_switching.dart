@@ -67,9 +67,7 @@ class _PhotoSwitchingState extends State<PhotoSwitching> {
     final nextImage = NetworkImage(nextPhotoURL);
     precacheImage(nextImage, context);
 
-    setState(() {
-      images.add(nextImage);
-    });
+    images.add(nextImage);
   }
 
   Future<void> getNextPhoto() async {

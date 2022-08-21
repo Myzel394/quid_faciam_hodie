@@ -14,38 +14,36 @@ class ModalSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final innerChild = Padding(
-      padding: const EdgeInsets.symmetric(horizontal: MEDIUM_SPACE),
-      child: child,
-    );
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        PlatformWidget(
-          material: (_, __) => Container(
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(LARGE_SPACE),
-                topRight: Radius.circular(LARGE_SPACE),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(vertical: MEDIUM_SPACE),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          PlatformWidget(
+            material: (_, __) => Container(
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(LARGE_SPACE),
+                  topRight: Radius.circular(LARGE_SPACE),
+                ),
+                color: getSheetColor(context),
               ),
-              color: getSheetColor(context),
+              padding: const EdgeInsets.symmetric(vertical: LARGE_SPACE),
+              child: child,
             ),
-            padding: const EdgeInsets.symmetric(vertical: LARGE_SPACE),
-            child: innerChild,
-          ),
-          cupertino: (_, __) => CupertinoPopupSurface(
-            isSurfacePainted: false,
-            child: Container(
-              color: Colors.white,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: LARGE_SPACE),
-                child: innerChild,
+            cupertino: (_, __) => CupertinoPopupSurface(
+              isSurfacePainted: false,
+              child: Container(
+                color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: LARGE_SPACE),
+                  child: child,
+                ),
               ),
             ),
-          ),
-        )
-      ],
+          )
+        ],
+      ),
     );
   }
 }

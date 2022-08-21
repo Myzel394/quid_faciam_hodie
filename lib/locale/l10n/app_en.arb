@@ -7,6 +7,7 @@
   "generalSaveButtonLabel": "Save",
   "generalUnderstoodButtonLabel": "OK",
   "generalLoadingLabel": "Loading...",
+  "generalSwipeForMore": "Swipe up for more",
 
   "welcomeScreenDescription": "Find out what you did all the days and unlock moments you completely forgot!",
   "welcomeScreenSubtitle": "What did I do today?",
@@ -66,6 +67,9 @@
   "loginScreenFormPasswordLabel": "Password",
   "loginScreenFormSubmitButton": "Login",
   "loginScreenLoginFailed": "Email or password incorrect",
+  "loginScreenSignUpDialogTitle": "Sign up",
+  "loginScreenSignUpDialogExplanation": "We didn't find your account. Do you want to sign up now?",
+  "loginScreenSignUpDialogAffirmationLabel": "Sign me up now",
 
 
   "grantPermissionScreenTitle": "Grant Permissions",
@@ -105,7 +109,6 @@
 
 
   "memoryMapScreenTitle": "Location",
-  "memoryMapScreenExpandForMoreDescription": "Expand for more details",
   "memoryMapScreenOpenNavigation": "Open Navigation",
   "memoryMapScreenValuesAddressLabel": "Estimated Address",
   "memoryMapScreenValuesAddressIsUnavailable": "Address not available",

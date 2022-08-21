@@ -72,23 +72,47 @@ class _LoginScreenState extends AuthState<LoginScreen> with Loadable {
     }
   }
 
+  Future<bool> _askWhetherToSignUp() {
+    final localizations = AppLocalizations.of(context)!;
+
+    return showPlatformDialog(
+      context: context,
+      builder: (_) => PlatformAlertDialog(
+        title: Text(localizations.loginScreenSignUpDialogTitle),
+        content: Text(localizations.loginScreenSignUpDialogExplanation),
+        actions: <Widget>[
+          PlatformDialogAction(
+            child: Text(localizations.generalCancelButtonLabel),
+            onPressed: () => Navigator.pop(context, false),
+          ),
+          PlatformDialogAction(
+            child: Text(localizations.loginScreenSignUpDialogAffirmationLabel),
+            onPressed: () => Navigator.pop(context, true),
+          ),
+        ],
+      ),
+    ) as Future<bool>;
+  }
+
   Future<void> signIn() async {
     final localizations = AppLocalizations.of(context)!;
 
     try {
       await _signIn();
     } catch (error) {
-      try {
-        await _signUp();
-      } catch (error) {
-        if (mounted) {
-          context.showLongErrorSnackBar(
-            message: localizations.loginScreenLoginFailed,
-          );
+      if (await _askWhetherToSignUp()) {
+        try {
+          await _signUp();
+        } catch (error) {
+          if (mounted) {
+            context.showLongErrorSnackBar(
+              message: localizations.loginScreenLoginFailed,
+            );
 
-          passwordController.clear();
+            passwordController.clear();
+          }
+          return;
         }
-        return;
       }
     }
 

@@ -98,7 +98,7 @@ class _MemoryMapScreenState extends State<MemoryMapScreen> with Loadable {
                 const SheetIndicator(),
                 const SizedBox(height: MEDIUM_SPACE),
                 Text(
-                  localizations.memoryMapScreenExpandForMoreDescription,
+                  localizations.generalSwipeForMore,
                   style: getBodyTextTextStyle(context),
                 ),
               ],

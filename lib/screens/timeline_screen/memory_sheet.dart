@@ -237,6 +237,13 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
                   ),
                 ],
               ),
+              if (widget.memory.location != null) ...[
+                const SizedBox(height: SMALL_SPACE),
+                Text(
+                  localizations.generalSwipeForMore,
+                  style: getBodyTextTextStyle(context),
+                ),
+              ],
             ],
           ),
         ),

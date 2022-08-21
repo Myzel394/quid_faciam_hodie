@@ -158,7 +158,10 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
       settings.resolution,
       imageFormatGroup: ImageFormatGroup.jpeg,
     );
-    cameraController.setFlashMode(FlashMode.off);
+
+    try {
+      cameraController.setFlashMode(FlashMode.off);
+    } catch (error) {}
 
     await previousCameraController?.dispose();
 

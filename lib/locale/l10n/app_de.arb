@@ -6,6 +6,7 @@
   "generalContinueButtonLabel": "Weiter",
   "generalUnderstoodButtonLabel": "OK",
   "generalLoadingLabel": "Wird geladen...",
+  "generalSwipeForMore": "Wische hoch für mehr",
 
   "welcomeScreenDescription": "Finde heraus was du den ganzen Tag gemacht hast und erlebe Erinnerungen wieder, die du komplett vergessen hast!",
   "welcomeScreenSubtitle": "Was hab ich heute gemacht?",
@@ -41,6 +42,9 @@
   "loginScreenFormPasswordLabel": "Passwort",
   "loginScreenFormSubmitButton": "Anmelden",
   "loginScreenLoginFailed": "E-Mail oder Passwort inkorrekt",
+  "loginScreenSignUpDialogTitle": "Registrieren",
+  "loginScreenSignUpDialogExplanation": "Wir haben deinen Account nicht gefunden. Möchtest du dich jetzt registrieren?",
+  "loginScreenSignUpDialogAffirmationLabel": "Jetzt registrieren",
 
 
   "grantPermissionScreenTitle": "Berechtigungen erteilen",
@@ -71,7 +75,6 @@
 
 
   "memoryMapScreenTitle": "Standort",
-  "memoryMapScreenExpandForMoreDescription": "Erweitere für mehr Details",
   "memoryMapScreenOpenNavigation": "Navigation öffnen",
   "memoryMapScreenValuesAddressLabel": "Geschätzte Adresse",
   "memoryMapScreenValuesAddressIsUnavailable": "Address nicht verfügbar",
