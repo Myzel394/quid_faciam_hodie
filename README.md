@@ -1,6 +1,8 @@
+<img src="assets/logo.svg" float="left" width="200" />
+
 # Quid faciam Hodie
 
-## What did I do today?
+## What did I do toady?
 
 Find out what you did all the days and unlock moments you completely forgot!
 
