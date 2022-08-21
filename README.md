@@ -62,17 +62,29 @@ You can swipe to see all your memories from here.
 
 ## Hint for the jury
 
+### Team members
+
+* Myzel394
+
+### Instructions
+
 The app can run directly after building it. All API Keys are stored in code.
 To protect them from simple bots, they are converted to base64.
 Once the Hackathon is over, all API keys will be removed.
 
 By default, this app will use the Supabase project from me (Myzel394).
 I do not share your data and I do not download it.
-If you want to host your own Supabase project (which is highly recommended), you can replace your
+If you want to host your own Supabase project, you can place your
 own API key under `lib/constants/apis.dart`;
 
 You will need to replace `SUPABASE_API_URL` to your URL and `SUPABASE_API_URL` to your API key.
 
-Aaaaaand most importantly:
+If anything goes wrong, you can simply contact me by my GitHub E-Mail.
 
-Have fun! :smile:
+### How did I use Supabase?
+
+This app uses Supabase's auth for authentication,
+databases for storing memories and their location in the
+storage, which is used to store the memories and lastly this app
+also uses realtime connections, to handle memory uploads /
+deletes / changes flawlessly.
