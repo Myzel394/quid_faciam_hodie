@@ -7,6 +7,7 @@
   "generalUnderstoodButtonLabel": "OK",
   "generalLoadingLabel": "Wird geladen...",
   "generalSwipeForMore": "Wische hoch für mehr",
+  "generalSaveButtonLabel": "Speichern",
 
   "welcomeScreenDescription": "Finde heraus was du den ganzen Tag gemacht hast und erlebe Erinnerungen wieder, die du komplett vergessen hast!",
   "welcomeScreenSubtitle": "Was hab ich heute gemacht?",
@@ -32,6 +33,10 @@
   "mainScreenHelpSheetTitle": "Nimm deine besten Momente im Leben auf",
   "mainScreenHelpSheetTakePhotoExplanation": "Tippe einmal auf den Auslöser um ein Foto zu erstellen.",
   "mainScreenHelpSheetTakeVideoExplanation": "Halt den Auslöser gedrückt um ein Video aufzunehmen. Lasse los, wenn du fertig bist.",
+
+  "mainScreenAnnotationDialogTitle": "Anmerkung hinzufüge ",
+  "mainScreenAnnotationDialogExplanation": "Du kannst eine Anmerkung zu deiner Erinnerung hinzufügen.",
+  "mainScreenAnnotationDialogAnnotationFieldLabel": "Anmerkung",
 
   "recordingOverlayIsRecording": "Aufnahme",
 
@@ -104,6 +109,7 @@
   "settingsScreenDeleteAccountConfirmLabel": "Account jetzt löschen",
   "settingsScreenGeneralSectionTitle": "General",
   "settingsScreenGeneralSectionQualityLabel": "Qualität",
+  "settingsScreenGeneralSectionAskForMemoryAnnotationsLabel": "Nach Anmerkungen für Erinnerungen fragen",
   "settingsScreenResetHelpSheetsLabel": "Hilf-Sheets zurücksetzen",
   "settingsScreenResetHelpSheetsResetSuccessfully": "Hilf-Sheets wurden zurückgesetzt.",
 
