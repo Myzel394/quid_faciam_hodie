@@ -10,22 +10,22 @@ Find out what you did all the days and unlock moments you completely forgot!
 ### Available for Android
 
 <p float="left">
-    <img src="readme_content/store_previews/ios/0_timeline.png" />
-    <img src="readme_content/store_previews/ios/1_calendar.png" />
-    <img src="readme_content/store_previews/ios/2_details_1.png" />
-    <img src="readme_content/store_previews/ios/2_details_2.png" />
-    <img src="readme_content/store_previews/ios/3_welcome.png" />
-    <img src="readme_content/store_previews/ios/4_login.png" />
+    <img src="readme_content/store_previews/android/0_timeline.png" width="150" />
+    <img src="readme_content/store_previews/android/1_calendar.png" width="150" />
+    <img src="readme_content/store_previews/android/2_details_1.png" width="150" />
+    <img src="readme_content/store_previews/android/2_details_2.png" width="150" />
+    <img src="readme_content/store_previews/android/3_welcome.png" width="150" />
+    <img src="readme_content/store_previews/android/4_login.png" width="150" />
 </p>
 
 ### As well as for iOS!
 
 <p float="left">
-    <img src="readme_content/store_previews/ios/0_timeline.png" />
-    <img src="readme_content/store_previews/ios/1_calendar.png" />
-    <img src="readme_content/store_previews/ios/2_details_1.png" />
-    <img src="readme_content/store_previews/ios/2_details_2.png" />
-    <img src="readme_content/store_previews/ios/3_welcome.png" />
+    <img src="readme_content/store_previews/ios/0_timeline.png" width="150" />
+    <img src="readme_content/store_previews/ios/1_calendar.png" width="150" />
+    <img src="readme_content/store_previews/ios/2_details_1.png" width="150" />
+    <img src="readme_content/store_previews/ios/2_details_2.png" width="150" />
+    <img src="readme_content/store_previews/ios/3_welcome.png" width="150" />
 </p>
 
 
