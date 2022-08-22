@@ -142,6 +142,7 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
           isExpanded = true;
         });
       },
+      enableToggle: true,
       background: GestureDetector(
         onTap: () => Navigator.pop(context),
       ),
@@ -234,11 +235,7 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
                 children: [
                   Icon(
                     context.platformIcons.time,
-                    size: platformThemeData(
-                      context,
-                      material: (data) => data.textTheme.bodyLarge!.fontSize,
-                      cupertino: (data) => data.textTheme.textStyle.fontSize,
-                    ),
+                    size: getIconSizeForBodyText(context),
                   ),
                   const SizedBox(width: TINY_SPACE),
                   Text(
@@ -258,6 +255,7 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
                       isExpanded
                           ? context.platformIcons.downArrow
                           : context.platformIcons.upArrow,
+                      size: getIconSizeForBodyText(context),
                     ),
                     const SizedBox(width: TINY_SPACE),
                     Text(

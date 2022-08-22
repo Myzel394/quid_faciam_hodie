@@ -37,3 +37,9 @@ Color getSheetColor(final BuildContext context) => platformThemeData(
           data.bottomSheetTheme.modalBackgroundColor ?? data.bottomAppBarColor,
       cupertino: (data) => data.barBackgroundColor,
     );
+
+double getIconSizeForBodyText(final BuildContext context) => platformThemeData(
+      context,
+      material: (data) => data.textTheme.bodyText1!.fontSize ?? 16,
+      cupertino: (data) => data.textTheme.textStyle.fontSize ?? 16,
+    );

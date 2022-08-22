@@ -75,11 +75,11 @@ class _MemoryMapScreenState extends State<MemoryMapScreen> with Loadable {
         background: isMaterial(context)
             ? MemoryMaterialMaps(
                 location: widget.location,
-                initialZoom: 13,
+                initialZoom: 14,
               )
             : MemoryCupertinoMaps(
                 location: widget.location,
-                initialZoom: 13,
+                initialZoom: 14,
               ),
         persistentHeader: Container(
           width: double.infinity,

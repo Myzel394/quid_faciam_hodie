@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/models/timeline.dart';
+import 'package:quid_faciam_hodie/utils/theme.dart';
 
 class TimelineOverlay extends StatelessWidget {
   final DateTime date;
@@ -88,13 +89,7 @@ class TimelineOverlay extends StatelessWidget {
                         curve: Curves.linearToEaseOut,
                         child: Icon(
                           Icons.public,
-                          size: platformThemeData(
-                            context,
-                            material: (data) =>
-                                data.textTheme.bodyLarge!.fontSize,
-                            cupertino: (data) =>
-                                data.textTheme.textStyle.fontSize,
-                          ),
+                          size: getIconSizeForBodyText(context),
                           color: Colors.white,
                         ),
                       ),
