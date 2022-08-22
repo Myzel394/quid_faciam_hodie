@@ -111,6 +111,7 @@
   "settingsScreenGeneralSectionTitle": "General",
   "settingsScreenGeneralSectionQualityLabel": "Qualität",
   "settingsScreenGeneralSectionAskForMemoryAnnotationsLabel": "Nach Anmerkungen für Erinnerungen fragen",
+  "settingsScreenGeneralSectionStartRecordingOnStartupLabel": "Aufnahme automatisch beim Öffnen der App starten",
   "settingsScreenResetHelpSheetsLabel": "Hilf-Sheets zurücksetzen",
   "settingsScreenResetHelpSheetsResetSuccessfully": "Hilf-Sheets wurden zurückgesetzt.",
 

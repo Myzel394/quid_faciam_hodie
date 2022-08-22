@@ -26,15 +26,12 @@ const OUT_DURATION = Duration(milliseconds: 300);
 
 class _RecordButtonState extends State<RecordButton> {
   bool animateToVideoIcon = false;
-  bool videoInAnimationActive = false;
-
   void cancelAnimation() {
-    if (videoInAnimationActive) {
+    if (widget.active) {
       return;
     }
 
     setState(() {
-      videoInAnimationActive = false;
       animateToVideoIcon = false;
     });
   }
@@ -49,7 +46,6 @@ class _RecordButtonState extends State<RecordButton> {
         }
 
         setState(() {
-          videoInAnimationActive = false;
           animateToVideoIcon = false;
         });
 
@@ -69,7 +65,6 @@ class _RecordButtonState extends State<RecordButton> {
 
         setState(() {
           animateToVideoIcon = false;
-          videoInAnimationActive = true;
         });
 
         HapticFeedback.heavyImpact();
@@ -87,7 +82,6 @@ class _RecordButtonState extends State<RecordButton> {
         }
 
         setState(() {
-          videoInAnimationActive = false;
           animateToVideoIcon = false;
         });
 
@@ -117,19 +111,18 @@ class _RecordButtonState extends State<RecordButton> {
           alignment: Alignment.center,
           children: <Widget>[
             AnimatedContainer(
-              duration: videoInAnimationActive ? Duration.zero : OUT_DURATION,
+              duration: widget.active ? Duration.zero : OUT_DURATION,
               width: 60,
               height: 60,
               decoration: BoxDecoration(
-                color: videoInAnimationActive
-                    ? Colors.white
-                    : Colors.white.withOpacity(.2),
+                color:
+                    widget.active ? Colors.white : Colors.white.withOpacity(.2),
                 borderRadius: BorderRadius.circular(30),
               ),
             ),
             AnimatedScale(
               duration: () {
-                if (videoInAnimationActive) {
+                if (widget.active) {
                   return Duration(milliseconds: 400);
                 }
 
@@ -141,7 +134,7 @@ class _RecordButtonState extends State<RecordButton> {
               }(),
               curve: Curves.easeInOut,
               scale: () {
-                if (videoInAnimationActive) {
+                if (widget.active) {
                   return .6;
                 }
 
@@ -153,7 +146,7 @@ class _RecordButtonState extends State<RecordButton> {
               }(),
               child: AnimatedContainer(
                 duration: () {
-                  if (videoInAnimationActive) {
+                  if (widget.active) {
                     return Duration(milliseconds: 400);
                   }
 
@@ -166,8 +159,8 @@ class _RecordButtonState extends State<RecordButton> {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: videoInAnimationActive ? Colors.red : Colors.white,
-                  borderRadius: videoInAnimationActive
+                  color: widget.active ? Colors.red : Colors.white,
+                  borderRadius: widget.active
                       ? BorderRadius.circular(8)
                       : BorderRadius.circular(50),
                 ),

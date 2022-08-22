@@ -161,6 +161,7 @@
   "settingsScreenGeneralSectionTitle": "General",
   "settingsScreenGeneralSectionQualityLabel": "Quality",
   "settingsScreenGeneralSectionAskForMemoryAnnotationsLabel": "Ask for memory annotations",
+  "settingsScreenGeneralSectionStartRecordingOnStartupLabel": "Automatically start recording on startup",
   "settingsScreenResetHelpSheetsLabel": "Reset Help Sheets",
   "settingsScreenResetHelpSheetsResetSuccessfully": "Help Sheets reset successfully.",
 

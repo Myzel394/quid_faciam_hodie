@@ -20,6 +20,7 @@ import 'package:quid_faciam_hodie/managers/global_values_manager.dart';
 import 'package:quid_faciam_hodie/models/memories.dart';
 import 'package:quid_faciam_hodie/screens/main_screen/annotation_dialog.dart';
 import 'package:quid_faciam_hodie/screens/main_screen/camera_help_content.dart';
+import 'package:quid_faciam_hodie/screens/main_screen/cancel_recording_button.dart';
 import 'package:quid_faciam_hodie/screens/main_screen/settings_button_overlay.dart';
 import 'package:quid_faciam_hodie/utils/auth_required.dart';
 import 'package:quid_faciam_hodie/utils/loadable.dart';
@@ -49,6 +50,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
   int currentZoomLevelIndex = 0;
 
+  bool hasRecordedOnStartup = false;
   bool isRecording = false;
   bool lockCamera = false;
   bool isTorchEnabled = false;
@@ -148,6 +150,19 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
     }
   }
 
+  Future<void> startRecording() async {
+    setState(() {
+      isRecording = true;
+    });
+
+    if (controller!.value.isRecordingVideo) {
+      // A recording has already started, do nothing.
+      return;
+    }
+
+    await controller!.startVideoRecording();
+  }
+
   void onNewCameraSelected(final CameraDescription cameraDescription) async {
     final settings = GlobalValuesManager.settings!;
     final previousCameraController = controller;
@@ -178,6 +193,12 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
 
     await controller!.initialize();
     await controller!.prepareForVideoRecording();
+
+    if (settings.recordOnStartup && !hasRecordedOnStartup) {
+      startRecording();
+
+      hasRecordedOnStartup = true;
+    }
 
     await determineZoomLevels();
 
@@ -420,7 +441,7 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
                                 controller!.buildPreview(),
                                 if (isRecording)
                                   RecordingOverlay(controller: controller!),
-                                if (!isRecording) SettingsButtonOverlay(),
+                                if (!isRecording) const SettingsButtonOverlay(),
                                 if (uploadingPhotoAnimation != null)
                                   UploadingPhoto(
                                     data: uploadingPhotoAnimation!,
@@ -465,22 +486,34 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
                                         SECONDARY_BUTTONS_DURATION_MULTIPLIER,
                                 opacityDuration: DEFAULT_OPACITY_DURATION *
                                     SECONDARY_BUTTONS_DURATION_MULTIPLIER,
-                                child: ChangeCameraButton(
-                                  disabled: lockCamera || isRecording,
-                                  onChangeCamera: () {
-                                    final currentCameraIndex =
-                                        GlobalValuesManager.cameras
-                                            .indexOf(controller!.description);
-                                    final availableCameras =
-                                        GlobalValuesManager.cameras.length;
+                                child: isRecording
+                                    ? CancelRecordingButton(
+                                        onCancel: () {
+                                          setState(() {
+                                            isRecording = false;
+                                          });
 
-                                    onNewCameraSelected(
-                                      GlobalValuesManager.cameras[
-                                          (currentCameraIndex + 1) %
-                                              availableCameras],
-                                    );
-                                  },
-                                ),
+                                          controller!.stopVideoRecording();
+                                        },
+                                      )
+                                    : ChangeCameraButton(
+                                        disabled: lockCamera || isRecording,
+                                        onChangeCamera: () {
+                                          final currentCameraIndex =
+                                              GlobalValuesManager.cameras
+                                                  .indexOf(
+                                                      controller!.description);
+                                          final availableCameras =
+                                              GlobalValuesManager
+                                                  .cameras.length;
+
+                                          onNewCameraSelected(
+                                            GlobalValuesManager.cameras[
+                                                (currentCameraIndex + 1) %
+                                                    availableCameras],
+                                          );
+                                        },
+                                      ),
                               ),
                             ),
                             Expanded(
@@ -488,18 +521,7 @@ class _MainScreenState extends AuthRequiredState<MainScreen> with Loadable {
                                 child: RecordButton(
                                   disabled: lockCamera,
                                   active: isRecording,
-                                  onVideoBegin: () async {
-                                    setState(() {
-                                      isRecording = true;
-                                    });
-
-                                    if (controller!.value.isRecordingVideo) {
-                                      // A recording has already started, do nothing.
-                                      return;
-                                    }
-
-                                    await controller!.startVideoRecording();
-                                  },
+                                  onVideoBegin: startRecording,
                                   onVideoEnd: takeVideo,
                                   onPhotoShot: takePhoto,
                                 ),

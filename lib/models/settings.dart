@@ -5,25 +5,31 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:quid_faciam_hodie/constants/storage_keys.dart';
+import 'package:quid_faciam_hodie/utils/string_to_bool.dart';
 
 const secure = FlutterSecureStorage();
 
 class Settings extends ChangeNotifier {
   ResolutionPreset _resolution = ResolutionPreset.max;
   bool _askForMemoryAnnotations = false;
+  bool _recordOnStartup = false;
 
-  Settings({
-    final ResolutionPreset? resolution,
-    final bool? askForMemoryAnnotations,
-  })  : _resolution = resolution ?? ResolutionPreset.max,
-        _askForMemoryAnnotations = askForMemoryAnnotations ?? true;
+  Settings(
+      {final ResolutionPreset? resolution,
+      final bool? askForMemoryAnnotations,
+      final bool? recordOnStartup})
+      : _resolution = resolution ?? ResolutionPreset.max,
+        _askForMemoryAnnotations = askForMemoryAnnotations ?? true,
+        _recordOnStartup = recordOnStartup ?? false;
 
   ResolutionPreset get resolution => _resolution;
   bool get askForMemoryAnnotations => _askForMemoryAnnotations;
+  bool get recordOnStartup => _recordOnStartup;
 
   Map<String, dynamic> toJSONData() => {
         'resolution': _resolution.toString(),
         'askForMemoryAnnotations': _askForMemoryAnnotations ? 'true' : 'false',
+        'recordOnStartup': _recordOnStartup ? 'true' : 'false',
       };
 
   Future<void> save() async {
@@ -46,20 +52,14 @@ class Settings extends ChangeNotifier {
     final resolution = ResolutionPreset.values.firstWhereOrNull(
       (preset) => preset.toString() == data['resolution'],
     );
-    final askForMemoryAnnotations = () {
-      switch (data['askForMemoryAnnotations']) {
-        case 'true':
-          return true;
-        case 'false':
-          return false;
-        default:
-          return null;
-      }
-    }();
+    final askForMemoryAnnotations =
+        stringToBool(data['askForMemoryAnnotations']);
+    final recordOnStartup = stringToBool(data['recordOnStartup']);
 
     return Settings(
       resolution: resolution,
       askForMemoryAnnotations: askForMemoryAnnotations,
+      recordOnStartup: recordOnStartup,
     );
   }
 
@@ -71,6 +71,12 @@ class Settings extends ChangeNotifier {
 
   void setAskForMemoryAnnotations(final bool askForMemoryAnnotations) {
     _askForMemoryAnnotations = askForMemoryAnnotations;
+    notifyListeners();
+    save();
+  }
+
+  void setRecordOnStartup(final bool recordOnStartup) {
+    _recordOnStartup = recordOnStartup;
     notifyListeners();
     save();
   }

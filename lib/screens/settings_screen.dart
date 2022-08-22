@@ -218,6 +218,12 @@ class _SettingsScreenState extends AuthRequiredState<SettingsScreen>
                               .settingsScreenGeneralSectionAskForMemoryAnnotationsLabel,
                         ),
                       ),
+                      SettingsTile.switchTile(
+                        initialValue: settings.recordOnStartup,
+                        onToggle: settings.setRecordOnStartup,
+                        title: Text(localizations
+                            .settingsScreenGeneralSectionStartRecordingOnStartupLabel),
+                      ),
                       SettingsTile(
                         leading: Icon(context.platformIcons.help),
                         title: Text(
