@@ -12,12 +12,12 @@ Find out what you did all the days and unlock moments you completely forgot!
 ### Available for Android
 
 <p float="left">
-    <img src="readme_content/store_previews/android/0_timeline.png" width="150" />
-    <img src="readme_content/store_previews/android/1_calendar.png" width="150" />
-    <img src="readme_content/store_previews/android/2_details_1.png" width="150" />
-    <img src="readme_content/store_previews/android/2_details_2.png" width="150" />
-    <img src="readme_content/store_previews/android/3_welcome.png" width="150" />
-    <img src="readme_content/store_previews/android/4_login.png" width="150" />
+    <img src="readme_content/store_previews/android/0_timeline.png" width="130" />
+    <img src="readme_content/store_previews/android/1_calendar.png" width="130" />
+    <img src="readme_content/store_previews/android/2_details_1.png" width="130" />
+    <img src="readme_content/store_previews/android/2_details_2.png" width="130" />
+    <img src="readme_content/store_previews/android/3_welcome.png" width="130" />
+    <img src="readme_content/store_previews/android/4_login.png" width="130" />
 </p>
 
 ### As well as for iOS!
@@ -86,5 +86,5 @@ If anything goes wrong, you can simply contact me by my GitHub E-Mail.
 This app uses Supabase's auth for authentication,
 databases for storing memories and their location in the
 storage, which is used to store the memories and lastly this app
-also uses realtime connections, to handle memory uploads /
+also uses realtime connections to handle memory uploads /
 deletes / changes flawlessly.
