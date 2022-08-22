@@ -44,7 +44,7 @@ class CalendarScreen extends StatelessWidget {
                         : null,
                     trailingActions: calendar.isInSelectMode
                         ? <Widget>[
-                            IconButton(
+                            PlatformIconButton(
                               onPressed: () async {
                                 calendar.setIsSavingToGallery(true);
 
@@ -52,6 +52,7 @@ class CalendarScreen extends StatelessWidget {
                                     calendar.filterMemories(memories.memories);
 
                                 final hasSavedAll = await showPlatformDialog(
+                                  barrierDismissible: true,
                                   context: context,
                                   builder: (_) => SaveToGalleryModal(
                                     memories: memoriesToSave,

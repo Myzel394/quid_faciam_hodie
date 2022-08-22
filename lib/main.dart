@@ -76,6 +76,9 @@ class _MyAppState extends State<MyApp> {
           darkTheme: DARK_THEME_MATERIAL,
           themeMode: ThemeMode.system,
         ),
+        cupertino: (_, __) => CupertinoAppData(
+          theme: LIGHT_THEME_CUPERTINO,
+        ),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         routes: {

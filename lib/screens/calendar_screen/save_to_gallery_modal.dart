@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/foreign_types/memory.dart';
@@ -30,11 +32,9 @@ class _SaveToGalleryModalState extends State<SaveToGalleryModal> {
     for (final memory in widget.memories) {
       await memory.saveFileToGallery();
 
-      if (widget.memories.last != memory) {
-        setState(() {
-          currentMemory = currentMemory + 1;
-        });
-      }
+      setState(() {
+        currentMemory = min(widget.memories.length - 1, currentMemory + 1);
+      });
     }
 
     if (mounted) {
