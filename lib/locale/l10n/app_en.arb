@@ -166,6 +166,17 @@
 
 
   "calendarScreenTitle": "Calendar",
+  "calendarScreenSelectionTitle": "Selected {memories,plural, =1{one memory} other{{memories} memories}}",
+  "@calendarScreenSelectionTitle": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      },
+      "memories": {
+        "type": "int"
+      }
+    }
+  },
 
 
   "timelineScreenTitle": "Timeline",

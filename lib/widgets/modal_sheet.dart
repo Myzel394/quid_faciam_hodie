@@ -14,38 +14,38 @@ class ModalSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.only(top: MEDIUM_SPACE),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          PlatformWidget(
-            material: (_, __) => Container(
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(LARGE_SPACE),
-                  topRight: Radius.circular(LARGE_SPACE),
-                ),
-                color: getSheetColor(context),
-              ),
-              padding: const EdgeInsets.symmetric(vertical: LARGE_SPACE),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: MEDIUM_SPACE),
-                child: child,
-              ),
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: PlatformWidget(
+        material: (_, __) => Container(
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(LARGE_SPACE),
+              topRight: Radius.circular(LARGE_SPACE),
             ),
-            cupertino: (_, __) => CupertinoPopupSurface(
-              isSurfacePainted: false,
-              child: Container(
-                color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: LARGE_SPACE),
-                  child: child,
-                ),
-              ),
+            color: getSheetColor(context),
+          ),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(
+              vertical: LARGE_SPACE,
+              horizontal: MEDIUM_SPACE,
             ),
-          )
-        ],
+            child: child,
+          ),
+        ),
+        cupertino: (_, __) => CupertinoPopupSurface(
+          isSurfacePainted: false,
+          child: Container(
+            color: Colors.white,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(
+                vertical: LARGE_SPACE,
+                horizontal: MEDIUM_SPACE,
+              ),
+              child: child,
+            ),
+          ),
+        ),
       ),
     );
   }

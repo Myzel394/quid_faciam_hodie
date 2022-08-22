@@ -3,9 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:gallery_saver/gallery_saver.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
-import 'package:quid_faciam_hodie/enums.dart';
 import 'package:quid_faciam_hodie/extensions/snackbar.dart';
 import 'package:quid_faciam_hodie/foreign_types/memory.dart';
 import 'package:quid_faciam_hodie/managers/file_manager.dart';
@@ -50,16 +48,7 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
     final localizations = AppLocalizations.of(context)!;
 
     try {
-      final file = await widget.memory.downloadToFile();
-
-      switch (widget.memory.type) {
-        case MemoryType.photo:
-          await GallerySaver.saveImage(file.path);
-          break;
-        case MemoryType.video:
-          await GallerySaver.saveVideo(file.path);
-          break;
-      }
+      await widget.memory.saveFileToGallery();
 
       if (!mounted) {
         return;

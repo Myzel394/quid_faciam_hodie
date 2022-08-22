@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:gallery_saver/gallery_saver.dart';
 import 'package:path/path.dart';
 import 'package:quid_faciam_hodie/enums.dart';
 import 'package:quid_faciam_hodie/managers/file_manager.dart';
@@ -44,4 +45,17 @@ class Memory {
         'memories',
         filePath,
       );
+
+  Future<void> saveFileToGallery() async {
+    final file = await downloadToFile();
+
+    switch (type) {
+      case MemoryType.photo:
+        await GallerySaver.saveImage(file.path);
+        break;
+      case MemoryType.video:
+        await GallerySaver.saveVideo(file.path);
+        break;
+    }
+  }
 }
