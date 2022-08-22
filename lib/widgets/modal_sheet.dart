@@ -15,7 +15,7 @@ class ModalSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(vertical: MEDIUM_SPACE),
+      padding: const EdgeInsets.only(top: MEDIUM_SPACE),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -29,7 +29,10 @@ class ModalSheet extends StatelessWidget {
                 color: getSheetColor(context),
               ),
               padding: const EdgeInsets.symmetric(vertical: LARGE_SPACE),
-              child: child,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: MEDIUM_SPACE),
+                child: child,
+              ),
             ),
             cupertino: (_, __) => CupertinoPopupSurface(
               isSurfacePainted: false,

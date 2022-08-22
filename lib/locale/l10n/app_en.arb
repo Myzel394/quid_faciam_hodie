@@ -7,7 +7,8 @@
   "generalSaveButtonLabel": "Save",
   "generalUnderstoodButtonLabel": "OK",
   "generalLoadingLabel": "Loading...",
-  "generalSwipeForMore": "Swipe up for more",
+  "generalSwipeUpForMore": "Swipe up for more",
+  "generalSwipeDownToClose": "Swipe down to close this sheet",
 
   "welcomeScreenDescription": "Find out what you did all the days and unlock moments you completely forgot!",
   "welcomeScreenSubtitle": "What did I do today?",

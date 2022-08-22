@@ -4,10 +4,11 @@
   "generalError": "Ein Fehler ist aufgetreten",
   "generalCancelButtonLabel": "Abbrechen",
   "generalContinueButtonLabel": "Weiter",
+  "generalSaveButtonLabel": "Speichern",
   "generalUnderstoodButtonLabel": "OK",
   "generalLoadingLabel": "Wird geladen...",
   "generalSwipeForMore": "Wische hoch für mehr",
-  "generalSaveButtonLabel": "Speichern",
+  "generalSwipeDownToClose": "Wische runter um zu schließen",
 
   "welcomeScreenDescription": "Finde heraus was du den ganzen Tag gemacht hast und erlebe Erinnerungen wieder, die du komplett vergessen hast!",
   "welcomeScreenSubtitle": "Was hab ich heute gemacht?",

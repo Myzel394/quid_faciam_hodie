@@ -36,6 +36,7 @@ class HelpSheet extends StatefulWidget {
 
 class _HelpSheetState extends State<HelpSheet> {
   bool isShowingSheet = false;
+  BuildContext? buildContext;
 
   @override
   void initState() {
@@ -46,6 +47,15 @@ class _HelpSheetState extends State<HelpSheet> {
     } else {
       checkIfSheetShouldBeShown();
     }
+  }
+
+  @override
+  void dispose() {
+    if (isShowingSheet && buildContext != null) {
+      Navigator.pop(buildContext!);
+    }
+
+    super.dispose();
   }
 
   @override
@@ -92,10 +102,22 @@ class _HelpSheetState extends State<HelpSheet> {
           semanticsDismissible: false,
         ),
         context: context,
-        builder: (_) => HelpSheetForm(
-          helpContent: widget.helpContent,
-          title: widget.title,
-        ),
+        builder: (buildContext) {
+          this.buildContext = buildContext;
+
+          return WillPopScope(
+            onWillPop: () async {
+              Navigator.pop(buildContext);
+              Navigator.pop(context);
+
+              return false;
+            },
+            child: HelpSheetForm(
+              helpContent: widget.helpContent,
+              title: widget.title,
+            ),
+          );
+        },
       );
 
       if (widget.onSheetHidden != null) {
@@ -118,7 +140,7 @@ class _HelpSheetState extends State<HelpSheet> {
     final hasSheetBeShownAlready =
         await UserHelpSheetsManager.getIfAlreadyShown(widget.helpID);
 
-    if (!hasSheetBeShownAlready) {
+    if (!hasSheetBeShownAlready && !isShowingSheet) {
       showSheet();
     }
   }

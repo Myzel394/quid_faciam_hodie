@@ -36,6 +36,8 @@ class MemorySheet extends StatefulWidget {
 final supabase = Supabase.instance.client;
 
 class _MemorySheetState extends State<MemorySheet> with Loadable {
+  bool isExpanded = false;
+
   Future<void> deleteFile() async {
     await FileManager.deleteFile(widget.memory.filePath);
 
@@ -130,6 +132,16 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
     final backgroundColor = getSheetColor(context);
 
     return ExpandableBottomSheet(
+      onIsContractedCallback: () {
+        setState(() {
+          isExpanded = false;
+        });
+      },
+      onIsExtendedCallback: () {
+        setState(() {
+          isExpanded = true;
+        });
+      },
       background: GestureDetector(
         onTap: () => Navigator.pop(context),
       ),
@@ -239,9 +251,22 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
               ),
               if (widget.memory.location != null) ...[
                 const SizedBox(height: SMALL_SPACE),
-                Text(
-                  localizations.generalSwipeForMore,
-                  style: getBodyTextTextStyle(context),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      isExpanded
+                          ? context.platformIcons.downArrow
+                          : context.platformIcons.upArrow,
+                    ),
+                    const SizedBox(width: TINY_SPACE),
+                    Text(
+                      isExpanded
+                          ? localizations.generalSwipeDownToClose
+                          : localizations.generalSwipeUpForMore,
+                      style: getBodyTextTextStyle(context),
+                    ),
+                  ],
                 ),
               ],
             ],
