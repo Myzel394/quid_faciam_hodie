@@ -86,5 +86,5 @@ If anything goes wrong, you can simply contact me by my GitHub E-Mail.
 This app uses Supabase's auth for authentication,
 databases for storing memories and their location in the
 storage, which is used to store the memories and lastly this app
-also uses realtime connections, to handle memory uploads /
+also uses realtime connections to handle memory uploads /
 deletes / changes flawlessly.
