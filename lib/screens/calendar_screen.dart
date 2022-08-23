@@ -74,7 +74,6 @@ class CalendarScreen extends StatelessWidget {
                     title: Text(
                       calendar.isInSelectMode
                           ? localizations.calendarScreenSelectionTitle(
-                              calendar.selectedDates.length,
                               calendar.filterMemories(memories.memories).length,
                             )
                           : localizations.calendarScreenTitle,

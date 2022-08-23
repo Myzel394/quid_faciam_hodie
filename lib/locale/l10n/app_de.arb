@@ -117,6 +117,7 @@
 
 
   "calendarScreenTitle": "Kalendar",
+  "calendarScreenSelectionTitle": "{count,plural, =1{Eine Erinnerung} other{{count} Erinnerungen}} ausgewählt",
 
 
   "timelineScreenTitle": "Timeline",

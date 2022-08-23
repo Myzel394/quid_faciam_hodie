@@ -167,13 +167,10 @@
 
 
   "calendarScreenTitle": "Calendar",
-  "calendarScreenSelectionTitle": "Selected {memories,plural, =1{one memory} other{{memories} memories}}",
+  "calendarScreenSelectionTitle": "Selected {count,plural, =1{one memory} other{{count} memories}}",
   "@calendarScreenSelectionTitle": {
     "placeholders": {
-      "days": {
-        "type": "int"
-      },
-      "memories": {
+      "count": {
         "type": "int"
       }
     }
