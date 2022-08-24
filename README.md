@@ -4,7 +4,7 @@
 
 ## What did I do toady?
 
-Find out what you did all the days and unlock moments you completely forgot!
+Find out what you did all these days and unlock moments you completely forgot!
 
 
 ## Showcase
@@ -40,6 +40,7 @@ Find out what you did all the days and unlock moments you completely forgot!
 * :flashlight: Usage of Supabase's Auth, Database, Storage & Realtime functionality
 * :new_moon_with_face: Supports dark mode
 * :fast_forward: Optimized for efficient behavior
+* :iphone: Includes self-written native modules
 
 
 ## Quick start
