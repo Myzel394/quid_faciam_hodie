@@ -89,3 +89,10 @@ databases for storing memories and their location in the
 storage, which is used to store the memories and lastly this app
 also uses realtime connections to handle memory uploads /
 deletes / changes flawlessly.
+
+## Future plans
+
+* Add share functionality
+* Add public / private handling
+* Publish app in the Play Store & App Store
+* Add CI:CD for automatic builds
