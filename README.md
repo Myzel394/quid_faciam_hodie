@@ -1,4 +1,4 @@
-<img src="assets/logo.svg" float="left" width="200" />
+<img src="readme_content/poster.png" />
 
 # Quid faciam Hodie
 
