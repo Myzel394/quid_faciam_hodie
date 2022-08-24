@@ -4,7 +4,7 @@
 
 ## What did I do toady?
 
-Find out what you did all the days and unlock moments you completely forgot!
+Find out what you did all these days and unlock moments you completely forgot!
 
 
 ## Showcase
