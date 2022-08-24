@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
 import 'package:quid_faciam_hodie/controllers/status_controller.dart';
+import 'package:quid_faciam_hodie/native_events/window_focus.dart';
 
 const BAR_HEIGHT = 4.0;
 
@@ -11,6 +12,7 @@ class Status extends StatefulWidget {
   final bool hideProgressBar;
   final bool autoStart;
   final bool isIndeterminate;
+  final bool pauseOnLostFocus;
   final VoidCallback? onEnd;
   final Duration duration;
 
@@ -21,6 +23,7 @@ class Status extends StatefulWidget {
     this.hideProgressBar = false,
     this.autoStart = false,
     this.isIndeterminate = false,
+    this.pauseOnLostFocus = true,
     this.duration = const Duration(seconds: 5),
     this.onEnd,
     this.controller,
@@ -31,6 +34,8 @@ class Status extends StatefulWidget {
 }
 
 class _StatusState extends State<Status> with TickerProviderStateMixin {
+  bool _wasAnimatingBeforeLostFocus = false;
+
   Animation<double>? animation;
   AnimationController? animationController;
 
@@ -59,6 +64,20 @@ class _StatusState extends State<Status> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+
+    EventChannelWindowFocus.setGlobalListener((hasFocus) {
+      if (!widget.pauseOnLostFocus) {
+        return;
+      }
+
+      if (hasFocus && _wasAnimatingBeforeLostFocus) {
+        animationController?.forward();
+      } else if (!hasFocus) {
+        _wasAnimatingBeforeLostFocus =
+            animationController?.isAnimating ?? false;
+        animationController?.stop();
+      }
+    });
 
     if (widget.autoStart) {
       initializeAnimation();
