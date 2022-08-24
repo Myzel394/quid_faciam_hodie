@@ -1,4 +1,4 @@
-<img src="readme_content/poster.png" />
+<img src="readme_content/poster.webp" />
 
 # Quid faciam Hodie
 
@@ -12,22 +12,22 @@ Find out what you did all these days and unlock moments you completely forgot!
 ### Available for Android
 
 <p float="left">
-    <img src="readme_content/store_previews/android/0_timeline.png" width="130" />
-    <img src="readme_content/store_previews/android/1_calendar.png" width="130" />
-    <img src="readme_content/store_previews/android/2_details_1.png" width="130" />
-    <img src="readme_content/store_previews/android/2_details_2.png" width="130" />
-    <img src="readme_content/store_previews/android/3_welcome.png" width="130" />
-    <img src="readme_content/store_previews/android/4_login.png" width="130" />
+    <img src="readme_content/store_previews/android/0_timeline.webp" width="130" />
+    <img src="readme_content/store_previews/android/1_calendar.webp" width="130" />
+    <img src="readme_content/store_previews/android/2_details_1.webp" width="130" />
+    <img src="readme_content/store_previews/android/2_details_2.webp" width="130" />
+    <img src="readme_content/store_previews/android/3_welcome.webp" width="130" />
+    <img src="readme_content/store_previews/android/4_login.webp" width="130" />
 </p>
 
 ### As well as for iOS!
 
 <p float="left">
-    <img src="readme_content/store_previews/ios/0_timeline.png" width="150" />
-    <img src="readme_content/store_previews/ios/1_calendar.png" width="150" />
-    <img src="readme_content/store_previews/ios/2_details_1.png" width="150" />
-    <img src="readme_content/store_previews/ios/2_details_2.png" width="150" />
-    <img src="readme_content/store_previews/ios/3_welcome.png" width="150" />
+    <img src="readme_content/store_previews/ios/0_timeline.webp" width="150" />
+    <img src="readme_content/store_previews/ios/1_calendar.webp" width="150" />
+    <img src="readme_content/store_previews/ios/2_details_1.webp" width="150" />
+    <img src="readme_content/store_previews/ios/2_details_2.webp" width="150" />
+    <img src="readme_content/store_previews/ios/3_welcome.webp" width="150" />
 </p>
 
 
