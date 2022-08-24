@@ -1,6 +1,6 @@
 <img src="readme_content/poster.webp" />
 
-# Quid faciam Hodie
+# Quid Faciam Hodie
 
 ## What did I do today?
 
