@@ -59,7 +59,7 @@
             <string>Editor</string>
             <key>CFBundleURLSchemes</key>
             <array>
-                <string>floss.myzel394.quid_faciam_hodie</string>
+                <string>floss.myzel394.QuidFaciamHodie</string>
             </array>
         </dict>
     </array>
