@@ -21,10 +21,7 @@ class RawMemoryDisplay extends StatefulWidget {
     this.onVideoControllerInitialized,
     this.file,
     this.data,
-  })  : assert(data != null || file != null),
-        assert((type == MemoryType.photo) ||
-            (type == MemoryType.video && data != null)),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   State<RawMemoryDisplay> createState() => _RawMemoryDisplayState();

@@ -30,14 +30,14 @@ class _AnnotationDialogState extends State<AnnotationDialog> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.all(MEDIUM_SPACE),
+            padding: const EdgeInsets.all(SMALL_SPACE),
             child: Column(
               children: <Widget>[
                 Text(
                   localizations.mainScreenAnnotationDialogTitle,
                   style: getTitleTextStyle(context),
                 ),
-                const SizedBox(height: MEDIUM_SPACE),
+                const SizedBox(height: SMALL_SPACE),
                 Text(
                   localizations.mainScreenAnnotationDialogExplanation,
                   style: getBodyTextTextStyle(context),

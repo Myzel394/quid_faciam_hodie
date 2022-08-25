@@ -85,9 +85,9 @@ class _RecordButtonState extends State<RecordButton> {
           animateToVideoIcon = false;
         });
 
-        HapticFeedback.lightImpact();
-
         if (widget.active) {
+          HapticFeedback.lightImpact();
+
           widget.onVideoEnd();
         }
       },
