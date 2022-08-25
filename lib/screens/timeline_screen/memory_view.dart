@@ -126,7 +126,7 @@ class _MemoryViewState extends State<MemoryView> {
         children: <Widget>[
           if (widget.memory.type == MemoryType.photo)
             ImageFiltered(
-              imageFilter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              imageFilter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
               child: RawMemoryDisplay(
                 filename: widget.memory.filename,
                 data: data!,
