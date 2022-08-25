@@ -33,6 +33,7 @@ class _MemoryMaterialMapsState extends State<MemoryMaterialMaps> {
         latitude: widget.location.latitude,
         longitude: widget.location.longitude,
       ),
+      initMapWithUserPosition: false,
     );
   }
 
