@@ -7,7 +7,9 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:quid_faciam_hodie/constants/spacing.dart';
+import 'package:quid_faciam_hodie/enum_mapping/record_button_behavior/texts.dart';
 import 'package:quid_faciam_hodie/enum_mapping/resolution_preset/texts.dart';
+import 'package:quid_faciam_hodie/enums/record_button_behavior.dart';
 import 'package:quid_faciam_hodie/extensions/snackbar.dart';
 import 'package:quid_faciam_hodie/managers/global_values_manager.dart';
 import 'package:quid_faciam_hodie/managers/user_help_sheets_manager.dart';
@@ -15,9 +17,10 @@ import 'package:quid_faciam_hodie/screens/welcome_screen.dart';
 import 'package:quid_faciam_hodie/utils/auth_required.dart';
 import 'package:quid_faciam_hodie/utils/loadable.dart';
 import 'package:quid_faciam_hodie/utils/theme.dart';
-import 'package:quid_faciam_hodie/widgets/cupertino_dropdown.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import 'settings_screen/dropdown_tile.dart';
 
 final supabase = Supabase.instance.client;
 
@@ -82,46 +85,6 @@ class _SettingsScreenState extends AuthRequiredState<SettingsScreen>
       WelcomeScreen.ID,
       (route) => false,
     );
-  }
-
-  Widget getQualityPicker() {
-    final settings = GlobalValuesManager.settings!;
-    final resolutionTextMapping = getResolutionTextMapping(context);
-    final items = ResolutionPreset.values
-        .map(
-          (value) => DropdownMenuItem<ResolutionPreset>(
-            value: value,
-            child: Text(resolutionTextMapping[value]!),
-          ),
-        )
-        .toList();
-
-    if (isMaterial(context)) {
-      return DropdownButtonFormField<ResolutionPreset>(
-        value: settings.resolution,
-        onChanged: (value) {
-          if (value == null) {
-            return;
-          }
-
-          settings.setResolution(value);
-        },
-        items: items,
-      );
-    } else {
-      return CupertinoDropdownButton<ResolutionPreset>(
-        itemExtent: 30,
-        onChanged: (value) {
-          if (value == null) {
-            return;
-          }
-
-          settings.setResolution(value);
-        },
-        value: settings.resolution,
-        items: items,
-      );
-    }
   }
 
   @override
@@ -202,13 +165,29 @@ class _SettingsScreenState extends AuthRequiredState<SettingsScreen>
                     title: Text(
                       localizations.settingsScreenGeneralSectionTitle,
                     ),
-                    tiles: <SettingsTile>[
-                      SettingsTile(
-                        leading: Text(
+                    tiles: [
+                      SettingsDropdownTile<ResolutionPreset>(
+                        leading: const Icon(Icons.high_quality),
+                        title: Text(
                           localizations
                               .settingsScreenGeneralSectionQualityLabel,
                         ),
-                        title: getQualityPicker(),
+                        onUpdate: settings.setResolution,
+                        textMapping: getResolutionTextMapping(context),
+                        value: settings.resolution,
+                        values: ResolutionPreset.values,
+                      ),
+                      SettingsDropdownTile<RecordButtonBehavior>(
+                        leading: const Icon(Icons.fiber_manual_record),
+                        title: Text(
+                          localizations
+                              .settingsScreenGeneralSectionRecordButtonBehaviorLabel,
+                        ),
+                        onUpdate: settings.setRecordButtonBehavior,
+                        textMapping:
+                            getRecordButtonBehaviorTextMapping(context),
+                        value: settings.recordButtonBehavior,
+                        values: RecordButtonBehavior.values,
                       ),
                       SettingsTile.switchTile(
                         initialValue: settings.askForMemoryAnnotations,
@@ -221,8 +200,10 @@ class _SettingsScreenState extends AuthRequiredState<SettingsScreen>
                       SettingsTile.switchTile(
                         initialValue: settings.recordOnStartup,
                         onToggle: settings.setRecordOnStartup,
-                        title: Text(localizations
-                            .settingsScreenGeneralSectionStartRecordingOnStartupLabel),
+                        title: Text(
+                          localizations
+                              .settingsScreenGeneralSectionStartRecordingOnStartupLabel,
+                        ),
                       ),
                       SettingsTile(
                         leading: Icon(context.platformIcons.help),
