@@ -12,10 +12,9 @@ import 'package:quid_faciam_hodie/utils/loadable.dart';
 import 'package:quid_faciam_hodie/utils/theme.dart';
 import 'package:quid_faciam_hodie/widgets/icon_button_child.dart';
 import 'package:quid_faciam_hodie/widgets/platform_widgets/memory_cupertino_maps.dart';
+import 'package:quid_faciam_hodie/widgets/platform_widgets/memory_material_maps.dart';
 import 'package:quid_faciam_hodie/widgets/sheet_indicator.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-import '../../widgets/platform_widgets/memory_material_maps.dart';
 
 class MemorySheet extends StatefulWidget {
   final Memory memory;
@@ -87,10 +86,9 @@ class _MemorySheetState extends State<MemorySheet> with Loadable {
           message: localizations.memorySheetMemoryUpdatedToPublic,
         );
       } else {
-        if (isMaterial(context))
-          context.showSuccessSnackBar(
-            message: localizations.memorySheetMemoryUpdatedToPrivate,
-          );
+        context.showSuccessSnackBar(
+          message: localizations.memorySheetMemoryUpdatedToPrivate,
+        );
       }
     } catch (error) {
       context.showErrorSnackBar(message: localizations.generalError);

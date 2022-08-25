@@ -41,6 +41,7 @@ Find out what you did all these days and unlock moments you completely forgot!
 * :new_moon_with_face: Supports dark mode
 * :fast_forward: Optimized for efficient behavior
 * :iphone: Includes self-written native modules
+* :map: Uses OpenStreetMap on Android for more privacy; Uses Apple Maps on iOS devices
 
 
 ## Quick start
