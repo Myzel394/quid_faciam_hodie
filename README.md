@@ -11,23 +11,23 @@ Find out what you did all these days and unlock moments you completely forgot!
 
 ### Available for Android
 
-<p float="left">
-    <img src="readme_content/store_previews/android/0_timeline.webp" width="130" />
-    <img src="readme_content/store_previews/android/1_calendar.webp" width="130" />
-    <img src="readme_content/store_previews/android/2_details_1.webp" width="130" />
-    <img src="readme_content/store_previews/android/2_details_2.webp" width="130" />
-    <img src="readme_content/store_previews/android/3_welcome.webp" width="130" />
-    <img src="readme_content/store_previews/android/4_login.webp" width="130" />
+<p float="left" align="center">
+    <img src="readme_content/store_previews/android/0_timeline.webp" width="16%" />
+    <img src="readme_content/store_previews/android/1_calendar.webp" width="16%" />
+    <img src="readme_content/store_previews/android/2_details_1.webp" width="16%" />
+    <img src="readme_content/store_previews/android/2_details_2.webp" width="16%" />
+    <img src="readme_content/store_previews/android/3_welcome.webp" width="16%" />
+    <img src="readme_content/store_previews/android/4_login.webp" width="16%" />
 </p>
 
 ### As well as for iOS!
 
-<p float="left">
-    <img src="readme_content/store_previews/ios/0_timeline.webp" width="150" />
-    <img src="readme_content/store_previews/ios/1_calendar.webp" width="150" />
-    <img src="readme_content/store_previews/ios/2_details_1.webp" width="150" />
-    <img src="readme_content/store_previews/ios/2_details_2.webp" width="150" />
-    <img src="readme_content/store_previews/ios/3_welcome.webp" width="150" />
+<p float="left" align="center">
+    <img src="readme_content/store_previews/ios/0_timeline.webp" width="19%" />
+    <img src="readme_content/store_previews/ios/1_calendar.webp" width="19%" />
+    <img src="readme_content/store_previews/ios/2_details_1.webp" width="19%" />
+    <img src="readme_content/store_previews/ios/2_details_2.webp" width="19%" />
+    <img src="readme_content/store_previews/ios/3_welcome.webp" width="19%" />
 </p>
 
 
