@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:quid_faciam_hodie/widgets/cupertino_dropdown.dart';
 import 'package:settings_ui/settings_ui.dart';
 
 const IN_DURATION = Duration(seconds: 1);
@@ -140,6 +142,30 @@ class SettingsDropdownTile<T> extends AbstractSettingsTile {
   final Widget? leading;
   final Widget? description;
 
+  Widget getCupertinoPicker() {
+    final items = values
+        .map(
+          (value) => DropdownMenuItem<T>(
+            value: value,
+            child: Text(textMapping[value]!),
+          ),
+        )
+        .toList();
+
+    return CupertinoDropdownButton<T>(
+      itemExtent: 30,
+      onChanged: (value) {
+        if (value == null) {
+          return;
+        }
+
+        onUpdate(value);
+      },
+      value: value,
+      items: items,
+    );
+  }
+
   const SettingsDropdownTile({
     Key? key,
     required this.title,
@@ -154,15 +180,24 @@ class SettingsDropdownTile<T> extends AbstractSettingsTile {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownTile(
-      title: title,
-      values: values,
-      value: value,
-      textMapping: textMapping,
-      onUpdate: (value) => onUpdate(value as T),
-      enabled: enabled,
-      leading: leading,
-      description: description,
-    );
+    if (isMaterial(context)) {
+      return DropdownTile(
+        title: title,
+        values: values,
+        value: value,
+        textMapping: textMapping,
+        onUpdate: (value) => onUpdate(value as T),
+        enabled: enabled,
+        leading: leading,
+        description: description,
+      );
+    } else {
+      return SettingsTile(
+        leading: title,
+        title: getCupertinoPicker(),
+        enabled: enabled,
+        description: description,
+      );
+    }
   }
 }
