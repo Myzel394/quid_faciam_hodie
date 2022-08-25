@@ -1,6 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:quid_faciam_hodie/enums/record_button_behavior.dart';
+import 'package:quid_faciam_hodie/managers/global_values_manager.dart';
 
 class RecordButton extends StatefulWidget {
   final bool active;
@@ -26,6 +28,7 @@ const OUT_DURATION = Duration(milliseconds: 300);
 
 class _RecordButtonState extends State<RecordButton> {
   bool animateToVideoIcon = false;
+
   void cancelAnimation() {
     if (widget.active) {
       return;
@@ -37,7 +40,21 @@ class _RecordButtonState extends State<RecordButton> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    final settings = GlobalValuesManager.settings!;
+
+    // Update UI when settings change
+    settings.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final settings = GlobalValuesManager.settings!;
+
     return GestureDetector(
       // Take photo
       onTap: () {
@@ -81,14 +98,18 @@ class _RecordButtonState extends State<RecordButton> {
           return;
         }
 
-        setState(() {
-          animateToVideoIcon = false;
-        });
+        if (settings.recordButtonBehavior ==
+            RecordButtonBehavior.holdRecording) {
+          // Stop recording
+          setState(() {
+            animateToVideoIcon = false;
+          });
 
-        if (widget.active) {
-          HapticFeedback.lightImpact();
+          if (widget.active) {
+            HapticFeedback.lightImpact();
 
-          widget.onVideoEnd();
+            widget.onVideoEnd();
+          }
         }
       },
       // Animate to video icon

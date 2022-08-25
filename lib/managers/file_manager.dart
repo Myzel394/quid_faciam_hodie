@@ -112,7 +112,9 @@ class FileManager {
 
     final cacheData = String.fromCharCodes(data);
 
-    await cache.write(key, cacheData, CACHE_INVALIDATION_DURATION.inMinutes);
+    try {
+      await cache.write(key, cacheData, CACHE_INVALIDATION_DURATION.inMinutes);
+    } catch (error) {}
 
     return data;
   }
