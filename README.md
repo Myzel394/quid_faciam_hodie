@@ -42,6 +42,7 @@ Find out what you did all these days and unlock moments you completely forgot!
 * :fast_forward: Optimized for efficient behavior
 * :iphone: Includes self-written native modules
 * :map: Uses OpenStreetMap on Android for more privacy; Uses Apple Maps on iOS devices
+* :star: Uses animations for awesome User Experience
 
 
 ## Quick start
