@@ -66,11 +66,10 @@
   "loginScreenHelpText": "Sign in to your account. If you do not have one already, we will automatically set up one for you.",
   "loginScreenFormEmailLabel": "Email",
   "loginScreenFormPasswordLabel": "Password",
-  "loginScreenFormSubmitButton": "Login",
+  "loginScreenFormLoginButton": "Login",
+  "loginScreenFormSignUpButton": "Sign up",
   "loginScreenLoginFailed": "Email or password incorrect",
-  "loginScreenSignUpDialogTitle": "Sign up",
-  "loginScreenSignUpDialogExplanation": "We didn't find your account. Do you want to sign up now?",
-  "loginScreenSignUpDialogAffirmationLabel": "Sign me up now",
+  "loginScreenSignUpFailed": "Registration failed. Maybe you already have an account?",
 
 
   "grantPermissionScreenTitle": "Grant Permissions",

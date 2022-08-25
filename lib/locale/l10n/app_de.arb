@@ -46,11 +46,10 @@
   "loginScreenHelpText": "Melde dich an. Wenn du noch keinen Account besitzt, erstellen wir automatisch einen für dich.",
   "loginScreenFormEmailLabel": "E-Mail",
   "loginScreenFormPasswordLabel": "Passwort",
-  "loginScreenFormSubmitButton": "Anmelden",
+  "loginScreenFormLoginButton": "Anmelden",
+  "loginScreenFormSignUpButton": "Registrieren",
   "loginScreenLoginFailed": "E-Mail oder Passwort inkorrekt",
-  "loginScreenSignUpDialogTitle": "Registrieren",
-  "loginScreenSignUpDialogExplanation": "Wir haben deinen Account nicht gefunden. Möchtest du dich jetzt registrieren?",
-  "loginScreenSignUpDialogAffirmationLabel": "Jetzt registrieren",
+  "loginScreenSignUpFailed": "Registrierung fehlgeschlagen. Hast du eventuell schon einen Account?",
 
 
   "grantPermissionScreenTitle": "Berechtigungen erteilen",

@@ -1,4 +1,4 @@
-import 'dart:typed_data';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +25,7 @@ class TodayPhotoButton extends StatefulWidget {
 }
 
 class _TodayPhotoButtonState extends State<TodayPhotoButton> {
-  Uint8List? data;
+  File? file;
   MemoryType? type;
 
   @override
@@ -59,7 +59,7 @@ class _TodayPhotoButtonState extends State<TodayPhotoButton> {
 
     if (memories.memories.isEmpty) {
       setState(() {
-        data = null;
+        file = null;
         type = null;
       });
       return;
@@ -67,12 +67,11 @@ class _TodayPhotoButtonState extends State<TodayPhotoButton> {
 
     final lastMemory = memories.memories.first;
 
-    final file = await lastMemory.downloadToFile();
-    final memoryData = await file.readAsBytes();
+    final downloadedFile = await lastMemory.downloadToFile();
 
     setState(() {
-      data = memoryData;
       type = lastMemory.type;
+      file = downloadedFile;
     });
   }
 
@@ -107,10 +106,10 @@ class _TodayPhotoButtonState extends State<TodayPhotoButton> {
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(SMALL_SPACE),
-            child: (data == null || type == null)
+            child: (file == null || type == null)
                 ? const SizedBox.shrink()
                 : RawMemoryDisplay(
-                    data: data!,
+                    file: file!,
                     type: type!,
                   ),
           ),

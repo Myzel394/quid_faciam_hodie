@@ -46,20 +46,22 @@ class _LoginScreenState extends AuthState<LoginScreen> with Loadable {
     super.dispose();
   }
 
-  Future<void> _signUp() async {
-    final response = await supabase.auth.signUp(
-      emailController.text.trim(),
-      passwordController.text,
-    );
-
-    final error = response.error;
-
-    if (error != null) {
-      throw Exception(error);
+  Future<void> _onAuthenticated() async {
+    if (!mounted) {
+      return;
     }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const ServerLoadingScreen(),
+      ),
+    );
   }
 
-  Future<void> _signIn() async {
+  Future<void> signIn() async {
+    final localizations = AppLocalizations.of(context)!;
+
     final response = await supabase.auth.signIn(
       email: emailController.text.trim(),
       password: passwordController.text,
@@ -67,63 +69,46 @@ class _LoginScreenState extends AuthState<LoginScreen> with Loadable {
 
     final error = response.error;
 
+    if (!mounted) {
+      return;
+    }
+
     if (error != null) {
-      throw Exception(error);
-    }
-  }
-
-  Future<bool> _askWhetherToSignUp() {
-    final localizations = AppLocalizations.of(context)!;
-
-    return showPlatformDialog(
-      context: context,
-      builder: (_) => PlatformAlertDialog(
-        title: Text(localizations.loginScreenSignUpDialogTitle),
-        content: Text(localizations.loginScreenSignUpDialogExplanation),
-        actions: <Widget>[
-          PlatformDialogAction(
-            child: Text(localizations.generalCancelButtonLabel),
-            onPressed: () => Navigator.pop(context, false),
-          ),
-          PlatformDialogAction(
-            child: Text(localizations.loginScreenSignUpDialogAffirmationLabel),
-            onPressed: () => Navigator.pop(context, true),
-          ),
-        ],
-      ),
-    ) as Future<bool>;
-  }
-
-  Future<void> signIn() async {
-    final localizations = AppLocalizations.of(context)!;
-
-    try {
-      await _signIn();
-    } catch (error) {
-      if (await _askWhetherToSignUp()) {
-        try {
-          await _signUp();
-        } catch (error) {
-          if (mounted) {
-            context.showLongErrorSnackBar(
-              message: localizations.loginScreenLoginFailed,
-            );
-
-            passwordController.clear();
-          }
-          return;
-        }
-      }
-    }
-
-    if (mounted) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const ServerLoadingScreen(),
-        ),
+      context.showLongErrorSnackBar(
+        message: localizations.loginScreenLoginFailed,
       );
+
+      passwordController.clear();
+      return;
     }
+
+    _onAuthenticated();
+  }
+
+  Future<void> signUp() async {
+    final localizations = AppLocalizations.of(context)!;
+
+    final response = await supabase.auth.signUp(
+      emailController.text.trim(),
+      passwordController.text,
+    );
+
+    final error = response.error;
+
+    if (!mounted) {
+      return;
+    }
+
+    if (error != null) {
+      context.showLongErrorSnackBar(
+        message: localizations.loginScreenSignUpFailed,
+      );
+
+      passwordController.clear();
+      return;
+    }
+
+    _onAuthenticated();
   }
 
   @override
@@ -148,16 +133,18 @@ class _LoginScreenState extends AuthState<LoginScreen> with Loadable {
                 cupertino: (data) => data.textTheme.navLargeTitleTextStyle,
               ),
             ),
-            const SizedBox(height: LARGE_SPACE),
-            Text(
-              localizations.loginScreenHelpText,
-              style: platformThemeData(
-                context,
-                material: (data) => data.textTheme.bodyText1,
-                cupertino: (data) => data.textTheme.textStyle,
+            const Flexible(child: SizedBox(height: LARGE_SPACE)),
+            Flexible(
+              child: Text(
+                localizations.loginScreenHelpText,
+                style: platformThemeData(
+                  context,
+                  material: (data) => data.textTheme.bodyText1,
+                  cupertino: (data) => data.textTheme.textStyle,
+                ),
               ),
             ),
-            const SizedBox(height: MEDIUM_SPACE),
+            const Flexible(child: SizedBox(height: MEDIUM_SPACE)),
             PlatformTextField(
               controller: emailController,
               autofocus: true,
@@ -191,13 +178,25 @@ class _LoginScreenState extends AuthState<LoginScreen> with Loadable {
               ),
               onSubmitted: (value) => callWithLoading(signIn),
             ),
-            const SizedBox(height: MEDIUM_SPACE),
-            PlatformElevatedButton(
-              onPressed: isLoading ? null : () => callWithLoading(signIn),
-              child: IconButtonChild(
-                icon: Icon(context.platformIcons.forward),
-                label: Text(localizations.loginScreenFormSubmitButton),
-              ),
+            const Flexible(child: SizedBox(height: MEDIUM_SPACE)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                PlatformElevatedButton(
+                  onPressed: isLoading ? null : () => callWithLoading(signIn),
+                  child: IconButtonChild(
+                    icon: Icon(context.platformIcons.forward),
+                    label: Text(localizations.loginScreenFormLoginButton),
+                  ),
+                ),
+                PlatformTextButton(
+                  onPressed: isLoading ? null : () => callWithLoading(signUp),
+                  child: IconButtonChild(
+                    icon: Icon(context.platformIcons.add),
+                    label: Text(localizations.loginScreenFormSignUpButton),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

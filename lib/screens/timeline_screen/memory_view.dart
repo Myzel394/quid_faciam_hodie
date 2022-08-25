@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:typed_data';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -39,7 +39,7 @@ class MemoryView extends StatefulWidget {
 
 class _MemoryViewState extends State<MemoryView> {
   MemoryFetchStatus status = MemoryFetchStatus.downloading;
-  Uint8List? data;
+  File? file;
   Timer? _nextMemoryTimer;
 
   @override
@@ -64,17 +64,15 @@ class _MemoryViewState extends State<MemoryView> {
     });
 
     try {
-      final file = await widget.memory.downloadToFile();
+      final downloadedFile = await widget.memory.downloadToFile();
 
       if (!mounted) {
         return;
       }
 
-      final fileData = await file.readAsBytes();
-
       setState(() {
         status = MemoryFetchStatus.done;
-        data = fileData;
+        file = downloadedFile;
       });
 
       if (widget.onFileDownloaded != null) {
@@ -128,16 +126,14 @@ class _MemoryViewState extends State<MemoryView> {
             ImageFiltered(
               imageFilter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
               child: RawMemoryDisplay(
-                filename: widget.memory.filename,
-                data: data!,
+                file: file!,
                 type: widget.memory.type,
                 loopVideo: widget.loopVideo,
                 fit: BoxFit.cover,
               ),
             ),
           RawMemoryDisplay(
-            filename: widget.memory.filename,
-            data: data!,
+            file: file!,
             type: widget.memory.type,
             fit: BoxFit.contain,
             loopVideo: widget.loopVideo,
