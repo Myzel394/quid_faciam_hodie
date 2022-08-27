@@ -1,3 +1,6 @@
+# This project has been replaced by [Relieve](https://github.com/Myzel394/relieve)
+
+
 <img src="readme_content/poster.webp" />
 
 # Quid Faciam Hodie
